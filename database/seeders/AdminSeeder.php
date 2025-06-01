@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class AdminSeeder extends Seeder
 {
@@ -13,10 +14,23 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = Admin::create([
-            'name' => 'admin',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('admin123')
+        
+        $admin = Admin::where('email', 'admin@gmail.com')->first();
+        if (!$admin) {
+            $admin = Admin::create([
+                'name' => 'admin',
+                'email' => 'admin@gmail.com',
+                'password' => bcrypt('admin123')
+            ]);
+        }
+        
+        $role = Role::firstOrCreate([
+            'name' => 'Admin',
+            'guard_name' => 'admin',
         ]);
+
+        $role->syncPermissions(Permission::where('guard_name', 'admin')->get());
+
+        $admin->assignRole($role);
     }
 }

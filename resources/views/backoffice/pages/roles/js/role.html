@@ -1,0 +1,76 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const selectAllCheckbox = document.getElementById('checkable_checkall');
+
+    if (selectAllCheckbox) {
+        // Select All Checkbox
+        selectAllCheckbox.addEventListener('change', function () {
+            const isChecked = this.checked;
+            document.querySelectorAll('.permission-checkbox').forEach(cb => cb.checked = isChecked);
+            document.querySelectorAll('.collapser-input').forEach(cb => {
+                cb.checked = isChecked;
+                cb.indeterminate = false;
+            });
+        });
+    }
+
+    // Handle Group (Parent) Checkbox Change
+    document.querySelectorAll('.collapser-input').forEach(parentCheckbox => {
+        parentCheckbox.addEventListener('change', function () {
+            const groupId = this.id;
+            const children = document.querySelectorAll(`.permission-checkbox[parent-key="${groupId}"]`);
+            children.forEach(child => child.checked = this.checked);
+        });
+    });
+
+    // Handle Child Checkbox Change
+    document.querySelectorAll('.permission-checkbox').forEach(childCheckbox => {
+        childCheckbox.addEventListener('change', function () {
+            const parentKey = this.getAttribute('parent-key');
+            if (parentKey && parentKey !== 'all') {
+                const parent = document.getElementById(parentKey);
+                const siblings = document.querySelectorAll(`.permission-checkbox[parent-key="${parentKey}"]`);
+
+                const allChecked = Array.from(siblings).every(cb => cb.checked);
+                const someChecked = Array.from(siblings).some(cb => cb.checked);
+
+                if (parent) {
+                    parent.checked = allChecked;
+                    parent.indeterminate = !allChecked && someChecked;
+                }
+            }
+
+            updateSelectAllState();
+        });
+    });
+
+    // Cập nhật trạng thái "Select All"
+    function updateSelectAllState() {
+        const all = document.querySelectorAll('.permission-checkbox[parent-key]');
+        const allChecked = Array.from(all).every(cb => cb.checked);
+        const someChecked = Array.from(all).some(cb => cb.checked);
+
+        if (selectAllCheckbox) {
+            selectAllCheckbox.checked = allChecked;
+            selectAllCheckbox.indeterminate = !allChecked && someChecked;
+        }
+    }
+
+    // Khởi tạo trạng thái indeterminate cho các checkbox group khi có old data
+    function initParentCheckboxes() {
+        document.querySelectorAll('.collapser-input').forEach(parent => {
+            const groupId = parent.id;
+            const children = document.querySelectorAll(`.permission-checkbox[parent-key="${groupId}"]`);
+            const allChecked = Array.from(children).every(cb => cb.checked);
+            const someChecked = Array.from(children).some(cb => cb.checked);
+
+            parent.checked = allChecked;
+            parent.indeterminate = !allChecked && someChecked;
+        });
+
+        updateSelectAllState();
+    }
+
+    initParentCheckboxes();
+});
+</script>

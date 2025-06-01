@@ -2,31 +2,25 @@
 
 namespace App\Models;
 
-use App\Models\BaseAuthenticateModel;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Hash;
 
-class Admin extends BaseAuthenticateModel
+class Admin extends Authenticatable
 {
-    //
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes, HasRoles;
 
-    protected $guard = 'admin';
+    protected $guard_name = 'admin';
 
     protected $fillable = [
         'name',
         'email',
-        'password'
+        'password',
     ];
 
     protected $hidden = [
         'password',
-        'remember_token'
-    ];
-
-    protected $casts = [
-        // 'password' => Hash::class,
+        'remember_token',
     ];
 }

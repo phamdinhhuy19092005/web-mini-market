@@ -18,12 +18,19 @@ class BackofficeRouteServiceProvider extends ServiceProvider
 
     public function mapWebRoutes()
     {
-        Route::middleware(['auth:admin'])
+        Route::middleware(['web', 'auth:admin'])
             ->prefix('backoffice')
             ->namespace($this->namespace)
             ->as('bo.web.')
             ->group(base_path('routes/backoffice/web.php'));
     }
 
-    public function mapApiRoutes() {}
+    public function mapApiRoutes()
+    {
+        Route::middleware(['web', 'auth:admin'])
+            ->prefix('api')
+            ->namespace($this->namespace)
+            ->as('bo.api.')
+            ->group(base_path('routes/backoffice/api.php'));
+    }
 }

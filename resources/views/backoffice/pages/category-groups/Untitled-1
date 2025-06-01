@@ -1,0 +1,21 @@
+
+
+users mua sap
+
+transanction() A -> mo transanction
+{
+    -> lay san pham tu db
+    -> tao 1 trog gio hang (A)
+    -> tao dia chi giao hang
+
+    -> lay ra xem san pham A 
+
+    -> dat hang: chuyen san pham trong gio sang orders
+    -> delete sap pham trong gio []
+    -> giao hang
+
+}
+
+transanction B () {
+    -> lay ra xem san pham A tu gio hang
+}

@@ -123,4 +123,13 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+
+
+//     'providers' => [
+//     // Các provider khác...
+//     Illuminate\Auth\AuthServiceProvider::class,
+//     // ...
+//     Spatie\Permission\PermissionServiceProvider::class,
+// ],
+
 ];
