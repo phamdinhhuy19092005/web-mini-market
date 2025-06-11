@@ -11,20 +11,9 @@ class UpdateRoleRequest extends BaseFormRequest implements UpdateRoleRequestInte
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('roles', 'name')->ignore($this->route('id')), // Bỏ qua role hiện tại khi kiểm tra unique
-            ],
-            'permissions' => [
-                'sometimes',
-                'array',
-            ],
-            'permissions.*' => [
-                'string',
-                Rule::exists(Permission::class, 'name'),
-            ],
+            'name' => ['required','string','max:255',Rule::unique('roles', 'name')->ignore($this->route('id'))],
+            'permissions' => ['sometimes','array'],
+            'permissions.*' => ['string',Rule::exists(Permission::class, 'name')],
         ];
     }
 

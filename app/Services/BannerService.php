@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Classes\ImageHelper;
@@ -14,7 +15,13 @@ class BannerService extends BaseService
         $this->bannerRepository = $bannerRepository;
     }
 
-    public function searchByAdmin($data = [])
+    /**
+     * Search banners by ID or name for admin panel.
+     *
+     * @param array $data
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function searchByAdmin(array $data = [])
     {
         $query = data_get($data, 'query');
         $perPage = data_get($data, 'per_page', 10);
@@ -22,13 +29,13 @@ class BannerService extends BaseService
         return $this->bannerRepository->model()::query()
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                ->orWhere('name', 'like', "%$query%");
+                    ->orWhere('name', 'like', "%$query%");
             })
             ->paginate($perPage);
     }
 
     /**
-     * Tạo mới banner
+     * Create a new banner.
      *
      * @param array $attributes
      * @return \Illuminate\Database\Eloquent\Model
@@ -51,7 +58,7 @@ class BannerService extends BaseService
     }
 
     /**
-     * Tìm banner theo ID
+     * Find banner by ID.
      *
      * @param int $id
      * @return \Illuminate\Database\Eloquent\Model
@@ -62,7 +69,7 @@ class BannerService extends BaseService
     }
 
     /**
-     * Hiển thị banner theo ID
+     * Show banner details (alias of find).
      *
      * @param int $id
      * @return \Illuminate\Database\Eloquent\Model
@@ -73,7 +80,7 @@ class BannerService extends BaseService
     }
 
     /**
-     * Cập nhật banner
+     * Update an existing banner.
      *
      * @param int $id
      * @param array $attributes
@@ -88,19 +95,27 @@ class BannerService extends BaseService
             $attributes['desktop_image'] = $this->handleImageUpdate($model->desktop_image, $attributes['desktop_image'] ?? null);
             $attributes['mobile_image'] = $this->handleImageUpdate($model->mobile_image, $attributes['mobile_image'] ?? null);
 
-            // Cập nhật trạng thái
+            // Update status if provided
             $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : $model->status;
 
             return $this->bannerRepository->update($id, $attributes);
         });
     }
 
+    /**
+     * Handle banner image updates (desktop/mobile).
+     *
+     * @param string|null $oldImagePath
+     * @param array|null $newImage
+     * @return string|null
+     */
     protected function handleImageUpdate($oldImagePath, $newImage = null)
     {
         if (isset($newImage['file']) && $newImage['file'] instanceof \Illuminate\Http\UploadedFile) {
             if ($oldImagePath) {
                 (new ImageHelper('banner'))->delete($oldImagePath);
             }
+
             return (new ImageHelper('banner'))->upload($newImage['file']);
         }
 
@@ -111,9 +126,8 @@ class BannerService extends BaseService
         return $oldImagePath;
     }
 
-
     /**
-     * Xóa banner
+     * Delete a banner and its associated images.
      *
      * @param int $id
      * @return bool
@@ -123,10 +137,10 @@ class BannerService extends BaseService
         return DB::transaction(function () use ($id) {
             $model = $this->bannerRepository->findOrFail($id);
 
-            // Xóa ảnh nếu tồn tại
             if ($model->desktop_image) {
                 (new ImageHelper('banner'))->delete($model->desktop_image);
             }
+
             if ($model->mobile_image) {
                 (new ImageHelper('banner'))->delete($model->mobile_image);
             }

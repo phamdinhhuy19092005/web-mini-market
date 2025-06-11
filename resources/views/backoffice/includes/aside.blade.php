@@ -59,7 +59,7 @@
                                 </ul>
                             </div>
                         </li>
-                        <li class="k-menu__item " aria-haspopup="true"><a href="{{route('bo.web.admins.index')}}" class="k-menu__link "><i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i><span class="k-menu__link-text">Page list</span></a></li>
+                        <li class="k-menu__item " aria-haspopup="true"><a href="{{route('bo.web.pages.index')}}" class="k-menu__link "><i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i><span class="k-menu__link-text">Page list</span></a></li>
                         <li class="k-menu__item  k-menu__item--submenu" aria-haspopup="true" data-kmenu-submenu-toggle="hover"><a href="javascript:;" class="k-menu__link k-menu__toggle"><i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i><span class="k-menu__link-text">Faqs</span><i class="k-menu__ver-arrow la la-angle-right"></i></a>
                             <div class="k-menu__submenu "><span class="k-menu__arrow"></span>
                                 <ul class="k-menu__subnav">
@@ -68,6 +68,24 @@
                                 </ul>
                             </div>
                         </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="k-menu__item  k-menu__item--submenu" aria-haspopup="true" data-kmenu-submenu-toggle="hover"><a href="javascript:;" class="k-menu__link k-menu__toggle"><i class="k-menu__link-icon flaticon-placeholder-3"></i><span class="k-menu__link-text"> Areas </span><i class="k-menu__ver-arrow la la-angle-right"></i></a>
+                <div class="k-menu__submenu "><span class="k-menu__arrow"></span>
+                    <ul class="k-menu__subnav">
+                        <li class="k-menu__item " aria-haspopup="true"><a href="{{route('bo.web.countries.index')}}" class="k-menu__link "><i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i><span class="k-menu__link-text">Countries</span></a></li>
+                        <li class="k-menu__item " aria-haspopup="true"><a href="{{route('bo.web.currencies.index')}}" class="k-menu__link "><i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i><span class="k-menu__link-text">Currencies</span></a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="k-menu__item  k-menu__item--submenu" aria-haspopup="true" data-kmenu-submenu-toggle="hover"><a href="javascript:;" class="k-menu__link k-menu__toggle"><i class="k-menu__link-icon flaticon2-settings"></i><span class="k-menu__link-text"> Systems </span><i class="k-menu__ver-arrow la la-angle-right"></i></a>
+                <div class="k-menu__submenu "><span class="k-menu__arrow"></span>
+                    <ul class="k-menu__subnav">
+                        <li class="k-menu__item " aria-haspopup="true"><a href="#" class="k-menu__link "><i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i><span class="k-menu__link-text">System Configuration</span></a></li>
+                        <li class="k-menu__item " aria-haspopup="true"><a href="#" class="k-menu__link "><i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i><span class="k-menu__link-text">System Currency</span></a></li>
                     </ul>
                 </div>
             </li>

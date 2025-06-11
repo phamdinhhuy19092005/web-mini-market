@@ -1,7 +1,6 @@
 <?php
 namespace App\Services;
 
-use App\Classes\ImageHelper;
 use App\Repositories\Interfaces\PostRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -18,20 +17,18 @@ class PostService extends BaseService
     {
         $query = data_get($data, 'query');
         $perPage = data_get($data, 'per_page', 10);
+
         return $this->postRepository->model()::query()
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                ->orWhere('name', 'like', "%$query%");
+                    ->orWhere('name', 'like', "%$query%");
             })
             ->paginate($perPage);
     }
 
-
-
     public function create(array $attributes = [])
     {
-        return DB::transaction(function() use ($attributes) {
-
+        return DB::transaction(function () use ($attributes) {
             return $this->postRepository->create($attributes);
         });
     }
@@ -51,11 +48,12 @@ class PostService extends BaseService
         return DB::transaction(function () use ($id, $attributes, $image) {
             $post = $this->show($id);
 
+            // Update status and display settings, default to 0 if not provided
             $attributes['status'] = (bool) data_get($attributes, 'status', 0);
             $attributes['display_on_frontend'] = (bool) data_get($attributes, 'display_on_frontend', 0);
 
+            // Update model
             $post->update($attributes);
-
             return $post;
         });
     }

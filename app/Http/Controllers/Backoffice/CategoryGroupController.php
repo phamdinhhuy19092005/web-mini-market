@@ -32,31 +32,35 @@ class CategoryGroupController extends BaseController
     public function store(StoreCategoryGroupRequestInterface $request)
     {
         $categoryGroup = $this->categoryGroupService->create($request->validated());
+
         return $this->responses(StoreCategoryGroupResponseContract::class, $categoryGroup);
     }
 
     public function show($id)
     {
         $categoryGroups = $this->categoryGroupService->show($id);
+
         return view('backoffice.pages.category-groups.index', compact('categoryGroups'));
     }
 
     public function edit($id)
     {
         $categoryGroup = $this->categoryGroupService->show($id);
+
         return view('backoffice.pages.category-groups.edit', compact('categoryGroup'));
     }
 
     public function update(UpdateCategoryGroupRequestInterface $request, $id)
     {
-        $file = $request->imageFile();
-        $this->categoryGroupService->update($id, $request->validated(), $file);
+        $this->categoryGroupService->update($id, $request->validated());
+
         return $this->responses(UpdateCategoryGroupResponseContract::class);
     }
 
     public function destroy($id)
     {
         $this->categoryGroupService->delete($id);
+        
         return redirect()->route('bo.web.category-groups.index');
     }
 }

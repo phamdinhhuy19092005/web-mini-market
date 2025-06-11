@@ -7,16 +7,33 @@ use Illuminate\Support\Facades\Route;
 
 class BackofficeRouteServiceProvider extends ServiceProvider
 {
+    /**
+     * Controller namespace for backoffice routes.
+     *
+     * @var string
+     */
     protected $namespace = 'App\Http\Controllers\Backoffice';
+
+    /**
+     * Home path for backoffice.
+     *
+     * @var string
+     */
     public const HOME = '/backoffice';
 
-    public function map()
+    /**
+     * Define the routes for the application.
+     */
+    public function map(): void
     {
         $this->mapWebRoutes();
         $this->mapApiRoutes();
     }
 
-    public function mapWebRoutes()
+    /**
+     * Define the "web" routes for the backoffice.
+     */
+    protected function mapWebRoutes(): void
     {
         Route::middleware(['web', 'auth:admin'])
             ->prefix('backoffice')
@@ -25,7 +42,10 @@ class BackofficeRouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/backoffice/web.php'));
     }
 
-    public function mapApiRoutes()
+    /**
+     * Define the "api" routes for the backoffice.
+     */
+    protected function mapApiRoutes(): void
     {
         Route::middleware(['web', 'auth:admin'])
             ->prefix('api')

@@ -1,0 +1,28 @@
+ <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
+    <style>
+        .ck-editor__editable_inline {
+            resize: vertical !important;
+            min-height: 200px !important;
+            max-height: 800px !important;
+            overflow: auto !important;
+        }
+    </style>
+    
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#answer'), {
+                toolbar: [
+                    'heading', '|',
+                    'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
+                    'outdent', 'indent', '|',
+                    'blockQuote', 'insertTable', 'mediaEmbed', 'undo', 'redo'
+                ],
+                placeholder: 'Nhập câu trả lời'
+            })
+            .then(editor => {
+                console.log('Editor was initialized', editor);
+            })
+            .catch(error => {
+                console.error('There was an error initializing the editor:', error);
+            });
+    </script>

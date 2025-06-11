@@ -11,27 +11,16 @@ class StoreRoleRequest extends BaseFormRequest implements StoreRoleRequestInterf
    public function rules(): array
     {
         return [
-            'name' => [
-                'required',               
-                'string',                 
-                'max:255',                
-                Rule::unique('roles', 'name'),
-            ],
-            'permissions' => [
-                'sometimes',              
-                'array',                 
-            ],
-            'permissions.*' => [
-                'string',                 
-                Rule::exists(Permission::class, 'name'), 
-            ],
+            'name' => ['required','string','max:255',Rule::unique('roles', 'name')],
+            'permissions' => ['sometimes','array'],
+            'permissions.*' => ['string',Rule::exists(Permission::class, 'name')],
         ];
     }
 
     public function prepareForValidation()
     {
         $this->merge([
-            'name' => trim($this->input('name')), // Loại bỏ khoảng trắng thừa ở đầu/cuối tên role
+            'name' => trim($this->input('name')),
         ]);
     }
 

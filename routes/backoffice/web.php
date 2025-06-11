@@ -4,7 +4,11 @@ use App\Http\Controllers\Backoffice\AdminController;
 use App\Http\Controllers\Backoffice\BannerController;
 use App\Http\Controllers\Backoffice\CategoryController;
 use App\Http\Controllers\Backoffice\CategoryGroupController;
+use App\Http\Controllers\Backoffice\CountryController;
+use App\Http\Controllers\Backoffice\CurrencyController;
 use App\Http\Controllers\Backoffice\DashboardController;
+use App\Http\Controllers\Backoffice\FaqController;
+use App\Http\Controllers\Backoffice\FaqTopicController;
 use App\Http\Controllers\Backoffice\MenuGroupController;
 use App\Http\Controllers\Backoffice\MenuSubGroupController;
 use App\Http\Controllers\Backoffice\PageController;
@@ -12,6 +16,7 @@ use App\Http\Controllers\Backoffice\PostCategoryController;
 use App\Http\Controllers\Backoffice\PostController;
 use App\Http\Controllers\Backoffice\ProductController;
 use App\Http\Controllers\Backoffice\RoleController;
+use App\Http\Controllers\Backoffice\SystemSettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -171,3 +176,49 @@ Route::get('/pages/{id}', [PageController::class, 'show'])->name('pages.show');
 Route::get('/pages/{id}/edit', [PageController::class, 'edit'])->name('pages.edit');
 Route::put('/pages/{id}', [PageController::class, 'update'])->name('pages.update');
 Route::delete('/pages/{id}', [PageController::class, 'destroy'])->name('pages.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Faq-topics
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/faq-topics', [FaqTopicController::class, 'index'])->name('faq-topics.index');
+Route::get('/faq-topics/create', [FaqTopicController::class, 'create'])->name('faq-topics.create');
+Route::post('/faq-topics', [FaqTopicController::class, 'store'])->name('faq-topics.store');
+Route::get('/faq-topics/{id}', [FaqTopicController::class, 'show'])->name('faq-topics.show');
+Route::get('/faq-topics/{id}/edit', [FaqTopicController::class, 'edit'])->name('faq-topics.edit');
+Route::put('/faq-topics/{id}', [FaqTopicController::class, 'update'])->name('faq-topics.update');
+Route::delete('/faq-topics/{id}', [FaqTopicController::class, 'destroy'])->name('faq-topics.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Faqs
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
+Route::get('/faqs/create', [FaqController::class, 'create'])->name('faqs.create');
+Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');
+Route::get('/faqs/{id}', [FaqController::class, 'show'])->name('faqs.show');
+Route::get('/faqs/{id}/edit', [FaqController::class, 'edit'])->name('faqs.edit');
+Route::put('/faqs/{id}', [FaqController::class, 'update'])->name('faqs.update');
+Route::delete('/faqs/{id}', [FaqController::class, 'destroy'])->name('faqs.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Nations
+|--------------------------------------------------------------------------
+*/
+
+Route::get('countries', [CountryController::class, 'index'])->name('countries.index');
+Route::get('currencies', [CurrencyController::class, 'index'])->name('currencies.index');
+
+/*
+|--------------------------------------------------------------------------
+| System Setting
+|--------------------------------------------------------------------------
+*/
+
+
+

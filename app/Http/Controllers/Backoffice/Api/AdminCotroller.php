@@ -16,6 +16,7 @@ class AdminController extends BaseApiController
     public function index(Request $request)
     {
         $admins = $this->adminService->searchByAdmin($request->all());
+        
         return $this->responses(ListAdminResponseContract::class, $admins);
     }
 }

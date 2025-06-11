@@ -2,20 +2,31 @@
 
 namespace App\Providers\Backoffice;
 
-use App\Repositories as Repositories;
-use App\Repositories\AdminRepository;
 use Illuminate\Support\ServiceProvider;
+
+// Interfaces
+use App\Repositories\Interfaces\AdminRepositoryInterface;
+use App\Repositories\Interfaces\BannerRepositoryInterface;
 use App\Repositories\Interfaces\CategoryGroupRepositoryInterface;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
-use App\Repositories\Interfaces\BannerRepositoryInterface;
-use App\Repositories\BannerRepository;
-use App\Repositories\CategoryGroupRepository;
-use App\Repositories\CategoryRepository;
-use App\Repositories\Interfaces\AdminRepositoryInterface;
 use App\Repositories\Interfaces\PageRepositoryInterface;
 use App\Repositories\Interfaces\PostCategoryRepositoryInterface;
 use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Repositories\Interfaces\RoleRepositoryInterface;
+use App\Repositories\Interfaces\FaqTopicRepositoryInterface;
+use App\Repositories\Interfaces\CountryRepositoryInterface;
+use App\Repositories\Interfaces\CurrencyRepositoryInterface;
+use App\Repositories\Interfaces\FaqRepositoryInterface;
+
+// Repositories
+use App\Repositories\AdminRepository;
+use App\Repositories\BannerRepository;
+use App\Repositories\CategoryGroupRepository;
+use App\Repositories\CategoryRepository;
+use App\Repositories\FaqTopicRepository;
+use App\Repositories\CountryRepository;
+use App\Repositories\CurrencyRepository;
+use App\Repositories\FaqRepository;
 use App\Repositories\PageRepository;
 use App\Repositories\PostCategoryRepository;
 use App\Repositories\PostRepository;
@@ -24,15 +35,89 @@ use App\Repositories\RoleRepository;
 class BackofficeRepositoryServiceProvider extends ServiceProvider
 {
     public $singletons = [
-        Repositories\Interfaces\CategoryGroupRepositoryInterface::class => Repositories\CategoryGroupRepository::class,
-        CategoryGroupRepositoryInterface::class => CategoryGroupRepository::class,
-        CategoryRepositoryInterface::class => CategoryRepository::class,
-        BannerRepositoryInterface::class => BannerRepository::class,
-        AdminRepositoryInterface::class => AdminRepository::class,
-        RoleRepositoryInterface::class => RoleRepository::class,
-        PostCategoryRepositoryInterface::class => PostCategoryRepository::class,
-        PostRepositoryInterface::class => PostRepository::class,
-        PageRepositoryInterface::class => PageRepository::class,
-    ];
 
+        /*
+        |--------------------------------------------------------------------------
+        | Category Groups
+        |--------------------------------------------------------------------------
+        */
+        CategoryGroupRepositoryInterface::class   => CategoryGroupRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Categories
+        |--------------------------------------------------------------------------
+        */
+        CategoryRepositoryInterface::class        => CategoryRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Banners
+        |--------------------------------------------------------------------------
+        */
+        BannerRepositoryInterface::class          => BannerRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Admins
+        |--------------------------------------------------------------------------
+        */
+        AdminRepositoryInterface::class           => AdminRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Roles
+        |--------------------------------------------------------------------------
+        */
+        RoleRepositoryInterface::class            => RoleRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Post Categories
+        |--------------------------------------------------------------------------
+        */
+        PostCategoryRepositoryInterface::class    => PostCategoryRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Posts
+        |--------------------------------------------------------------------------
+        */
+        PostRepositoryInterface::class            => PostRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Pages
+        |--------------------------------------------------------------------------
+        */
+        PageRepositoryInterface::class            => PageRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Faq Topics
+        |--------------------------------------------------------------------------
+        */
+        FaqTopicRepositoryInterface::class        => FaqTopicRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Faqs
+        |--------------------------------------------------------------------------
+        */
+        FaqRepositoryInterface::class        => FaqRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Countries
+        |--------------------------------------------------------------------------
+        */
+        CountryRepositoryInterface::class        => CountryRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Currencies
+        |--------------------------------------------------------------------------
+        */
+        CurrencyRepositoryInterface::class        => CurrencyRepository::class,
+    ];
 }

@@ -27,12 +27,14 @@ class PostController extends BaseController
     public function create()
     {
         $postCategories = PostCategory::all();
+
         return view('backoffice.pages.posts.create', compact('postCategories'));
     }
 
     public function store(StorePostRequestInterface $request)
     {
         $post = $this->postService->create($request->validated());
+
         return $this->responses(StorePostResponseContract::class, $post);
     }
 
@@ -40,6 +42,7 @@ class PostController extends BaseController
     {
         $postCategories = PostCategory::all();
         $post = $this->postService->show($id);
+
         return view('backoffice.pages.posts.edit', compact('postCategories','post'));
     }
 
@@ -47,19 +50,21 @@ class PostController extends BaseController
     {
         $postCategories = PostCategory::all();
         $post = $this->postService->show($id);
+
         return view('backoffice.pages.posts.edit', compact('postCategories','post'));
     }
 
     public function update(UpdatePostRequestInterface $request, $id)
     {
-        $file = $request->imageFile();
-        $post = $this->postService->update($id, $request->validated(), $file);
+        $post = $this->postService->update($id, $request->validated());
+
         return $this->responses(UpdatePostResponseContract::class, $post);
     }
 
     public function destroy($id)
     {
         $this->postService->delete($id);
+        
         return redirect()->route('bo.web.posts.index');
     }
     

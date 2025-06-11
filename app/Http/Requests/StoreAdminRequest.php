@@ -12,24 +12,18 @@ class StoreAdminRequest extends BaseFormRequest implements StoreAdminRequestInte
         // dd($this->all());
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('admins', 'email'),
-            ],
-            'password' => [
-                'required',
-                'string',
-            ],
+            'email' => ['required','email','max:255', Rule::unique('admins', 'email')],
+            'password' => ['required','string'],
         ];
     }
 
-     public function prepareForValidation()
+    public function prepareForValidation()
     {
+        return null;
     }
 
     public function imageFile()
     {
+        return null;
     }
 }

@@ -16,6 +16,7 @@ class RoleController extends BaseApiController
     public function index(Request $request)
     {
         $admins = $this->roleService->searchByAdmin($request->all());
+        
         return $this->responses(ListRoleResponseContract::class, $admins);
     }
 }

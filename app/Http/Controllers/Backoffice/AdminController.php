@@ -27,12 +27,14 @@ class AdminController extends BaseController
     public function create()
     {
         $roles = Role::all();
+
         return view('backoffice.pages.admins.create', compact('roles'));
     }
 
     public function store(StoreAdminRequestInterface $request)
     {
         $admin = $this->adminService->create($request->validated());
+
         return $this->responses(StoreAdminResponseContract::class, $admin);
     }
 
@@ -41,6 +43,7 @@ class AdminController extends BaseController
         $admin = $this->adminService->show($id);
         $roles = Role::all();
         $adminRoleIds = $admin->roles->pluck('id')->toArray();
+
         return view('backoffice.pages.admins.show', compact('admin', 'roles', 'adminRoleIds'));
     }
 
@@ -49,18 +52,21 @@ class AdminController extends BaseController
         $admin = $this->adminService->find($id);
         $roles = Role::all();
         $adminRoleIds = $admin->roles->pluck('id')->toArray();
+
         return view('backoffice.pages.admins.edit', compact('admin', 'roles', 'adminRoleIds'));
     }
 
     public function update(UpdateAdminRequestInterface $request, string $id)
     {
         $admin = $this->adminService->update($id, $request->validated());
+
         return $this->responses(UpdateAdminResponseContract::class, $admin);
     }
 
     public function destroy(string $id)
     {
         $this->adminService->delete($id);
+        
         return redirect()->route('bo.web.admins.index');
     }
 }

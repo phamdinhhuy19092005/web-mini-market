@@ -31,29 +31,32 @@ class BannerController extends BaseController
     public function store(StoreBannerRequestInterface $request)
     {
         $banners = $this->bannerService->create($request->validated());
+
         return $this->responses(StoreBannerResponseContract::class, $banners);
     }
-
 
     public function show($id)
     {
         $banner = $this->bannerService->show($id);
+
         return view('backoffice.pages.banners.edit', compact('banner'));
     }
 
     public function edit($id)
     {
         $banner = $this->bannerService->show($id);
+
         return view('backoffice.pages.banners.edit', compact('banner'));
     }
 
     public function update(UpdateBannerRequestInterface $request, $id)
     {
         $banner = $this->bannerService->update($id, $request->validated());
+
         return $this->responses(UpdateBannerResponseContract::class, $banner);
     }
 
-   public function destroy($id)
+    public function destroy($id)
     {
         $this->bannerService->delete($id);
 

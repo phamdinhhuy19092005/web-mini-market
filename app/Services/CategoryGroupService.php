@@ -22,40 +22,16 @@ class CategoryGroupService extends BaseService
         return $this->categoryGroupRepository->model()::query()
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                ->orWhere('name', 'like', "%$query%");
+                    ->orWhere('name', 'like', "%$query%");
             })
             ->paginate($perPage);
     }
 
     public function create(array $attributes = [])
     {
-        return DB::transaction(function() use ($attributes) {
-            /**
-             * cau hinh trong filesystems.php
-             *
-             */
-
-            // users mua sap
-
-            // transanction() A -> mo transanction
-            // {
-            //     -> lay san pham tu db
-            //     -> tao 1 trog gio hang (A)
-            //     -> tao dia chi giao hang
-
-            //     -> lay ra xem san pham A
-
-            //     -> dat hang: chuyen san pham trong gio sang orders
-            //     -> delete sap pham trong gio []
-            //     -> giao hang
-
-            // }
-
-            // transanction B () {
-            //     -> lay ra xem san pham A tu gio hang
-            // }
+        return DB::transaction(function () use ($attributes) {
+            // Configuration is set in filesystems.php
             $attributes['image'] = (new ImageHelper('category_group'))->upload($attributes['image']);
-
             return $this->categoryGroupRepository->create($attributes);
         });
     }
@@ -75,32 +51,24 @@ class CategoryGroupService extends BaseService
         return DB::transaction(function () use ($id, $attributes, $image) {
             $category_group = $this->show($id);
 
-            // Xử lý ảnh
+            // Handle image processing
             if ($image) {
-                // Xóa ảnh cũ nếu tồn tại
+                // Delete old image if it exists
                 if ($category_group->image) {
                     (new ImageHelper('category'))->delete($category_group->image);
                 }
-                // Tải lên ảnh mới
+                // Upload new image
                 $attributes['image'] = (new ImageHelper('category'))->upload(['file' => $image]);
-            // } elseif (isset($attributes['image']['path'])) {
-            } elseif (! data_get($attributes, 'image.path')) {
-                // Giữ đường dẫn hiện tại nếu không có ảnh mới
-                // $attributes['image'] = $attributes['image']['path'];
-                $attributes['image'] = data_get($attributes, 'image.path');
-            } else {
-                // Giữ ảnh cũ nếu không có dữ liệu mới
+            } elseif (!data_get($attributes, 'image.path')) {
+                // Keep existing image path if no new image is provided
                 $attributes['image'] = $category_group->image;
             }
 
-            // Cập nhật trạng thái
-            // $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : 0;
+            // Update status, default to 0 if not provided
             $attributes['status'] = (bool) data_get($attributes, 'status', 0);
 
-
-            // Cập nhật model
+            // Update model
             $category_group->update($attributes);
-
             return $category_group;
         });
     }

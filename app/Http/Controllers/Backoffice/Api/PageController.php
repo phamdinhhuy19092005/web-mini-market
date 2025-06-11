@@ -15,6 +15,7 @@ class PageController extends BaseApiController
     public function index(Request $request)
     {
         $pages = $this->pageService->searchByAdmin($request->all());
+        
         return $this->responses(ListPageResponseContract::class, $pages);
     }
 }

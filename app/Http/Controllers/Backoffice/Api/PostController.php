@@ -15,6 +15,7 @@ class PostController extends BaseApiController
     public function index(Request $request)
     {
         $posts = $this->postService->searchByAdmin($request->all());
+        
         return $this->responses(ListPostResponseContract::class, $posts);
     }
 }

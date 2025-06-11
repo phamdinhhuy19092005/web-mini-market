@@ -31,32 +31,36 @@ class PostCategoryController extends BaseController
     public function store(StorePostCategoryRequestInterface $request)
     {
         $postCategory = $this->postCategoryGroupService->create($request->validated());
+
         return $this->responses(StorePostCategoryResponseContract::class, $postCategory);
     }
 
     public function show($id)
     {
         $postCategory = $this->postCategoryGroupService->show($id);
+
         return view('backoffice.pages.post-categories.edit', compact('postCategory'));
     }
 
     public function edit($id)
     {
         $postCategory = $this->postCategoryGroupService->show($id);
+
         return view('backoffice.pages.post-categories.edit', compact('postCategory'));
     }
 
 
     public function update(UpdatePostCategoryRequestInterface $request, $id)
     {
-        $file = $request->imageFile();
-        $postCategory = $this->postCategoryGroupService->update($id, $request->validated(), $file);
+        $postCategory = $this->postCategoryGroupService->update($id, $request->validated());
+
         return $this->responses(UpdatePostCategoryResponseContract::class, $postCategory);
     }
 
     public function destroy($id)
     {
         $this->postCategoryGroupService->delete($id);
+        
         return redirect()->route('bo.web.post-categories.index');
     }
 }

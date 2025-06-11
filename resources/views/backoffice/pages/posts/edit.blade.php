@@ -1,4 +1,3 @@
-```blade
 @extends('backoffice.layouts.master')
 
 @php
@@ -220,4 +219,3 @@
         });
     </script>
 @endsection
-```

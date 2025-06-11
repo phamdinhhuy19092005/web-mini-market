@@ -13,13 +13,8 @@ class UpdateAdminRequest extends BaseFormRequest implements UpdateAdminRequestIn
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('admins', 'email')->ignore($adminId),
-            ],
-            'password' => ['nullable', 'string', 'min:8'], // Thay 'required' thành 'nullable'
+            'email' => ['required','email','max:255',Rule::unique('admins', 'email')->ignore($adminId)],
+            'password' => ['nullable', 'string', 'min:8'], 
             'roles' => ['sometimes', 'array'],
         ];
     }

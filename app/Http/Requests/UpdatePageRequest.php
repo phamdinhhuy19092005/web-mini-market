@@ -16,19 +16,19 @@ class UpdatePageRequest extends FormRequest implements UpdatePageRequestInterfac
         return [
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'title' => ['required', 'string', 'max:255'],
             'order' => ['nullable', 'integer'],
-            'display_on_frontend' => ['required', Rule::in(ActivationFE::all())],
+
+            'display_in' => ['required', 'array'],
+            'display_in.*' => ['string', Rule::in(\App\Enum\PageDisplayInEnum::all())],
+
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:255'],
-            'status' => ['required', Rule::in(ActivationStatus::all())],
-            'code' => ['nullable', 'string', 'max:100'],
-            'view_count' => ['nullable', 'integer', 'min:0'],
-            'author' => ['required', 'string', 'max:255'],
-            'post_category_id' => ['required', 'integer', 'exists:post_categories,id'],
-            'content' => ['nullable', 'string'],
-            'post_at' => ['nullable', 'date'],
 
+            'display_on_frontend' => ['required', Rule::in(ActivationFE::all())],
+            'status' => ['required', Rule::in(ActivationStatus::all())],
+
+            'content' => ['nullable', 'string'],
         ];
     }
 

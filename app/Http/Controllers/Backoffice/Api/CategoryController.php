@@ -15,6 +15,7 @@ class CategoryController extends BaseApiController
     public function index(Request $request)
     {
         $categories = $this->categoryService->searchByAdmin($request->all());
+        
         return $this->responses(ListCategoryGroupResponseContract::class, $categories);
     }
 }

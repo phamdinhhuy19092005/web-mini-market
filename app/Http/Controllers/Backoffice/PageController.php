@@ -27,36 +27,44 @@ class PageController extends BaseController
     public function create()
     {
         $pageDisplayInEnumLabels = PageDisplayInEnum::labels();
+
         return view('backoffice.pages.pages.create', compact('pageDisplayInEnumLabels'));
     }
 
     public function store(StorePageRequestInterface $request)
     {
-        $post = $this->pageService->create($request->validated());
-        return $this->responses(StorePageResponseContract::class, $post);
+        $page = $this->pageService->create($request->validated());
+
+        return $this->responses(StorePageResponseContract::class, $page);
     }
 
     public function show($id)
     {
-        $post = $this->pageService->show($id);
-        return view('backoffice.pages.pages.edit', compact('post'));
+        $pageDisplayInEnumLabels = PageDisplayInEnum::labels();
+        $page = $this->pageService->show($id);
+
+        return view('backoffice.pages.pages.edit', compact('page', 'pageDisplayInEnumLabels'));
     }
 
     public function edit($id)
     {
-        $post = $this->pageService->show($id);
-        return view('backoffice.pages.pages.edit', compact('post'));
+        $pageDisplayInEnumLabels = PageDisplayInEnum::labels();
+        $page = $this->pageService->show($id);
+
+        return view('backoffice.pages.pages.edit', compact('page', 'pageDisplayInEnumLabels'));
     }
 
     public function update(UpdatePageRequestInterface $request, $id)
     {
-        $post = $this->pageService->update($id, $request->validated());
-        return $this->responses(UpdatePageResponseContract::class, $post);
+        $page = $this->pageService->update($id, $request->validated());
+
+        return $this->responses(UpdatePageResponseContract::class, $page);
     }
 
     public function destroy($id)
     {
         $this->pageService->delete($id);
+        
         return redirect()->route('bo.web.pages.pages.index');
     }
     
