@@ -12,6 +12,7 @@ use App\Http\Controllers\Backoffice\Api\PageController;
 use App\Http\Controllers\Backoffice\Api\PostCategoryController;
 use App\Http\Controllers\Backoffice\Api\PostController;
 use App\Http\Controllers\Backoffice\Api\RoleController;
+use App\Http\Controllers\Backoffice\Api\ShippingZoneController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('bo/api')->name('bo.api.')->group(function () {
@@ -30,4 +31,5 @@ Route::get('/faq-topics', [FaqTopicController::class, 'index'])->name('faq-topic
 Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
 Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
 Route::get('/currencies', [CurrencyController::class, 'index'])->name('currencies.index');
+Route::get('/shipping-zones', [ShippingZoneController::class, 'index'])->name('shipping-zones.index');
 

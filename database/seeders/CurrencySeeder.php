@@ -12,6 +12,7 @@ class CurrencySeeder extends Seeder
      */
     public function run(): void
     {
+        Currency::truncate();
         $currencies = [
             ['id' => 1,  'type' => 1, 'name' => 'Antarctican dollar',                   'code' => 'AAD', 'symbol' => '$',   'decimals' => 2, 'status' => 1, 'used_countries' => ['AQ']],
             ['id' => 2,  'type' => 1, 'name' => 'United Arab Emirates dirham',         'code' => 'AED', 'symbol' => 'إ.د', 'decimals' => 2, 'status' => 1, 'used_countries' => ['AE']],
@@ -170,7 +171,6 @@ class CurrencySeeder extends Seeder
             ['id' => 155, 'type' => 1, 'name' => 'Zambian kwacha',                   'code' => 'ZMW', 'symbol' => 'ZK',  'decimals' => 2, 'status' => 1, 'used_countries' => ['ZM']],
             ['id' => 156, 'type' => 1, 'name' => 'Zimbabwe Dollar',                   'code' => 'ZWL', 'symbol' => '$',  'decimals' => 2, 'status' => 1, 'used_countries' => ['ZW']],
         ];
-
         foreach ($currencies as $currency) {
             Currency::create($currency);
         }

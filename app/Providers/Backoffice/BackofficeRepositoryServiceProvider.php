@@ -27,10 +27,12 @@ use App\Repositories\FaqTopicRepository;
 use App\Repositories\CountryRepository;
 use App\Repositories\CurrencyRepository;
 use App\Repositories\FaqRepository;
+use App\Repositories\Interfaces\ShippingZoneRepositoryInterface;
 use App\Repositories\PageRepository;
 use App\Repositories\PostCategoryRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\RoleRepository;
+use App\Repositories\ShippingZoneRepository;
 
 class BackofficeRepositoryServiceProvider extends ServiceProvider
 {
@@ -119,5 +121,12 @@ class BackofficeRepositoryServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         CurrencyRepositoryInterface::class        => CurrencyRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Shipping Zones
+        |--------------------------------------------------------------------------
+        */
+        ShippingZoneRepositoryInterface::class        => ShippingZoneRepository::class,
     ];
 }

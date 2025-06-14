@@ -16,6 +16,7 @@ use App\Http\Controllers\Backoffice\PostCategoryController;
 use App\Http\Controllers\Backoffice\PostController;
 use App\Http\Controllers\Backoffice\ProductController;
 use App\Http\Controllers\Backoffice\RoleController;
+use App\Http\Controllers\Backoffice\ShippingZoneController;
 use App\Http\Controllers\Backoffice\SystemSettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -221,4 +222,16 @@ Route::get('currencies', [CurrencyController::class, 'index'])->name('currencies
 */
 
 
+/*
+|--------------------------------------------------------------------------
+| Shipping Zones
+|--------------------------------------------------------------------------
+*/
 
+Route::get('/shipping-zones', [ShippingZoneController::class, 'index'])->name('shipping-zones.index');
+Route::get('/shipping-zones/create', [ShippingZoneController::class, 'create'])->name('shipping-zones.create');
+Route::post('/shipping-zones', [ShippingZoneController::class, 'store'])->name('shipping-zones.store');
+Route::get('/shipping-zones/{id}', [ShippingZoneController::class, 'show'])->name('shipping-zones.show');
+Route::get('/shipping-zones/{id}/edit', [ShippingZoneController::class, 'edit'])->name('shipping-zones.edit');
+Route::put('/shipping-zones/{id}', [ShippingZoneController::class, 'update'])->name('shipping-zones.update');
+Route::delete('/shipping-zones/{id}', [ShippingZoneController::class, 'destroy'])->name('shipping-zones.destroy');

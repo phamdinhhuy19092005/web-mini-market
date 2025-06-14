@@ -7,7 +7,7 @@
             <ul class="k-menu__nav ">
                 <li class="k-menu__item k-menu__item--submenu k-menu__item--rel">
                     <a href="#" target="_blank" class="k-menu__link" style="background-color: #fff;">
-                        <span class="k-menu__link-text" style="text-transform: uppercase;">Cửa Hàng</span>
+                        <span class="k-menu__link-text" style="text-transform: uppercase;">Uchi Market</span>
                     </a>
                 </li>
                 {{-- <li class="k-menu__item  k-menu__item--submenu k-menu__item--rel k-menu__item--active" data-kmenu-submenu-toggle="click" data-kmenu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="k-menu__link k-menu__toggle"><span class="k-menu__link-text">Pages</span><i class="k-menu__hor-arrow la la-angle-down"></i><i class="k-menu__ver-arrow la la-angle-right"></i></a>

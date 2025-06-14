@@ -16,6 +16,7 @@ use App\Contracts\Responses\Backoffice\ListFaqTopicResponseContract;
 use App\Contracts\Responses\Backoffice\ListPageResponseContract;
 use App\Contracts\Responses\Backoffice\ListPostCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\ListPostResponseContract;
+use App\Contracts\Responses\Backoffice\ListShippingZoneResponseContract;
 use App\Contracts\Responses\Backoffice\StoreAdminResponseContract;
 use App\Contracts\Responses\Backoffice\StoreBannerResponseContract;
 use App\Contracts\Responses\Backoffice\StoreCategoryGroupResponseContract;
@@ -26,6 +27,7 @@ use App\Contracts\Responses\Backoffice\StorePageResponseContract;
 use App\Contracts\Responses\Backoffice\StorePostCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\StorePostResponseContract;
 use App\Contracts\Responses\Backoffice\StoreRoleResponseContract;
+use App\Contracts\Responses\Backoffice\StoreShippingZoneResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateAdminResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateBannerResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateCategoryGroupResponseContract;
@@ -36,7 +38,7 @@ use App\Contracts\Responses\Backoffice\UpdatePageResponseContract;
 use App\Contracts\Responses\Backoffice\UpdatePostCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\UpdatePostResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateRoleResponseContract;
-
+use App\Contracts\Responses\Backoffice\UpdateShippingZoneResponseContract;
 // Responses
 use App\Http\Responses\Backoffice\ListAdminResponse;
 use App\Http\Responses\Backoffice\ListBannerResponse;
@@ -49,6 +51,7 @@ use App\Http\Responses\Backoffice\ListFaqTopicResponse;
 use App\Http\Responses\Backoffice\ListPageResponse;
 use App\Http\Responses\Backoffice\ListPostCategoryResponse;
 use App\Http\Responses\Backoffice\ListPostResponse;
+use App\Http\Responses\Backoffice\ListShippingZoneResponse;
 use App\Http\Responses\Backoffice\StoreAdminResponses;
 use App\Http\Responses\Backoffice\StoreBannerResponses;
 use App\Http\Responses\Backoffice\StoreCategoryGroupResponses;
@@ -59,6 +62,7 @@ use App\Http\Responses\Backoffice\StorePageResponses;
 use App\Http\Responses\Backoffice\StorePostCategoryResponses;
 use App\Http\Responses\Backoffice\StorePostResponses;
 use App\Http\Responses\Backoffice\StoreRoleResponses;
+use App\Http\Responses\Backoffice\StoreShippingZoneResponses;
 use App\Http\Responses\Backoffice\UpdateAdminResponses;
 use App\Http\Responses\Backoffice\UpdateBannerResponses;
 use App\Http\Responses\Backoffice\UpdateCategoryGroupResponses;
@@ -69,6 +73,7 @@ use App\Http\Responses\Backoffice\UpdatePageResponses;
 use App\Http\Responses\Backoffice\UpdatePostCategoryResponses;
 use App\Http\Responses\Backoffice\UpdatePostResponses;
 use App\Http\Responses\Backoffice\UpdateRoleResponses;
+use App\Http\Responses\Backoffice\UpdateShippingZoneResponses;
 
 class BackofficeResponseServiceProvider extends ServiceProvider
 {
@@ -176,6 +181,15 @@ class BackofficeResponseServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         ListCurrencyResponseContract::class          => ListCurrencyResponse::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Shipping Zones
+        |--------------------------------------------------------------------------
+        */
+        StoreShippingZoneResponseContract::class         => StoreShippingZoneResponses::class,
+        UpdateShippingZoneResponseContract::class        => UpdateShippingZoneResponses::class,
+        ListShippingZoneResponseContract::class          => ListShippingZoneResponse::class,
 
     ];
 }

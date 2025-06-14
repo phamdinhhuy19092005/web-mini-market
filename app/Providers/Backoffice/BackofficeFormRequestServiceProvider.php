@@ -50,15 +50,19 @@ use App\Http\Requests\UpdatePostRequest;
 
 // Pages
 use App\Http\Requests\Interfaces\StorePageRequestInterface;
+use App\Http\Requests\Interfaces\StoreShippingZoneRequestInterface;
 use App\Http\Requests\Interfaces\UpdateFaqRequestInterface;
 use App\Http\Requests\Interfaces\UpdateFaqTopicRequestInterface;
 use App\Http\Requests\Interfaces\UpdatePageRequestInterface;
+use App\Http\Requests\Interfaces\UpdateShippingZoneRequestInterface;
 use App\Http\Requests\StoreFaqRequest;
 use App\Http\Requests\StoreFaqTopicRequest;
 use App\Http\Requests\StorePageRequest;
+use App\Http\Requests\StoreShippingZoneRequest;
 use App\Http\Requests\UpdateFaqRequest;
 use App\Http\Requests\UpdateFaqTopicRequest;
 use App\Http\Requests\UpdatePageRequest;
+use App\Http\Requests\UpdateShippingZoneRequest;
 
 class BackofficeFormRequestServiceProvider extends ServiceProvider
 {
@@ -136,13 +140,21 @@ class BackofficeFormRequestServiceProvider extends ServiceProvider
         StoreFaqTopicRequestInterface::class          => StoreFaqTopicRequest::class,
         UpdateFaqTopicRequestInterface::class         => UpdateFaqTopicRequest::class,
 
-         /*
+        /*
         |--------------------------------------------------------------------------
         | Faqs
         |--------------------------------------------------------------------------
         */
         StoreFaqRequestInterface::class          => StoreFaqRequest::class,
         UpdateFaqRequestInterface::class         => UpdateFaqRequest::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Shipping Zones
+        |--------------------------------------------------------------------------
+        */
+        StoreShippingZoneRequestInterface::class          => StoreShippingZoneRequest::class,
+        UpdateShippingZoneRequestInterface::class         => UpdateShippingZoneRequest::class,
 
         
     ];

@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Country;
-use App\Models\User;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -26,6 +25,14 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             CountrySeeder::class,
             CurrencySeeder::class,
+
+            AdministrativeRegionsSeeder::class,
+            AdministrativeUnitSeeder::class,
+
+            ProvinceSeeder::class,
+            DistrictSeeder::class,
         ]);
+
+
     }
 }
