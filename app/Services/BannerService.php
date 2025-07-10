@@ -87,9 +87,9 @@ class BannerService extends BaseService
      * @param \Illuminate\Http\UploadedFile|null $image
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function update($id, array $attributes = [], $image = null)
+    public function update($id, array $attributes = [])
     {
-        return DB::transaction(function () use ($id, $attributes, $image) {
+        return DB::transaction(function () use ($id, $attributes) {
             $model = $this->bannerRepository->findOrFail($id);
 
             $attributes['desktop_image'] = $this->handleImageUpdate($model->desktop_image, $attributes['desktop_image'] ?? null);

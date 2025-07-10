@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Backoffice;
 
 use App\Contracts\Responses\Backoffice\StoreRoleResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateRoleResponseContract;
-use App\Http\Requests\Interfaces\StoreRoleRequestInterface;
-use App\Http\Requests\Interfaces\UpdateRoleRequestInterface;
+
+use App\Http\Requests\Backoffice\Interfaces\StoreRoleRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateRoleRequestInterface;
+
 use App\Services\RoleService;
 use Spatie\Permission\Models\Permission;
 
@@ -60,29 +62,42 @@ class RoleController extends BaseController
 
     public function show($id)
     {
-        $admin = $this->roleService->show($id);
-
-        return view('backoffice.pages.admins.show', compact('admin', 'roles', 'adminRoleIds'));
+        $role = $this->roleService->show($id);
+        return view('backoffice.pages.roles.show', compact('role'));
     }
 
     public function edit($id)
     {
-        $admin = $this->roleService->find($id);
+        $role = $this->roleService->find($id);
+        $permissions = Permission::all()->pluck('name')->toArray();
 
-        return view('backoffice.pages.admins.edit', compact('admin', 'roles', 'adminRoleIds'));
+        $groups = [];
+        foreach ($permissions as $permission) {
+            $parts = explode('.', $permission, 2);
+            $groupName = count($parts) === 2 ? $parts[0] : $permission;
+            $groups[$groupName][] = $permission;
+        }
+
+        ksort($groups);
+        foreach ($groups as &$subPermissions) {
+            sort($subPermissions);
+        }
+
+        $rolePermissionNames = $role->permissions->pluck('name')->toArray();
+
+        return view('backoffice.pages.roles.edit', compact('role', 'groups', 'rolePermissionNames'));
     }
 
     public function update(UpdateRoleRequestInterface $request, string $id)
     {
-        $admin = $this->roleService->update($id, $request->validated());
-
-        return $this->responses(UpdateRoleResponseContract::class, $admin);
+        $role = $this->roleService->update($id, $request->validated());
+        return $this->responses(UpdateRoleResponseContract::class, $role);
     }
 
     public function destroy(string $id)
     {
         $this->roleService->delete($id);
-        
-        return redirect()->route('bo.web.admins.index');
+        return redirect()->route('bo.web.roles.index');
     }
+
 }

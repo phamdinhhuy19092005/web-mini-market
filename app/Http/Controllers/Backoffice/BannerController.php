@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Backoffice;
 
 use App\Contracts\Responses\Backoffice\StoreBannerResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateBannerResponseContract;
-use App\Http\Requests\Interfaces\StoreBannerRequestInterface;
-use App\Http\Requests\Interfaces\UpdateBannerRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreBannerRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateBannerRequestInterface;
 use App\Services\BannerService;
 use Illuminate\Http\Request;
 

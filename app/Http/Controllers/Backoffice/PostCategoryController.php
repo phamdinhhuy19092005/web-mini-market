@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Backoffice;
 
 use App\Contracts\Responses\Backoffice\StorePostCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\UpdatePostCategoryResponseContract;
-use App\Http\Requests\Interfaces\StorePostCategoryRequestInterface;
-use App\Http\Requests\Interfaces\UpdatePostCategoryRequestInterface;
+
+use App\Http\Requests\Backoffice\Interfaces\StorePostCategoryRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdatePostCategoryRequestInterface;
+
 use App\Services\PostCategoryService;
 use Illuminate\Http\Request;
 

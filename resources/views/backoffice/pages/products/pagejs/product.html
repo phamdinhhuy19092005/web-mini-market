@@ -1,0 +1,116 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const wrapper = document.querySelector('#media-gallery-wrapper');
+    const addBtn = document.querySelector('#add-media-image');
+
+    // === Hàm xử lý ảnh cho từng nhóm ===
+    function initImageGroupEvents(group) {
+        const fileInput = group.querySelector('.image-file');
+        const urlInput = group.querySelector('.image-url');
+        const previewImg = group.querySelector('.image-preview');
+        const removeBtn = group.querySelector('.remove-media-image');
+
+        if (!fileInput || !urlInput || !previewImg) return;
+
+        // Preview khi chọn file
+        fileInput.addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = evt => {
+                previewImg.src = evt.target.result;
+                previewImg.style.display = 'block';
+                urlInput.value = file.name;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Preview khi nhập URL
+        urlInput.addEventListener('input', () => {
+            const url = urlInput.value.trim();
+            if (url) {
+                previewImg.src = url;
+                previewImg.style.display = 'block';
+                previewImg.onerror = () => {
+                    previewImg.src = '';
+                    previewImg.style.display = 'none';
+                    previewImg.onerror = null;
+                };
+            } else {
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+                fileInput.value = '';
+            }
+        });
+
+        // Xử lý nút XÓA
+       if (removeBtn) {
+            removeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const confirmDelete = confirm('Bạn có chắc chắn muốn xóa ảnh này không?');
+                if (confirmDelete) {
+                    group.remove();
+                }
+            });
+        }
+
+    }
+
+    // Gán event cho tất cả ảnh có sẵn
+    document.querySelectorAll('.form-group, .media-image-item').forEach(initImageGroupEvents);
+
+    // Thêm ảnh mới
+    if (addBtn && wrapper) {
+        addBtn.addEventListener('click', () => {
+           const template = document.querySelector('#media-image-template');
+            if (!template) return;
+            const newItem = template.content.firstElementChild.cloneNode(true);
+            newItem.querySelector('.image-url').value = '';
+            newItem.querySelector('.image-file').value = '';
+            const previewImg = newItem.querySelector('.image-preview');
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+            initImageGroupEvents(newItem);
+            wrapper.appendChild(newItem);
+        });
+    }
+
+    // === Tạo mã tự động ===
+    document.querySelectorAll('button[data-generate]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const length = parseInt(btn.getAttribute('data-generate-length')) || 5;
+            const ref = btn.getAttribute('data-generate-ref');
+            const uppercase = btn.getAttribute('data-generate-uppercase') === 'true';
+            const input = document.querySelector(ref);
+            if (!input) return;
+
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars[Math.floor(Math.random() * chars.length)];
+            }
+            input.value = uppercase ? result.toUpperCase() : result;
+        });
+    });
+
+    // === Tạo slug tự động từ tiêu đề ===
+    const titleInput = document.querySelector('#name');
+    const slugInput = document.querySelector('#slug');
+    if (titleInput && slugInput) {
+        titleInput.addEventListener('input', () => {
+            slugInput.value = slugify(titleInput.value);
+        });
+    }
+
+    // Hàm tạo slug
+    function slugify(str) {
+        return str.toLowerCase()
+            .trim()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+    }
+});
+</script>

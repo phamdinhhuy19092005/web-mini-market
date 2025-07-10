@@ -19,6 +19,7 @@ class RoleService extends BaseService
         $perPage = data_get($data, 'per_page', 10);
 
         return $this->roleRepository->model()::query()
+            ->withCount(['users']) 
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
                     ->orWhere('name', 'like', "%$query%");

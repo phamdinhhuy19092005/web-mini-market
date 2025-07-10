@@ -1,17 +1,17 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Create Faq Topics');
+    $title = __('Tạo chủ đề FAQ');
 
     $breadcrumbs = [
         [
-            'label' => __('Utilities'),
+            'label' => __('Tiện ích'),
         ],
         [
-            'label' => __('Faq Topics'),
+            'label' => __('Chủ đề FAQs'),
         ],
         [
-            'label' => __('Create Faq Topics'),
+            'label' => __('Tạo chủ đề FAQ'),
         ],
     ];
 @endphp
@@ -28,7 +28,7 @@
                 <div class="k-portlet">
                     <div class="k-portlet__head">
                         <div class="k-portlet__head-label">
-                            <h3 class="k-portlet__head-title">Create Faq Topics</h3>
+                            <h3 class="k-portlet__head-title">Tạo chủ đề FAQ</h3>
                         </div>
                     </div>
 

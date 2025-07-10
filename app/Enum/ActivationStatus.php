@@ -14,4 +14,18 @@ class ActivationStatus extends BaseEnum
             self::ACTIVE,
         ];
     }
+
+    public static function labels(): array
+    {
+        return [
+            self::INACTIVE => 'Inactive',
+            self::ACTIVE => 'Active',
+        ];
+    }
+
+    public static function label($value): string
+    {
+        return self::labels()[$value] ?? 'Unknown';
+    }
+
 }

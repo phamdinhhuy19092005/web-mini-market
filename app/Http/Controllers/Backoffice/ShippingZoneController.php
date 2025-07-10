@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Backoffice;
 
 use App\Contracts\Responses\Backoffice\StoreShippingZoneResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateShippingZoneResponseContract;
-use App\Http\Requests\Interfaces\StoreShippingZoneRequestInterface;
-use App\Http\Requests\Interfaces\UpdateShippingZoneRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreShippingZoneRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateShippingZoneRequestInterface;
 use App\Models\Country;
 use App\Models\District;
 use App\Models\Province;

@@ -13,4 +13,10 @@ class Role extends SpatieRole
         'name',
         'guard_name',
     ];
+
+    public function admins()
+    {
+        return $this->belongsToMany(\App\Models\Admin::class, 'model_has_roles', 'role_id', 'model_id')
+                    ->where('model_type', \App\Models\Admin::class);
+    }
 }

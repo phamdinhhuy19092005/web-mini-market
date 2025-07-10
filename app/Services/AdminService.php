@@ -30,8 +30,7 @@ class AdminService extends BaseService
         return $this->adminRepository->model()::query()
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                    ->orWhere('name', 'like', "%$query%")
-                    ->orWhere('email', 'like', "%$query%");
+                    ->orWhere('name', 'like', "%$query%");
             })
             ->paginate($perPage);
     }

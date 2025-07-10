@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Backoffice;
 use App\Contracts\Responses\Backoffice\StoreCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateCategoryResponseContract;
 
-use App\Http\Requests\Interfaces\StoreCategoryRequestInterface;
-use App\Http\Requests\Interfaces\UpdateCategoryRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreCategoryRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateCategoryRequestInterface;
 
 use App\Models\CategoryGroup;
 use App\Services\CategoryService;
@@ -23,7 +23,6 @@ class CategoryController extends BaseController
 
     public function index(Request $request)
     {
-
          return view('backoffice.pages.categories.index');
     }
 

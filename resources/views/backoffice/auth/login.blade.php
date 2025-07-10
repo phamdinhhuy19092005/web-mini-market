@@ -16,7 +16,7 @@ License: You must have a valid license purchased only from https://themes.getboo
 
 <head>
     <meta charset="utf-8" />
-    <title>Admin | Login - v1</title>
+    <title>Admin | Login</title>
     <meta name="description" content="User login example">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -123,23 +123,7 @@ License: You must have a valid license purchased only from https://themes.getboo
 
                 <!--begin::Body-->
                 <div class="k-login-v1__body">
-
-                    <!--begin::Section-->
-                    <!-- <div class="k-login-v1__body-section">
-                        <div class="k-login-v1__body-section-info">
-                            <h3>Admin</h3>
-                            <p>Lorem ipsum lian amet estudiat</p>
-                        </div>
-                    </div> -->
-
-                    <!--begin::Section-->
-
-                    <!--begin::Separator-->
                     <div class="k-login-v1__body-seaprator"></div>
-
-                    <!--end::Separator-->
-
-                    <!--begin::Wrapper-->
                     <div class="k-login-v1__body-wrapper">
                         <div class="k-login-v1__body-container">
                             <h3 class="k-login-v1__body-title">

@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Backoffice;
 
 use App\Contracts\Responses\Backoffice\StorePageResponseContract;
 use App\Contracts\Responses\Backoffice\UpdatePageResponseContract;
-use App\Enum\PageDisplayInEnum;
-use App\Http\Requests\Interfaces\StorePageRequestInterface;
-use App\Http\Requests\Interfaces\UpdatePageRequestInterface;
+
+use App\Http\Requests\Backoffice\Interfaces\StorePageRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdatePageRequestInterface;
+
 use App\Services\PageService;
 use Illuminate\Http\Request;
+use App\Enum\PageDisplayInEnum;
 
 class PageController extends BaseController
 {

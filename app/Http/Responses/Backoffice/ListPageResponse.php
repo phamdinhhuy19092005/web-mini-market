@@ -3,7 +3,7 @@
 namespace App\Http\Responses\Backoffice;
 
 use App\Contracts\Responses\Backoffice\ListPageResponseContract;
-use App\Http\Resources\PageResource;
+use App\Http\Resources\Backoffice\PageResource;
 use App\Http\Responses\BaseResponse;
 use Illuminate\Http\JsonResponse;
 

@@ -1,0 +1,18 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const formattedInputs = document.querySelectorAll('[data-type="inputmask_numeric"]');
+
+    formattedInputs.forEach(function (input) {
+        input.addEventListener('input', function () {
+            const key = input.dataset.key;
+            const hiddenInput = document.querySelector('[data-type="inputmask_numeric_unmasked"][data-key="' + key + '"]');
+
+            if (!hiddenInput) return;
+
+            // Lấy giá trị và loại bỏ ký tự không phải số hoặc dấu chấm
+            const rawValue = input.value.replace(/[^0-9.]/g, '');
+            hiddenInput.value = rawValue;
+        });
+    });
+});
+</script>

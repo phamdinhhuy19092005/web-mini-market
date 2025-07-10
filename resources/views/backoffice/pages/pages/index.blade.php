@@ -29,12 +29,12 @@
                             <h3 class="k-portlet__head-title">List Post</h3>
                         </div>
                         <div class="k-portlet__head-toolbar">
-                            <a href="{{ route('bo.web.pages.create') }}" class="btn btn-default btn-bold btn-upper btn-font-sm">
+                            <a href="{{ route('bo.web.pages.create') }}" class="btn btn-primary btn-bold btn-upper btn-font-sm">
                                 <i class="flaticon2-add-1"></i> Create page
                             </a>
                         </div>
                     </div>
-                    <div class="k-portlet__body k-portlet__body--fit">
+                    <div class="k-portlet__body k-portlet__body--fit p-4">
                         <table id="table_pages_index" data-searching="true" data-request-url="{{ route('bo.api.pages.index') }}" class="datatable table table-striped table-bordered table-hover table-checkable">
                             <thead>
                                 <tr>

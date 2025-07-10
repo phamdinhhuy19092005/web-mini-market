@@ -3,7 +3,7 @@
 namespace App\Http\Responses\Backoffice;
 
 use App\Contracts\Responses\Backoffice\ListCurrencyResponseContract;
-use App\Http\Resources\CurrencyResource;
+use App\Http\Resources\Backoffice\CurrencyResource;
 use App\Http\Responses\BaseResponse;
 use Illuminate\Http\JsonResponse;
 

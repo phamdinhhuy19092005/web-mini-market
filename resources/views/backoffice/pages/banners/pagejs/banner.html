@@ -1,0 +1,67 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Xử lý upload file cho Desktop và Mobile
+    document.querySelectorAll('.image_desktop_image_file, .image_mobile_image_file').forEach(input => {
+        input.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const type = this.classList.contains('image_desktop_image_file') ? 'desktop' : 'mobile';
+            const previewImg = document.querySelector(`img[data-image-ref-review-img="${type}"]`);
+            const inputText = document.querySelector(`input.image_${type}_image_url`);
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block'; // Hiển thị ảnh preview
+                    inputText.value = file.name; // Cập nhật tên file vào input text
+                };
+                reader.onerror = function() {
+                    console.error('Error reading file');
+                    alert('Không thể đọc file ảnh. Vui lòng thử lại.');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+    // Xử lý khi nhập URL cho Desktop và Mobile
+    document.querySelectorAll('.image_desktop_image_url, .image_mobile_image_url').forEach(input => {
+        input.addEventListener('input', function() {
+            const url = this.value.trim();
+            const type = this.classList.contains('image_desktop_image_url') ? 'desktop' : 'mobile';
+            const previewImg = document.querySelector(`img[data-image-ref-review-img="${type}"]`);
+
+            if (url) {
+                // Kiểm tra URL hợp lệ
+                const isValidUrl = url.match(/\.(jpeg|jpg|png|gif)$/i);
+                if (isValidUrl) {
+                    previewImg.src = url;
+                    previewImg.style.display = 'block'; 
+                } else {
+                    previewImg.src = '';
+                    previewImg.style.display = 'none';
+                    console.warn('Invalid image URL');
+                }
+            } else {
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+            }
+        });
+    });
+
+    // Xử lý xóa ảnh (khi nhập lại URL rỗng hoặc chọn file mới)
+    document.querySelectorAll('.image_desktop_image_url, .image_mobile_image_url').forEach(input => {
+        input.addEventListener('change', function() {
+            if (!this.value) {
+                const type = this.classList.contains('image_desktop_image_url') ? 'desktop' : 'mobile';
+                const previewImg = document.querySelector(`img[data-image-ref-review-img="${type}"]`);
+                const inputFile = document.querySelector(`input[type="file"].image_${type}_image_file`);
+                
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+                inputFile.value = ''; // Xóa file đã chọn
+            }
+        });
+    });
+});
+</script>  

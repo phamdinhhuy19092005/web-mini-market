@@ -3,7 +3,7 @@
 namespace App\Http\Responses\Backoffice;
 
 use App\Contracts\Responses\Backoffice\ListCountryResponseContract;
-use App\Http\Resources\CountryResource;
+use App\Http\Resources\Backoffice\CountryResource;
 use App\Http\Responses\BaseResponse;
 use Illuminate\Http\JsonResponse;
 

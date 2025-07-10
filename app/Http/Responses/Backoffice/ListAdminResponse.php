@@ -3,7 +3,7 @@
 namespace App\Http\Responses\Backoffice;
 
 use App\Contracts\Responses\Backoffice\ListAdminResponseContract;
-use App\Http\Resources\AdminResource;
+use App\Http\Resources\Backoffice\AdminResource;
 use App\Http\Responses\BaseResponse;
 use Illuminate\Http\JsonResponse;
 

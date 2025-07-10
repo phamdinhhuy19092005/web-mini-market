@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Backoffice;
 
 use App\Contracts\Responses\Backoffice\StoreFaqResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateFaqResponseContract;
-use App\Http\Requests\Interfaces\StoreFaqRequestInterface;
-use App\Http\Requests\Interfaces\UpdateFaqRequestInterface;
+
+use App\Http\Requests\Backoffice\Interfaces\StoreFaqRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateFaqRequestInterface;
+
 use App\Models\FaqTopic;
-use App\Services\faqService;
+use App\Services\FaqService;
 use Illuminate\Http\Request;
 
 class FaqController extends BaseController

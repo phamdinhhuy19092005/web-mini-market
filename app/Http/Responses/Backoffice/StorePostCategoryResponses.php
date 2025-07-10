@@ -9,6 +9,6 @@ class StorePostCategoryResponses extends BaseViewResponses implements StorePostC
 {
     public function toResponse($request)
     {
-        return redirect()->route('bo.web.categories.index');
+        return redirect()->route('bo.web.post-categories.index');
     }
 }

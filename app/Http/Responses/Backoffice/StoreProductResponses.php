@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Http\Responses\Backoffice;
+
+use App\Contracts\Responses\Backoffice\StoreProductResponseContract;
+use App\Http\Responses\BaseViewResponses;
+
+class StoreProductResponses extends BaseViewResponses implements StoreProductResponseContract
+{
+    public function toResponse($request)
+    {
+        return redirect()->route('bo.web.products.index');
+    }
+}

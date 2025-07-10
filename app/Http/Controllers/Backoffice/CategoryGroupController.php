@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Backoffice;
 use App\Contracts\Responses\Backoffice\StoreCategoryGroupResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateCategoryGroupResponseContract;
 
-use App\Http\Requests\Interfaces\StoreCategoryGroupRequestInterface;
-use App\Http\Requests\Interfaces\UpdateCategoryGroupRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreCategoryGroupRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateCategoryGroupRequestInterface;
+
 use App\Services\CategoryGroupService;
 use Illuminate\Http\Request;
 

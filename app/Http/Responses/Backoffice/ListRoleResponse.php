@@ -3,7 +3,7 @@
 namespace App\Http\Responses\Backoffice;
 
 use App\Contracts\Responses\Backoffice\ListRoleResponseContract;
-use App\Http\Resources\RoleResource;
+use App\Http\Resources\Backoffice\RoleResource;
 use App\Http\Responses\BaseResponse;
 use Illuminate\Http\JsonResponse;
 

@@ -18,20 +18,50 @@ class CategoryService extends BaseService
     {
         $query = data_get($data, 'query');
         $perPage = data_get($data, 'per_page', 10);
+        $orderColumn = data_get($data, 'order_column', 'id'); 
+        $orderDir = data_get($data, 'order_dir', 'desc');     
 
-        return $this->categoryRepository->model()::query()
+        $allowedColumns = ['id', 'name', 'status', 'slug'];
+        if (!in_array($orderColumn, $allowedColumns)) {
+            $orderColumn = 'id';
+        }
+
+        return $this->categoryRepository->model()::with('categoryGroup')
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                    ->orWhere('name', 'like', "%$query%");
+                ->orWhere('name', 'like', "%$query%")
+                ->orWhere('status', 'like', "%$query%")
+                ->orWhereHas('categoryGroup', function ($subQuery) use ($query) {
+                    $subQuery->where('name', 'like', "%$query%");
+                });
             })
+            ->orderBy($orderColumn, $orderDir)
             ->paginate($perPage);
+    }
+
+
+    protected function handleImageUpdate($oldImagePath, $newImage = null)
+    {
+        if (isset($newImage['file']) && $newImage['file'] instanceof \Illuminate\Http\UploadedFile) {
+            if ($oldImagePath) {
+                (new ImageHelper('category'))->delete($oldImagePath);
+            }
+
+            return (new ImageHelper('category'))->upload($newImage['file']);
+        }
+
+        if (isset($newImage['path'])) {
+            return $newImage['path'];
+        }
+
+        return $oldImagePath;
     }
 
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
-            // Configuration is set in filesystems.php
-            $attributes['image'] = (new ImageHelper('category'))->upload($attributes['image']);
+            $imageHelper = new ImageHelper('category');
+            $attributes['image'] = $imageHelper->upload($attributes['image']);
             return $this->categoryRepository->create($attributes);
         });
     }
@@ -46,30 +76,17 @@ class CategoryService extends BaseService
         return $this->categoryRepository->findOrFail($id);
     }
 
-    public function update($id, array $attributes, $image = null)
+    public function update($id, array $attributes = [])
     {
-        return DB::transaction(function () use ($id, $attributes, $image) {
-            $category = $this->show($id);
+        return DB::transaction(function () use ($id, $attributes) {
+            $model = $this->categoryRepository->findOrFail($id);
 
-            // Handle image processing
-            if ($image) {
-                // Delete old image if it exists
-                if ($category->image) {
-                    (new ImageHelper('category'))->delete($category->image);
-                }
-                // Upload new image
-                $attributes['image'] = (new ImageHelper('category'))->upload(['file' => $image]);
-            } elseif (!data_get($attributes, 'image.path')) {
-                // Keep existing image path if no new image is provided
-                $attributes['image'] = $category->image;
-            }
+            $attributes['image'] = $this->handleImageUpdate($model->image, $attributes['image'] ?? null);
 
-            // Update status, default to 0 if not provided
-            $attributes['status'] = (bool) data_get($attributes, 'status', 0);
+            // Update status if provided
+            $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : $model->status;
 
-            // Update model
-            $category->update($attributes);
-            return $category;
+            return $this->categoryRepository->update($id, $attributes);
         });
     }
 

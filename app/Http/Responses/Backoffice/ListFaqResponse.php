@@ -3,7 +3,7 @@
 namespace App\Http\Responses\Backoffice;
 
 use App\Contracts\Responses\Backoffice\ListFaqResponseContract;
-use App\Http\Resources\FaqResource;
+use App\Http\Resources\Backoffice\FaqResource;
 use App\Http\Responses\BaseResponse;
 use Illuminate\Http\JsonResponse;
 

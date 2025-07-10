@@ -29,7 +29,7 @@
                             <h3 class="k-portlet__head-title">List Currency</h3>
                         </div>
                     </div>
-                    <div class="k-portlet__body k-portlet__body--fit p-2">
+                    <div class="k-portlet__body k-portlet__body--fit p-4">
                         <table id="table_currencies_index"
                             data-searching="true"
                             data-request-url="{{ route('bo.api.currencies.index') }}"
@@ -37,13 +37,13 @@
                             <thead>
                                 <tr>
                                     <th data-property="id">{{ __('ID') }}</th>
-                                    <th data-property="name">{{ __('Name') }}</th> 
-                                    <th data-property="type">{{ __('Type') }}</th> 
-                                    <th data-property="userd_country">{{ __('Used country') }}</th> 
-                                    <th data-property="code">{{ __('Code') }}</th> 
-                                    <th data-property="symbol">{{ __('Symbol') }}</th> 
-                                    <th data-property="decimals">{{ __('Decimals') }}</th> 
-                                    <th data-property="status">{{ __('Status') }}</th> 
+                                    <th data-property="name">{{ __('Name') }}</th>
+                                    <th data-property="type_name">{{ __('Type') }}</th>
+                                    <th data-property="used_countries">{{ __('Used country') }}</th>
+                                    <th data-property="code">{{ __('Code') }}</th>
+                                    <th data-property="symbol">{{ __('Symbol') }}</th>
+                                    <th data-property="decimals">{{ __('Decimals') }}</th>
+                                    <th data-property="status">{{ __('Status') }}</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>

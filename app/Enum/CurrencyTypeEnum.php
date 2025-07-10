@@ -14,9 +14,11 @@ class CurrencyTypeEnum extends BaseEnum
 
     public static function all(): array
     {
-        return [
-            self::FIAT,
-            self::CRYPTO,
-        ];
+        return array_keys(self::$labels);
+    }
+
+    public static function getName(int|string|null $value): string
+    {
+        return self::$labels[$value] ?? 'Unknown';
     }
 }

@@ -1,0 +1,36 @@
+<style>
+    .attribute-type-btn {
+        display: inline-block;
+        padding: 5px 15px;
+        border: 1px solid #007bff; /* Viền xanh nhạt */
+        border-radius: 20px; /* Góc bo tròn */
+        background-color: transparent; /* Nền trong suốt */
+        color: #000; /* Màu chữ đen */
+        text-align: center;
+        margin: 2px;
+        font-size: 14px;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        $('#table_attributes_index').DataTable({
+            processing: true,
+            serverSide: true, // Nếu dùng server-side processing
+            ajax: {
+                url: "{{ route('bo.api.attributes.index') }}",
+                type: 'GET',
+                dataSrc: 'data' // Đảm bảo khớp với cấu trúc JSON từ API
+            },
+            columns: [
+                { data: 'id' },
+                { data: 'name' },
+                { data: 'order' },
+                { data: 'attribute_type_name' },
+                { data: 'supported_categories_names' },
+                { data: 'status_name' },
+                { data: null, orderable: false, searchable: false } // Cột Hành động
+            ]
+        });
+    });
+</script>

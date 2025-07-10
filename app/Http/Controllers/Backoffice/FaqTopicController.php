@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Backoffice;
 
 use App\Contracts\Responses\Backoffice\StoreFaqTopicResponseContract;
-use App\Contracts\Responses\Backoffice\StorePostResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateFaqTopicResponseContract;
-use App\Contracts\Responses\Backoffice\UpdatePostResponseContract;
-use App\Http\Requests\Interfaces\StoreFaqTopicRequestInterface;
-use App\Http\Requests\Interfaces\StorePostRequestInterface;
-use App\Http\Requests\Interfaces\UpdateFaqTopicRequestInterface;
-use App\Http\Requests\Interfaces\UpdatePostRequestInterface;
-use App\Models\PostCategory;
+
+use App\Http\Requests\Backoffice\Interfaces\StoreFaqTopicRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateFaqTopicRequestInterface;
+
 use App\Services\faqTopicService;
 use Illuminate\Http\Request;
 

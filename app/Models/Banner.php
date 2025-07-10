@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use App\Enum\ActivationStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Banner extends Model
@@ -23,4 +24,8 @@ class Banner extends Model
         'status'
     ];
 
+    public function getStatusNameAttribute(): string
+    {
+        return ActivationStatus::label($this->status);
+    }
 }

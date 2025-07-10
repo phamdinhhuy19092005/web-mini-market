@@ -27,11 +27,28 @@ class PostCategoryService extends BaseService
             ->paginate($perPage);
     }
 
+     protected function handleImageUpdate($oldImagePath, $newImage = null)
+    {
+        if (isset($newImage['file']) && $newImage['file'] instanceof \Illuminate\Http\UploadedFile) {
+            if ($oldImagePath) {
+                (new ImageHelper('post_category'))->delete($oldImagePath);
+            }
+
+            return (new ImageHelper('post_category'))->upload($newImage['file']);
+        }
+
+        if (isset($newImage['path'])) {
+            return $newImage['path'];
+        }
+
+        return $oldImagePath;
+    }
+
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
             // Upload image
-            $attributes['image'] = (new ImageHelper('posts'))->upload($attributes['image']);
+            $attributes['image'] = (new ImageHelper('post_category'))->upload($attributes['image']);
             return $this->postCategoryRepository->create($attributes);
         });
     }
@@ -48,29 +65,16 @@ class PostCategoryService extends BaseService
 
     public function update($id, array $attributes, $image = null)
     {
-        return DB::transaction(function () use ($id, $attributes, $image) {
-            $category = $this->show($id);
 
-            // Handle image processing
-            if ($image) {
-                // Delete old image if it exists
-                if ($category->image) {
-                    (new ImageHelper('posts'))->delete($category->image);
-                }
-                // Upload new image
-                $attributes['image'] = (new ImageHelper('posts'))->upload(['file' => $image]);
-            } elseif (!data_get($attributes, 'image.path')) {
-                // Keep existing image path if no new image is provided
-                $attributes['image'] = $category->image;
-            }
+        return DB::transaction(function () use ($id, $attributes) {
+            $model = $this->postCategoryRepository->findOrFail($id);
 
-            // Update status and display settings, default to 0 if not provided
-            $attributes['status'] = (bool) data_get($attributes, 'status', 0);
+            $attributes['image'] = $this->handleImageUpdate($model->image, $attributes['image'] ?? null);
+
+            $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : $model->status;
             $attributes['display_on_frontend'] = (bool) data_get($attributes, 'display_on_frontend', 0);
 
-            // Update model
-            $category->update($attributes);
-            return $category;
+            return $this->postCategoryRepository->update($id, $attributes);
         });
     }
 

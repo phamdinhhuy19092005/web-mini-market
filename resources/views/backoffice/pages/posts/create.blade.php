@@ -1,17 +1,17 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Create Post');
+    $title = __('Tạo Bài Viết');
 
     $breadcrumbs = [
         [
-            'label' => __('Utilities'),
+            'label' => __('Tiện Ích'),
         ],
         [
-            'label' => __('Blogs'),
+            'label' => __('Bài Viết'),
         ],
         [
-            'label' => __('Create Post'),
+            'label' => __('Tạo Bài Viết'),
         ],
     ];
 @endphp
@@ -19,196 +19,202 @@
 @component('backoffice.partials.breadcrumb', ['title' => $title, 'items' => $breadcrumbs])
 @endcomponent
 
-<!-- begin:: Content Body -->
 @section('content_body')
+    <!-- Begin::Content Body -->
     <div class="k-content__body k-grid__item k-grid__item--fluid" id="k_content_body">
         <div class="row">
-            <div class="col-md">
-                <!--begin::Portlet-->
+            <div class="col-md-12">
+                <!-- Begin::Portlet -->
                 <div class="k-portlet">
                     <div class="k-portlet__head">
                         <div class="k-portlet__head-label">
-                            <h3 class="k-portlet__head-title">Create Post</h3>
+                            <h3 class="k-portlet__head-title">Tạo Bài Viết Mới</h3>
                         </div>
                     </div>
 
-                    <!--begin::Form-->
+                    <!-- Begin::Form -->
                     <form action="{{ route('bo.web.posts.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @if ($errors->any())
                             <div class="alert alert-danger">
-                                <ul>
+                                <ul class="mb-0">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
                                     @endforeach
                                 </ul>
                             </div>
                         @endif
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="name">Tên</label>
-                                <input type="text" name="name" id="name" class="form-control"
-                                    placeholder="Nhập tên" autocomplete="off" value="{{ old('name') }}">
-                            </div>
 
-                            <div class="form-group">
-                                <label for="slug">Đường dẫn</label>
-                                <input type="text" name="slug" id="slug" class="form-control"
-                                    placeholder="Nhập đường dẫn" autocomplete="off" value="{{ old('slug') }}">
-                            </div>
+                        <div class="k-portlet__body">
+                            <!-- Begin::Form Fields -->
+                            <div class="row">
+                                <!-- Title Field -->
+                                <div class="col-md-6 form-group">
+                                    <label for="name">Tiêu đề <span class="text-danger">*</span></label>
+                                    <input type="text" name="name" id="name" class="form-control"
+                                           placeholder="Nhập tiêu đề bài viết" autocomplete="off" value="{{ old('name') }}" required>
+                                </div>
 
-                            <div class="form-group">
-                                <label>Người viết</label>
-                                <input type="text" class="form-control" id="author" name="author" placeholder="Nhập tên" value="admin">
-                            </div>
+                                <!-- Slug Field -->
+                                <div class="col-md-6 form-group">
+                                    <label for="slug">Đường dẫn URL</label>
+                                    <input type="text" name="slug" id="slug" class="form-control"
+                                           placeholder="Nhập đường dẫn URL" autocomplete="off" value="{{ old('slug') }}">
+                                </div>
 
-                            <div class="form-group">
-                                <label for="">Code *</label>
-                                <div class="input-group">
-                                    <input id="code" type="text" name="code" value="" class="form-control" placeholder="Nhập Code" required="">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" data-generate="" data-generate-length="5" data-generate-ref="#code" data-generate-uppercase="true" type="button">Generate Code</button>
+                                <!-- Image Upload Field -->
+                                <div class="col-md-6 form-group">
+                                    <label for="image-file">Ảnh đại diện</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control image-url" name="image[path]"
+                                               placeholder="Tải ảnh lên hoặc nhập URL" value="{{ old('image.path') }}">
+                                        <div class="input-group-append">
+                                            <label class="btn btn-outline-primary m-0" for="image-file">
+                                                <i class="flaticon2-image-file mr-2"></i>Tải ảnh
+                                                <input type="file" id="image-file" name="image[file]"
+                                                       class="d-none image-file" accept="image/*">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <img class="img-fluid image-preview" style="max-width: 150px; display: none;"
+                                             src="" alt="Ảnh xem trước">
+                                    </div>
+                                    @error('image.*')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <!-- Author Field -->
+                                <div class="col-md-6 form-group">
+                                    <label for="author">Tác giả</label>
+                                    <input type="text" class="form-control" id="author" name="author"
+                                           placeholder="Nhập tên tác giả" value="admin">
+                                </div>
+
+                                <!-- Code Field -->
+                                <div class="col-md-6 form-group">
+                                    <label for="code">Mã bài viết <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input id="code" type="text" name="code" class="form-control"
+                                               placeholder="Nhập mã bài viết" required>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" data-generate data-generate-length="5"
+                                                    data-generate-ref="#code" data-generate-uppercase="true" type="button">
+                                                Tạo mã
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <!-- Order Field -->
+                                <div class="col-md-6 form-group">
+                                    <label for="order">Thứ tự hiển thị</label>
+                                    <input type="number" min="1" name="order" id="order" class="form-control"
+                                           value="{{ old('order') }}">
+                                </div>
+
+                                <!-- Category Field -->
+                                <div class="col-md-6 form-group">
+                                    <label for="post_category_id">Danh mục <span class="text-danger">*</span></label>
+                                    <select name="post_category_id" id="post_category_id"
+                                            class="form-select selectpicker" data-live-search="true" required>
+                                        <option value="">-- Chọn danh mục --</option>
+                                        @foreach($postCategories as $postCategory)
+                                            <option value="{{ $postCategory->id }}"
+                                                    {{ old('post_category_id') == $postCategory->id ? 'selected' : '' }}>
+                                                {{ $postCategory->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Post Date Field -->
+                                <div class="col-md-6 form-group">
+                                    <label for="post_at">Ngày đăng</label>
+                                    <input type="datetime-local" class="form-control" id="post_at" name="post_at"
+                                           value="{{ old('post_at') }}">
+                                </div>
+
+                                <!-- Content Field -->
+                                <div class="col-md-12 form-group">
+                                    <label for="content">Nội dung</label>
+                                    <x-backoffice.content-editor
+                                        id="post_content"
+                                        name="content"
+                                        :value="old('content')"
+                                        :cols="30"
+                                        :rows="10"
+                                        placeholder="Nhập câu trả lời..."
+                                        disk="public"
+                                        class=""
+                                        :config="[]"
+                                    />
+                                </div>
+
+                                <!-- Description Field -->
+                                <div class="col-md-12 form-group">
+                                    <label for="description">Mô tả ngắn</label>
+                                    <textarea name="description" id="description" class="form-control"
+                                              rows="4">{{ old('description') }}</textarea>
+                                </div>
+
+
                             </div>
 
-                            <div class="form-group">
-                                <label for="order">Thứ tự hiển thị</label>
-                                <input type="number" min="1" name="order" id="order" class="form-control" value="{{ old('order') }}">
-                            </div>
+                                <!-- SEO Title Field -->
+                                <div class="col-md-6 form-group">
+                                    <label for="seo_title">Tiêu đề SEO</label>
+                                    <input type="text" name="meta_title" id="seo_title" class="form-control"
+                                           placeholder="Nhập tiêu đề SEO" autocomplete="off" value="{{ old('meta_title') }}">
+                                </div>
 
-                            <div class="form-group" style="width: 100%">
-                                <label for="post_category_id" class="form-label fw-bold d-block mb-2">
-                                    Danh mục <span class="text-danger">*</span>
-                                </label>
-                                <select name="post_category_id" id="post_category_id" class="form-select selectpicker" data-live-search="true" required>
-                                    <option value="">-- Chọn danh mục --</option>
-                                    @foreach($postCategories as $postCategory)
-                                        <option value="{{ $postCategory->id }}"
-                                            {{ old('category_group_id') == $postCategory->id ? 'selected' : '' }}>
-                                            {{ $postCategory->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                                <!-- SEO Description Field -->
+                                <div class="col-md-6 form-group">
+                                    <label for="seo_description">Mô tả SEO</label>
+                                    <input type="text" name="meta_description" id="seo_description" class="form-control"
+                                           placeholder="Nhập mô tả SEO" autocomplete="off" value="{{ old('meta_description') }}">
+                                </div>
 
-                            <div class="form-group">
-                                <label for="description">Mô tả</label>
-                                <textarea name="description" id="description" class="form-control" rows="5">{{ old('description') }}</textarea>
-                            </div>
+                                <!-- Display on Frontend -->
+                                <div class="col-md-6 form-group d-flex align-items-center">
+                                    <label class="mr-3">Hiển thị trên trang chính</label>
+                                    <span class="k-switch">
+                                        <label>
+                                            <input type="checkbox" name="display_on_frontend" value="1" checked>
+                                            <span></span>
+                                        </label>
+                                    </span>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="content">Content</label>
-                                <textarea name="content" id="content" class="form-control" rows="5">{{ old('content') }}</textarea>
+                                <!-- Status -->
+                                <div class="col-md-6 form-group d-flex align-items-center">
+                                    <label class="mr-3">Kích hoạt</label>
+                                    <span class="k-switch">
+                                        <label>
+                                            <input type="checkbox" name="status" value="1" checked>
+                                            <span></span>
+                                        </label>
+                                    </span>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="">Được viết lúc</label>
-                                <input type="datetimepicker" class="form-control" id="post_at" name="post_at" value="">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="seo_title">[SEO] Tiêu đề</label>
-                                <input type="text" name="meta_title" id="seo_title" class="form-control"
-                                    placeholder="Nhập [SEO] Tiêu đề" autocomplete="off" value="{{ old('seo_title') }}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="seo_description">[SEO] Mô tả</label>
-                                <input type="text" name="meta_description" id="seo_description" class="form-control"
-                                    placeholder="Nhập [SEO] Mô tả" autocomplete="off" value="{{ old('seo_description') }}">
-                            </div>
-
-                            <div class="form-group d-flex align-items-center">
-                                <label>FE</label>
-                                <span class="k-switch d-flex" style="margin-left: 70px;">
-                                    <label>
-                                        <input type="checkbox" name="display_on_frontend" value="1" checked>
-                                        <span></span>
-                                    </label>
-                                </span>
-                            </div>
-
-                            <div class="form-group d-flex align-items-center">
-                                <label>Hoạt động</label>
-                                <span class="k-switch d-flex" style="margin-left: 20px;">
-                                    <label>
-                                        <input type="checkbox" name="status" value="1" checked>
-                                        <span></span>
-                                    </label>
-                                </span>
-                            </div>
+                            <!-- End::Form Fields -->
                         </div>
 
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Lưu</button>
-                            <button type="reset" class="btn btn-secondary">Hủy</button>
+                        <!-- Form Actions -->
+                        <div class="k-portlet__foot">
+                            <div class="k-form__actions">
+                                <button type="submit" class="btn btn-primary">Lưu bài viết</button>
+                                <button type="reset" class="btn btn-secondary">Hủy</button>
+                            </div>
                         </div>
                     </form>
-                    <!--end::Form-->
+                    <!-- End::Form -->
                 </div>
-                <!--end::Portlet-->
+                <!-- End::Portlet -->
             </div>
         </div>
     </div>
-    <!-- end:: Content Body -->
-
-    <!-- Include CKEditor 5 CDN -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
-    <style>
-        /* Make CKEditor content area resizable */
-        .ck-editor__editable_inline {
-            resize: vertical !important;
-            min-height: 200px !important;
-            max-height: 800px !important;
-            overflow: auto !important;
-        }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Initialize CKEditor 5 on the content textarea
-            ClassicEditor
-                .create(document.querySelector('#content'), {
-                    toolbar: [
-                        'heading', '|',
-                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
-                        'outdent', 'indent', '|',
-                        'blockQuote', 'insertTable', 'mediaEmbed', 'undo', 'redo'
-                    ]
-                })
-                .then(editor => {
-                    // Ensure the editor is resizable
-                    editor.ui.view.editable.element.style.resize = 'vertical';
-                    editor.ui.view.editable.element.style.minHeight = '200px';
-                    editor.ui.view.editable.element.style.maxHeight = '800px';
-                })
-                .catch(error => {
-                    console.error('Error initializing CKEditor:', error);
-                });
-
-            // Existing code for generating random code
-            document.querySelectorAll('[data-generate]').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const length = parseInt(button.getAttribute('data-generate-length')) || 5;
-                    const ref = button.getAttribute('data-generate-ref');
-                    const isUppercase = button.getAttribute('data-generate-uppercase') === 'true';
-
-                    const targetInput = document.querySelector(ref);
-                    if (!targetInput) return;
-
-                    const characters = isUppercase
-                        ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-                        : 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-                    let result = '';
-                    for (let i = 0; i < length; i++) {
-                        const randomIndex = Math.floor(Math.random() * characters.length);
-                        result += characters[randomIndex];
-                    }
-
-                    targetInput.value = result;
-                });
-            });
-        });
-    </script>
+    <!-- End::Content Body -->
+@include('backoffice.pages.posts.pagejs.post');
 @endsection

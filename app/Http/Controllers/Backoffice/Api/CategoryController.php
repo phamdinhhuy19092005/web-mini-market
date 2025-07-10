@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Backoffice\Api;
 
-use App\Contracts\Responses\Backoffice\ListCategoryGroupResponseContract;
+use App\Contracts\Responses\Backoffice\ListCategoryResponseContract;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
 
@@ -16,6 +16,6 @@ class CategoryController extends BaseApiController
     {
         $categories = $this->categoryService->searchByAdmin($request->all());
         
-        return $this->responses(ListCategoryGroupResponseContract::class, $categories);
+        return $this->responses(ListCategoryResponseContract::class, $categories);
     }
 }

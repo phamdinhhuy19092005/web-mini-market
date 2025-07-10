@@ -3,13 +3,13 @@
 $k-media-breakpoints: (
     // Small screen / phone
     sm: 576px,
-    
+
     // Medium screen / tablet
     md: 768px,
-    
+
     // Large screen / desktop
     lg: 1024px,
-    
+
     // Extra large screen / wide desktop
     xl: 1200px,
 
@@ -75,7 +75,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Poppins";
+  /* font-family: "Poppins"; */
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -4545,7 +4545,7 @@ button.close {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: "Poppins";
+  /* font-family: "Poppins"; */
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -4630,7 +4630,7 @@ button.close {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: "Poppins";
+  /* font-family: "Poppins"; */
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -4674,7 +4674,7 @@ button.close {
   .bs-popover-top .arrow::before, .bs-popover-auto[x-placement^="top"] .arrow::before {
     bottom: 0;
     border-top-color: white; }
-  
+
   .bs-popover-top .arrow::after,
   .bs-popover-auto[x-placement^="top"] .arrow::after {
     bottom: 1px;
@@ -4694,7 +4694,7 @@ button.close {
   .bs-popover-right .arrow::before, .bs-popover-auto[x-placement^="right"] .arrow::before {
     left: 0;
     border-right-color: white; }
-  
+
   .bs-popover-right .arrow::after,
   .bs-popover-auto[x-placement^="right"] .arrow::after {
     left: 1px;
@@ -4711,7 +4711,7 @@ button.close {
   .bs-popover-bottom .arrow::before, .bs-popover-auto[x-placement^="bottom"] .arrow::before {
     top: 0;
     border-bottom-color: white; }
-  
+
   .bs-popover-bottom .arrow::after,
   .bs-popover-auto[x-placement^="bottom"] .arrow::after {
     top: 1px;
@@ -4740,7 +4740,7 @@ button.close {
   .bs-popover-left .arrow::before, .bs-popover-auto[x-placement^="left"] .arrow::before {
     right: 0;
     border-left-color: white; }
-  
+
   .bs-popover-left .arrow::after,
   .bs-popover-auto[x-placement^="left"] .arrow::after {
     right: 1px;
@@ -10460,7 +10460,7 @@ body {
   padding: 0px;
   font-size: 13px;
   font-weight: 300;
-  font-family: Poppins;
+  /* font-family: Poppins; */
   -ms-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
@@ -10496,7 +10496,7 @@ canvas {
   -ms-user-select: none; }
 
 /* Customize website's scrollbar like Mac OS */
-/* 
+/*
 ::-webkit-scrollbar {
     background-color:#f6f6f6;
     width:14px;

@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Backoffice\AdminController;
+use App\Http\Controllers\Backoffice\AttributeController;
+use App\Http\Controllers\Backoffice\AttributeValueController;
 use App\Http\Controllers\Backoffice\BannerController;
+use App\Http\Controllers\Backoffice\BrandController;
 use App\Http\Controllers\Backoffice\CategoryController;
 use App\Http\Controllers\Backoffice\CategoryGroupController;
 use App\Http\Controllers\Backoffice\CountryController;
@@ -9,14 +12,19 @@ use App\Http\Controllers\Backoffice\CurrencyController;
 use App\Http\Controllers\Backoffice\DashboardController;
 use App\Http\Controllers\Backoffice\FaqController;
 use App\Http\Controllers\Backoffice\FaqTopicController;
+use App\Http\Controllers\Backoffice\FileManagerController;
+use App\Http\Controllers\Backoffice\InventoryController;
 use App\Http\Controllers\Backoffice\MenuGroupController;
-use App\Http\Controllers\Backoffice\MenuSubGroupController;
+// use App\Http\Controllers\Backoffice\MenuSubGroupController;
 use App\Http\Controllers\Backoffice\PageController;
 use App\Http\Controllers\Backoffice\PostCategoryController;
 use App\Http\Controllers\Backoffice\PostController;
 use App\Http\Controllers\Backoffice\ProductController;
 use App\Http\Controllers\Backoffice\RoleController;
+use App\Http\Controllers\Backoffice\ShippingRateController;
 use App\Http\Controllers\Backoffice\ShippingZoneController;
+use App\Http\Controllers\Backoffice\SubCategoryController;
+use App\Http\Controllers\Backoffice\SubscriberController;
 use App\Http\Controllers\Backoffice\SystemSettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +43,10 @@ Route::get('/admins/{id}', [AdminController::class, 'show'])->name('admins.show'
 Route::get('/admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit')->middleware(['can:admins.update']);
 Route::put('/admins/{id}', [AdminController::class, 'update'])->name('admins.update')->middleware(['can:admins.update']);
 Route::delete('/admins/{id}', [AdminController::class, 'destroy'])->name('admins.destroy')->middleware(['can:admins.delete']);
+Route::post('/admins/logout', [AdminController::class, 'logout'])->name('admin.logout')->middleware('auth:admin');
+
+Route::put('/admins/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update')->middleware('auth:admin');
+Route::put('/admins/password', [AdminController::class, 'updatePassword'])->name('admin.password.update')->middleware('auth:admin');
 
 /*
 |--------------------------------------------------------------------------
@@ -80,18 +92,31 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name(
 
 /*
 |--------------------------------------------------------------------------
+| Sub Categories
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-categories.index')->middleware(['can:categories.index']);
+Route::get('/sub-categories/create', [SubCategoryController::class, 'create'])->name('sub-categories.create')->middleware(['can:categories.store']);
+Route::post('/sub-categories', [SubCategoryController::class, 'store'])->name('sub-categories.store')->middleware(['can:categories.store']);
+Route::get('/sub-categories/{id}', [SubCategoryController::class, 'show'])->name('sub-categories.show')->middleware(['can:categories.show']);
+Route::get('/sub-categories/{id}/edit', [SubCategoryController::class, 'edit'])->name('sub-categories.edit')->middleware(['can:categories.update']);
+Route::put('/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('sub-categories.update')->middleware(['can:categories.update']);
+Route::delete('/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('sub-categories.destroy')->middleware(['can:categories.delete']);
+
+/*
+|--------------------------------------------------------------------------
 | Products
 |--------------------------------------------------------------------------
 */
 
-// Uncomment nếu bạn muốn sử dụng và áp dụng middleware
-// Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware(['can:products.index']);
-// Route::get('/products/create', [ProductController::class, 'create'])->name('products.create')->middleware(['can:products.store']);
-// Route::post('/products', [ProductController::class, 'store'])->name('products.store')->middleware(['can:products.store']);
-// Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show')->middleware(['can:products.show']);
-// Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware(['can:products.update']);
-// Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware(['can:products.update']);
-// Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware(['can:products.delete']);
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
+Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
 /*
 |--------------------------------------------------------------------------
@@ -127,13 +152,13 @@ Route::delete('/menu-groups/{id}', [MenuGroupController::class, 'destroy'])->nam
 |--------------------------------------------------------------------------
 */
 
-Route::get('/menu-sub-groups', [MenuSubGroupController::class, 'index'])->name('menu-sub-groups.index')->middleware(['can:menu-sub-groups.index']);
-Route::get('/menu-sub-groups/create', [MenuSubGroupController::class, 'create'])->name('menu-sub-groups.create')->middleware(['can:menu-sub-groups.store']);
-Route::post('/menu-sub-groups', [MenuSubGroupController::class, 'store'])->name('menu-sub-groups.store')->middleware(['can:menu-sub-groups.store']);
-Route::get('/menu-sub-groups/{id}', [MenuSubGroupController::class, 'show'])->name('menu-sub-groups.show')->middleware(['can:menu-sub-groups.show']);
-Route::get('/menu-sub-groups/{id}/edit', [MenuSubGroupController::class, 'edit'])->name('menu-sub-groups.edit')->middleware(['can:menu-sub-groups.update']);
-Route::put('/menu-sub-groups/{id}', [MenuSubGroupController::class, 'update'])->name('menu-sub-groups.update')->middleware(['can:menu-sub-groups.update']);
-Route::delete('/menu-sub-groups/{id}', [MenuSubGroupController::class, 'destroy'])->name('menu-sub-groups.destroy')->middleware(['can:menu-sub-groups.delete']);
+// Route::get('/menu-sub-groups', [MenuSubGroupController::class, 'index'])->name('menu-sub-groups.index')->middleware(['can:menu-sub-groups.index']);
+// Route::get('/menu-sub-groups/create', [MenuSubGroupController::class, 'create'])->name('menu-sub-groups.create')->middleware(['can:menu-sub-groups.store']);
+// Route::post('/menu-sub-groups', [MenuSubGroupController::class, 'store'])->name('menu-sub-groups.store')->middleware(['can:menu-sub-groups.store']);
+// Route::get('/menu-sub-groups/{id}', [MenuSubGroupController::class, 'show'])->name('menu-sub-groups.show')->middleware(['can:menu-sub-groups.show']);
+// Route::get('/menu-sub-groups/{id}/edit', [MenuSubGroupController::class, 'edit'])->name('menu-sub-groups.edit')->middleware(['can:menu-sub-groups.update']);
+// Route::put('/menu-sub-groups/{id}', [MenuSubGroupController::class, 'update'])->name('menu-sub-groups.update')->middleware(['can:menu-sub-groups.update']);
+// Route::delete('/menu-sub-groups/{id}', [MenuSubGroupController::class, 'destroy'])->name('menu-sub-groups.destroy')->middleware(['can:menu-sub-groups.delete']);
 
 /*
 |--------------------------------------------------------------------------
@@ -221,6 +246,9 @@ Route::get('currencies', [CurrencyController::class, 'index'])->name('currencies
 |--------------------------------------------------------------------------
 */
 
+Route::get('system-settings', [SystemSettingController::class, 'index'])->name('system-settings.index');
+Route::get('system-settings/{id}/edit', [SystemSettingController::class, 'edit'])->name('system-settings.edit');
+Route::post('system-settings/{id}/update', [SystemSettingController::class, 'update'])->name('system-settings.update');
 
 /*
 |--------------------------------------------------------------------------
@@ -235,3 +263,88 @@ Route::get('/shipping-zones/{id}', [ShippingZoneController::class, 'show'])->nam
 Route::get('/shipping-zones/{id}/edit', [ShippingZoneController::class, 'edit'])->name('shipping-zones.edit');
 Route::put('/shipping-zones/{id}', [ShippingZoneController::class, 'update'])->name('shipping-zones.update');
 Route::delete('/shipping-zones/{id}', [ShippingZoneController::class, 'destroy'])->name('shipping-zones.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Shipping Rates
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/shipping-rates', [ShippingRateController::class, 'index'])->name('shipping-rates.index');
+Route::get('/shipping-rates/create', [ShippingRateController::class, 'create'])->name('shipping-rates.create');
+Route::post('/shipping-rates', [ShippingRateController::class, 'store'])->name('shipping-rates.store');
+Route::get('/shipping-rates/{id}', [ShippingRateController::class, 'show'])->name('shipping-rates.show');
+Route::get('/shipping-rates/{id}/edit', [ShippingRateController::class, 'edit'])->name('shipping-rates.edit');
+Route::put('/shipping-rates/{id}', [ShippingRateController::class, 'update'])->name('shipping-rates.update');
+Route::delete('/shipping-rates/{id}', [ShippingRateController::class, 'destroy'])->name('shipping-rates.destroy');
+
+
+/*
+|--------------------------------------------------------------------------
+| Subscribers
+|--------------------------------------------------------------------------
+*/
+Route::get('/subscribers', [SubscriberController::class, 'index'])->name('subscribers.index');
+
+/*
+|--------------------------------------------------------------------------
+| Brands
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
+Route::get('/brands/create', [BrandController::class, 'create'])->name('brands.create');
+Route::post('/brands', [BrandController::class, 'store'])->name('brands.store');
+Route::get('/brands/{id}', [BrandController::class, 'show'])->name('brands.show');
+Route::get('/brands/{id}/edit', [BrandController::class, 'edit'])->name('brands.edit');
+Route::put('/brands/{id}', [BrandController::class, 'update'])->name('brands.update');
+Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('brands.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Attributes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/attributes', [AttributeController::class, 'index'])->name('attributes.index');
+Route::get('/attributes/create', [AttributeController::class, 'create'])->name('attributes.create');
+Route::post('attributes', [AttributeController::class, 'store'])->name('attributes.store');
+Route::get('/attributes/{id}', [AttributeController::class, 'show'])->name('attributes.show');
+Route::get('/attributes/{id}/edit', [AttributeController::class, 'edit'])->name('attributes.edit');
+Route::put('/attributes/{id}', [AttributeController::class, 'update'])->name('attributes.update');
+Route::delete('/attributes/{id}', [AttributeController::class, 'destroy'])->name('attributes.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Attribute Values
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/attribute-values', [AttributeValueController::class, 'index'])->name('attribute-values.index');
+Route::get('/attribute-values/create', [AttributeValueController::class, 'create'])->name('attribute-values.create');
+Route::post('attribute-values', [AttributeValueController::class, 'store'])->name('attribute-values.store');
+Route::get('/attribute-values/{id}', [AttributeValueController::class, 'show'])->name('attribute-values.show');
+Route::get('/attribute-values/{id}/edit', [AttributeValueController::class, 'edit'])->name('attribute-values.edit');
+Route::put('/attribute-values/{id}', [AttributeValueController::class, 'update'])->name('attribute-values.update');
+Route::delete('/attribute-values/{id}', [AttributeValueController::class, 'destroy'])->name('attribute-values.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Inventories
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
+Route::get('/inventories/create', [InventoryController::class, 'create'])->name('inventories.create');
+Route::post('inventories', [InventoryController::class, 'store'])->name('inventories.store');
+Route::get('/inventories/{id}', [InventoryController::class, 'edit'])->name('inventories.edit');
+Route::put('/inventories/{id}', [InventoryController::class, 'update'])->name('inventories.update');
+Route::delete('/inventories/{id}', [InventoryController::class, 'destroy'])->name('inventories.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Test
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/file-manager/upload', [FileManagerController::class, 'upload'])->name('file-manager.upload');

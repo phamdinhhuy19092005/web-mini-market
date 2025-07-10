@@ -3,7 +3,7 @@
 namespace App\Http\Responses\Backoffice;
 
 use App\Contracts\Responses\Backoffice\ListCategoryResponseContract;
-use App\Http\Resources\CategoryResource;
+use App\Http\Resources\Backoffice\CategoryResource;
 use App\Http\Responses\BaseResponse;
 use Illuminate\Http\JsonResponse;
 
