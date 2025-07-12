@@ -29,5 +29,31 @@
     </div>
 </div>
 @endif
+
+@if ($errors->any())
+<div class="alert alert-danger alert-dismissible fade show position-fixed" role="alert"
+     id="error-alert"
+     style="top: 90px; right: 20px; max-width: 300px; z-index: 1050;">
+    <ul class="list-unstyled mb-0">
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+
+</div>
+
+<script>
+    setTimeout(() => {
+        const alertBox = document.getElementById('error-alert');
+        if (alertBox) {
+            alertBox.classList.remove('show');
+            alertBox.classList.add('fade');
+            setTimeout(() => alertBox.remove(), 700); 
+        }
+    }, 3000);
+</script>
+@endif
+
+
 @endsection
 

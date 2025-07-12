@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,6 +23,17 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             AdminSeeder::class,
             RoleSeeder::class,
+            CountrySeeder::class,
+            CurrencySeeder::class,
+
+            AdministrativeRegionsSeeder::class,
+            AdministrativeUnitSeeder::class,
+
+            ProvinceSeeder::class,
+            DistrictSeeder::class,
+            CarrierSeeder::class,
         ]);
+
+
     }
 }

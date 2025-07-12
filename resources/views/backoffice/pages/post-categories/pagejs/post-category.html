@@ -1,0 +1,120 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.querySelector('.image-file');
+    const urlInput = document.querySelector('.image-url');
+    const previewImg = document.querySelector('.image-preview');
+
+    // Debug: Kiểm tra selector
+    console.log('fileInput:', fileInput);
+    console.log('urlInput:', urlInput);
+    console.log('previewImg:', previewImg);
+
+    if (!fileInput || !urlInput || !previewImg) {
+        console.error('Một hoặc nhiều selector không tìm thấy. Vui lòng kiểm tra HTML.');
+        return;
+    }
+
+    // Xử lý upload file
+    fileInput.addEventListener('change', function(event) {
+        console.log('File input changed');
+        const file = event.target.files[0];
+        if (file) {
+            console.log('File selected:', file.name);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                console.log('FileReader loaded:', e.target.result);
+                previewImg.src = e.target.result;
+                previewImg.style.display = 'block';
+                urlInput.value = file.name;
+            };
+            reader.onerror = function(e) {
+                console.error('FileReader error:', e);
+                alert('Không thể đọc file ảnh. Vui lòng thử lại.');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            console.log('No file selected');
+        }
+    });
+
+    // Xử lý khi nhập URL
+    urlInput.addEventListener('input', function() {
+        const url = this.value.trim();
+        console.log('URL input changed:', url);
+        if (url) {
+            previewImg.src = url;
+            previewImg.style.display = 'block';
+            previewImg.onerror = function() {
+                console.error('Invalid image URL:', url);
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+                previewImg.onerror = null;
+            };
+        } else {
+            console.log('URL cleared');
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+            fileInput.value = '';
+        }
+    });
+
+    // Xử lý xóa ảnh khi xóa URL
+    urlInput.addEventListener('change', function() {
+        if (!this.value) {
+            console.log('URL input cleared');
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+            fileInput.value = '';
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const nameInput = document.querySelector('input[name="name"]');
+    const slugInput = document.querySelector('input[name="slug"]');
+
+    if (!nameInput || !slugInput) {
+        console.error('Không tìm thấy input name hoặc slug');
+        return;
+    }
+
+    function generateSlug(str) {
+        return str
+            .toLowerCase()
+            .normalize('NFD') // chuẩn hóa chuỗi Unicode
+            .replace(/[\u0300-\u036f]/g, '') // loại bỏ dấu
+            .replace(/[^a-z0-9\s-]/g, '') // loại bỏ ký tự đặc biệt
+            .trim()
+            .replace(/\s+/g, '-') // thay khoảng trắng bằng dấu gạch ngang
+            .replace(/-+/g, '-'); // loại bỏ gạch ngang thừa
+    }
+
+    nameInput.addEventListener('input', function () {
+        const slug = generateSlug(this.value);
+        slugInput.value = slug;
+    });
+});
+</script>
+
+<style>
+.img-fluid {
+    max-width: 150px;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.input-group .btn-outline-primary {
+    border-color: #4346CD;
+    color: #4346CD;
+}
+.input-group .btn-outline-primary:hover {
+    background-color: #4346CD;
+    color: #fff;
+}
+.text-danger {
+    font-size: 0.875rem;
+}
+</style>

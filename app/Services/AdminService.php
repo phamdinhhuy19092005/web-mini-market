@@ -16,7 +16,13 @@ class AdminService extends BaseService
         $this->adminRepository = $adminRepository;
     }
 
-    public function searchByAdmin($data = [])
+    /**
+     * Search admins by query string (id, name, or email).
+     *
+     * @param array $data
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function searchByAdmin(array $data = [])
     {
         $query = data_get($data, 'query');
         $perPage = data_get($data, 'per_page', 10);
@@ -24,14 +30,13 @@ class AdminService extends BaseService
         return $this->adminRepository->model()::query()
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                    ->orWhere('name', 'like', "%$query%")
-                    ->orWhere('email', 'like', "%$query%");
+                    ->orWhere('name', 'like', "%$query%");
             })
             ->paginate($perPage);
     }
 
     /**
-     * Tạo mới admin
+     * Create a new admin.
      *
      * @param array $attributes
      * @return \Illuminate\Database\Eloquent\Model
@@ -39,7 +44,6 @@ class AdminService extends BaseService
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
-
             if (isset($attributes['password'])) {
                 $attributes['password'] = Hash::make($attributes['password']);
             }
@@ -59,7 +63,7 @@ class AdminService extends BaseService
     }
 
     /**
-     * Tìm admin theo ID
+     * Find admin by ID with roles.
      *
      * @param int $id
      * @return \Illuminate\Database\Eloquent\Model
@@ -69,9 +73,8 @@ class AdminService extends BaseService
         return $this->adminRepository->model()::with('roles')->findOrFail($id);
     }
 
-
     /**
-     * Hiển thị admin theo ID
+     * Show admin details (alias of find).
      *
      * @param int $id
      * @return \Illuminate\Database\Eloquent\Model
@@ -82,7 +85,7 @@ class AdminService extends BaseService
     }
 
     /**
-     * Cập nhật admin
+     * Update an existing admin.
      *
      * @param int $id
      * @param array $attributes
@@ -93,32 +96,32 @@ class AdminService extends BaseService
         return DB::transaction(function () use ($id, $attributes) {
             $model = $this->adminRepository->findOrFail($id);
 
-            // Xử lý mật khẩu nếu được cung cấp
-            if (isset($attributes['password']) && !empty($attributes['password'])) {
+            // Hash password if provided
+            if (!empty($attributes['password'])) {
                 $attributes['password'] = Hash::make($attributes['password']);
             } else {
-                unset($attributes['password']); // Loại bỏ password nếu không được cung cấp
+                unset($attributes['password']);
             }
 
-            // Xử lý roles
+            // Handle roles
             $roleIds = array_keys($attributes['roles'] ?? []);
-            unset($attributes['roles']); // Xóa roles khỏi attributes
+            unset($attributes['roles']);
 
-            // Cập nhật admin
+            // Update admin
             $this->adminRepository->update($id, $attributes);
 
-            // Đồng bộ roles
+            // Sync roles if provided
             if (!empty($roleIds)) {
                 $roles = Role::whereIn('id', $roleIds)->get();
                 $model->syncRoles($roles);
             }
 
-            return $model->fresh(); // Trả về model đã được làm mới
+            return $model->fresh();
         });
     }
 
     /**
-     * Xóa admin
+     * Delete an admin by ID.
      *
      * @param int $id
      * @return bool
@@ -126,8 +129,7 @@ class AdminService extends BaseService
     public function delete($id)
     {
         return DB::transaction(function () use ($id) {
-            $model = $this->adminRepository->findOrFail($id);
-
+            $this->adminRepository->findOrFail($id);
             return $this->adminRepository->delete($id);
         });
     }

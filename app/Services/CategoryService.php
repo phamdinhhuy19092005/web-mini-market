@@ -2,7 +2,6 @@
 namespace App\Services;
 
 use App\Classes\ImageHelper;
-use App\Repositories\CategoryRepository;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -19,45 +18,50 @@ class CategoryService extends BaseService
     {
         $query = data_get($data, 'query');
         $perPage = data_get($data, 'per_page', 10);
-        return $this->categoryRepository->model()::query()
+        $orderColumn = data_get($data, 'order_column', 'id'); 
+        $orderDir = data_get($data, 'order_dir', 'desc');     
+
+        $allowedColumns = ['id', 'name', 'status', 'slug'];
+        if (!in_array($orderColumn, $allowedColumns)) {
+            $orderColumn = 'id';
+        }
+
+        return $this->categoryRepository->model()::with('categoryGroup')
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                ->orWhere('name', 'like', "%$query%");
+                ->orWhere('name', 'like', "%$query%")
+                ->orWhere('status', 'like', "%$query%")
+                ->orWhereHas('categoryGroup', function ($subQuery) use ($query) {
+                    $subQuery->where('name', 'like', "%$query%");
+                });
             })
+            ->orderBy($orderColumn, $orderDir)
             ->paginate($perPage);
     }
 
 
+    protected function handleImageUpdate($oldImagePath, $newImage = null)
+    {
+        if (isset($newImage['file']) && $newImage['file'] instanceof \Illuminate\Http\UploadedFile) {
+            if ($oldImagePath) {
+                (new ImageHelper('category'))->delete($oldImagePath);
+            }
+
+            return (new ImageHelper('category'))->upload($newImage['file']);
+        }
+
+        if (isset($newImage['path'])) {
+            return $newImage['path'];
+        }
+
+        return $oldImagePath;
+    }
 
     public function create(array $attributes = [])
     {
-        return DB::transaction(function() use ($attributes) {
-            /**
-             * cau hinh trong filesystems.php
-             *
-             */
-
-            // users mua sap
-
-            // transanction() A -> mo transanction
-            // {
-            //     -> lay san pham tu db
-            //     -> tao 1 trog gio hang (A)
-            //     -> tao dia chi giao hang
-
-            //     -> lay ra xem san pham A
-
-            //     -> dat hang: chuyen san pham trong gio sang orders
-            //     -> delete sap pham trong gio []
-            //     -> giao hang
-
-            // }
-
-            // transanction B () {
-            //     -> lay ra xem san pham A tu gio hang
-            // }
-            $attributes['image'] = (new ImageHelper('category'))->upload($attributes['image']);
-
+        return DB::transaction(function () use ($attributes) {
+            $imageHelper = new ImageHelper('category');
+            $attributes['image'] = $imageHelper->upload($attributes['image']);
             return $this->categoryRepository->create($attributes);
         });
     }
@@ -72,38 +76,17 @@ class CategoryService extends BaseService
         return $this->categoryRepository->findOrFail($id);
     }
 
-    public function update($id, array $attributes, $image = null)
+    public function update($id, array $attributes = [])
     {
-        return DB::transaction(function () use ($id, $attributes, $image) {
-            $category = $this->show($id);
+        return DB::transaction(function () use ($id, $attributes) {
+            $model = $this->categoryRepository->findOrFail($id);
 
-            // Xử lý ảnh
-            if ($image) {
-                // Xóa ảnh cũ nếu tồn tại
-                if ($category->image) {
-                    (new ImageHelper('category'))->delete($category->image);
-                }
-                // Tải lên ảnh mới
-                $attributes['image'] = (new ImageHelper('category'))->upload(['file' => $image]);
-            // } elseif (isset($attributes['image']['path'])) {
-            } elseif (! data_get($attributes, 'image.path')) {
-                // Giữ đường dẫn hiện tại nếu không có ảnh mới
-                // $attributes['image'] = $attributes['image']['path'];
-                $attributes['image'] = data_get($attributes, 'image.path');
-            } else {
-                // Giữ ảnh cũ nếu không có dữ liệu mới
-                $attributes['image'] = $category->image;
-            }
+            $attributes['image'] = $this->handleImageUpdate($model->image, $attributes['image'] ?? null);
 
-            // Cập nhật trạng thái
-            // $attributes['status'] = isset($$attributes['status']) ? (bool) $attributes['status'] : 0;
-            $attributes['status'] = (bool) data_get($attributes, 'status', 0);
+            // Update status if provided
+            $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : $model->status;
 
-
-            // Cập nhật model
-            $category->update($attributes);
-
-            return $category;
+            return $this->categoryRepository->update($id, $attributes);
         });
     }
 

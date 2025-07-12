@@ -1,305 +1,321 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Edit Product');
-
+    $title = __('Chỉnh sửa Sản phẩm');
     $breadcrumbs = [
-        [
-            'label' => __('Products'),
-        ],
-        [
-            'label' => __('Categories'),
-        ],
-        [
-            'label' => __('Manage Products'),
-        ],
+        ['label' => __('Kho sản phẩm')],
+        ['label' => __('Sản phẩm')],
+        ['label' => __('Chỉnh sửa Sản phẩm')],
     ];
 @endphp
-
 
 @component('backoffice.partials.breadcrumb', ['title' => $title, 'items' => $breadcrumbs])
 @endcomponent
 
-
-<!-- begin:: Content Body -->
 @section('content_body')
-<div class="k-content	k-grid__item k-grid__item--fluid k-grid k-grid--hor" id="k_content">
-<!-- begin:: Content Body -->
-<div class="k-content__body	k-grid__item k-grid__item--fluid" id="k_content_body">
-	<form id="form_store_product" method="POST" action="http://127.0.0.1:8003/bo/products/110" enctype="multipart/form-data">
-        <input type="hidden" name="_token" value="fXLrxLQZvubN6GrJ97HR9FjtjBYVR5P89nNrfzDT">        <input type="hidden" name="_method" value="PUT">
-        <div class="product-preview mb-3">
+    <div class="k-portlet">
+        <div class="k-portlet__body">
             <div class="row">
-                <div class="col-md-2">
-                    <img src="" alt="" style="width: 100%; height: auto;">
+                <div class="col-md-3">
+                    
+                        <div class="mt-2">
+                            <img class="img-fluid image-preview" style="max-width: 150px; display: {{ $product->primary_image ? 'block' : 'none' }};" src="{{ $product->primary_image ?? '' }}" alt="Image preview">
+                        </div>
+                        @error('image.*')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                   
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-7">
                     <div class="form-group">
-                        <label for="">Tên sản phẩm</label>
-                        <input type="text" class="form-control" disabled="" value="">
+                        <label for="name">Tên <span class="text-danger">*</span></label>
+                        <input type="text" name="name" id="name" class="form-control"
+                            placeholder="Nhập tên sản phẩm" autocomplete="off"
+                            value="{{ old('name', $product->name) }}" disabled>
+                        @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-
+        
                     <div class="form-group">
-                        <label for="">SKU</label>
-                        <input type="text" class="form-control" disabled="" value="">
+                        <label for="code">SKU sản phẩm <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input id="code" type="text" name="code" class="form-control"
+                                placeholder="Nhập mã sản phẩm" disabled
+                                value="{{ old('code', $product->code) }}">
+                        </div>
+                        @error('code') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <hr>
+    <div class="k-content__body k-grid__item k-grid__item--fluid" id="k_content_body">
+        <div class="row">
+            <div class="col-md-12">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-
-        <div class="k-portlet__head-toolbar">
-            <ul class="nav nav-tabs nav-tabs-bold nav-tabs-line nav-tabs-line-brand d-flex">
-                <li class="nav-item">
-                    <a class="nav-link show active" data-toggle="tab" href="#Tag_General_Information">
-                        Thông tin chung
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#Tag_Detail_Information">
-                        Thông tin chi tiết
-                    </a>
-                </li>
-
-                                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#Tag_Inventories">
-                        Sản phẩm tồn kho
-                        <span>(0)</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#Tag_Connect_Information">
-                        Thông tin liên kết
-                    </a>
-                </li>
-
-                            </ul>
-        </div>
-
-        <div class="tab-content">
-            <div class="tab-pane show active" id="Tag_General_Information">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="k-portlet">
-                            <div class="k-portlet__body">
-                                <div class="form-group">
-                                    <label for="">Tên *</label>
-                                    <input type="text" name="name" value="" class="form-control " data-reference-slug="slug" placeholder="Nhập tên" required="">
-                                                                    </div>
-
-                                <div class="form-group">
-                                    <label for="">Đường dẫn *</label>
-                                    <input type="text" name="slug" value="" class="form-control " placeholder="Nhập [SEO] tiêu đề" required="">
-                                                                    </div>
-
-                                <div class="form-group">
-                                    <label for="">SKU Sản phẩm *</label>
-                                    <div class="input-group">
-                                        <input type="hidden" name="code" value="">
-                                        <input id="code" type="text" value="" class="form-control " placeholder="Nhập Code" required="" disabled="">
+                <form action="{{ route('bo.web.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="row">
+                        {{-- Left column --}}
+                        <div class="col-md-8">
+                            <div class="k-portlet">
+                                <div class="k-portlet__head">
+                                    <div class="k-portlet__head-label">
+                                        <h3 class="k-portlet__head-title">Thông tin chính</h3>
                                     </div>
-                                                                    </div>
+                                </div>
+                                <div class="k-portlet__body">
+                                    {{-- Name --}}
+                                    <div class="form-group">
+                                        <label for="name">Tên <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" id="name" class="form-control"
+                                            placeholder="Nhập tên sản phẩm" autocomplete="off"
+                                            value="{{ old('name', $product->name) }}" required>
+                                        @error('name') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
 
-                                <div class="form-group">
-                                    <label>Loại sản phẩm *</label>
-                                    <div class="dropdown bootstrap-select form-control k_" data-original-title="" title=""><select title="-- Chọn loại sản phẩm --" name="type" class="form-control k_selectpicker" tabindex="-98"><option class="bs-title-option" value="">-- Chọn loại sản phẩm --</option>
-                                                                                <option value="1" selected="">Simple</option>
-                                                                                <option value="2">Variable</option>
-                                                                            </select><button type="button" class="btn dropdown-toggle btn-light" data-toggle="dropdown" title="Simple"><div class="filter-option"><div class="filter-option-inner">Simple</div></div>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu "><div class="inner show" tabindex="-1"><ul class="dropdown-menu inner show"></ul></div></div></div>
-                                                                    </div>
+                                    {{-- Slug --}}
+                                    <div class="form-group">
+                                        <label for="slug">Đường dẫn URL</label>
+                                        <input type="text" name="slug" id="slug" class="form-control"
+                                            placeholder="Nhập đường dẫn URL" autocomplete="off"
+                                            value="{{ old('slug', $product->slug) }}">
+                                        @error('slug') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
 
-                                <div class="form-group">
-                                    <label>Danh mục *</label>
-                                    <div class="dropdown bootstrap-select show-tick form-control k_" data-original-title="" title=""><select name="categories[]" title="-- Chọn danh mục --" class="form-control k_selectpicker" data-size="5" multiple="" required="" data-live-search="true" tabindex="-98">
-                                                                            </select><button type="button" class="btn dropdown-toggle bs-placeholder btn-light" data-toggle="dropdown" title="-- Chọn danh mục --"><div class="filter-option"><div class="filter-option-inner">-- Chọn danh mục --</div></div>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu "><div class="bs-searchbox"><input type="text" class="form-control" autocomplete="off" role="textbox" aria-label="Search"></div><div class="inner show" tabindex="-1"><ul class="dropdown-menu inner show"></ul></div></div></div>
-                                                                    </div>
+                                    {{-- Code --}}
+                                    <div class="form-group">
+                                        <label for="code">SKU sản phẩm <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <input id="code" type="text" name="code" class="form-control" disabled value="{{ old('code', $product->code) }}">
+                                            <div class="input-group-append">
+                                                <button class="btn" type="button"
+                                                    style="background-color: #e83e8c; color: white; border-color: #e83e8c;"
+                                                    data-generate-ref="#code" data-generate-uppercase="true">
+                                                    <i class="fas fa-lock text-white"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @error('code') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
 
-                                <div class="form-group">
-                                    <label>Thương hiệu</label>
-                                    <input type="text" class="form-control " name="branch" placeholder="Nhập tên thương hiệu" value="branch">
-                                                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="primary-image-file" class="form-label">Hình ảnh chính</label>
+                                        <div class="input-group">
+                                            <input type="text" 
+                                                class="form-control image-url" 
+                                                name="primary_image[path]" 
+                                                placeholder="Tải ảnh lên hoặc nhập URL" 
+                                                value="{{ old('primary_image.path', $product->primary_image) }}">
+                                            <div class="input-group-append">
+                                                <label class="btn btn-outline-primary m-0">
+                                                    <i class="flaticon2-image-file mr-2"></i> Tải ảnh
+                                                    <input type="file" 
+                                                        id="primary-image-file" 
+                                                        name="primary_image[file]" 
+                                                        class="d-none image-file" 
+                                                        accept="image/*">
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 image-preview-container">
+                                            <img class="img-fluid image-preview" 
+                                                style="max-width: 150px; display: display: {{ $product->primary_image ? 'block' : 'none' }};;" 
+                                                src="{{ $product->primary_image ?? '' }}" 
+                                                alt="Ảnh xem trước">
+                                        </div>
+                                        @error('primary_image.*')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
 
-                                <div class="form-group">
-                                    <label>Hoạt động</label>
-                                    <div>
-                                        <span class="k-switch k-switch--icon">
+                                    <div id="media-gallery-wrapper" class="mb-4" style="width:500px;">
+                                        <!-- Template ảnh bộ sưu tập -->
+                                        <template id="media-image-template">
+                                            <div class="media-image-item form-group">
+                                                <div class="d-flex">
+                                                    <div class="input-group">
+                                                        <input type="text" 
+                                                            class="form-control image-url" 
+                                                            name="media[path][]" 
+                                                            placeholder="Tải ảnh lên hoặc nhập URL">
+                                                        <div class="input-group-append">
+                                                            <label class="btn btn-outline-primary m-0">
+                                                                <i class="flaticon2-image-file mr-2"></i> Tải ảnh
+                                                                <input type="file" 
+                                                                    class="d-none image-file" 
+                                                                    name="media[file][]" 
+                                                                    accept="image/*">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary remove-media-image" style="margin-left: 10px">Xóa</button>
+                                                </div>
+                                                <div class="mt-2 d-flex align-items-center gap-2">
+                                                    <img class="img-fluid image-preview" 
+                                                        style="max-width: 150px; display: none;" 
+                                                        src="" 
+                                                        alt="Ảnh xem trước">
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <label class="form-label">{{ __('Bộ sưu tập ảnh') }}</label>
+                                        
+                                        @php
+                                            // Giải mã JSON media thành mảng, đảm bảo không lỗi nếu media là null hoặc không phải JSON
+                                            $media = is_string($product->media) ? json_decode($product->media, true) : ($product->media ?? []);
+                                            $media = is_array($media) ? $media : [];
+                                        @endphp
+
+                                        @foreach ($media as $image)
+                                            <div class="media-image-item form-group">
+                                                <div class="d-flex">
+                                                    <div class="input-group">
+                                                        <input type="text" 
+                                                            class="form-control image-url" 
+                                                            name="media[path][]" 
+                                                            value="{{ $image }}"
+                                                            placeholder="Tải ảnh lên hoặc nhập URL">
+                                                        <div class="input-group-append">
+                                                            <label class="btn btn-outline-primary m-0">
+                                                                <i class="flaticon2-image-file mr-2"></i> Tải ảnh
+                                                                <input type="file" 
+                                                                    class="d-none image-file" 
+                                                                    name="media[file][]" 
+                                                                    accept="image/*">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary remove-media-image" style="margin-left: 10px">Xóa</button>
+                                                </div>
+                                                <div class="mt-2 d-flex align-items-center gap-2">
+                                                    <img class="img-fluid image-preview" 
+                                                        style="max-width: 150px; display: block;" 
+                                                        src="{{ $image }}" 
+                                                        alt="Ảnh xem trước">
+                                                </div>
+                                            </div>
+                                        @endforeach
+
+                                    </div>
+                                    <!-- Nút Thêm ảnh -->
+                                    <div class="form-group">
+                                        <button type="button" id="add-media-image" class="btn btn-sm btn-secondary mt-2">
+                                            + Thêm ảnh
+                                        </button>
+                                    </div>
+
+                                    {{-- Description --}}
+                                    <div class="form-group">
+                                        <label for="description">Mô tả</label>
+                                        <x-backoffice.content-editor
+                                            id="product_description"
+                                            name="description"
+                                            :value="old('description', $product->description)"
+                                            :cols="30"
+                                            :rows="10"
+                                            placeholder="Nhập mô tả..."
+                                            disk="public"
+                                            class=""
+                                            :config="[]"
+                                        />
+                                        @error('description') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Right column --}}
+                        <div class="col-md-4">
+                            <div class="k-portlet">
+                                <div class="k-portlet__head">
+                                    <div class="k-portlet__head-label">
+                                        <h3 class="k-portlet__head-title">Thông tin bổ sung</h3>
+                                    </div>
+                                </div>
+                                <div class="k-portlet__body">
+                                    {{-- Category --}}
+                                    <div class="form-group">
+                                        <label for="category_ids">Danh mục <span class="text-danger">*</span></label>
+                                        <select name="category_ids[]" id="category_ids" class="form-control k_selectpicker" data-live-search="true" data-none-selected-text="-- Chọn danh mục --" multiple required>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}"
+                                                    {{ collect(old('category_ids', $product->categories->pluck('id')->toArray()))->contains($category->id) ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('category_ids') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+                                    {{-- Brand --}}
+                                    <div class="form-group">
+                                        <label for="brand_id" class="form-label mb-1">Thương hiệu</label>
+                                        <select name="brand_id" id="brand_id"
+                                            class="form-control k_selectpicker" data-live-search="true">
+                                            <option value="">-- Chọn thương hiệu --</option>
+                                            @foreach($brands as $brand)
+                                                <option value="{{ $brand->id }}"
+                                                    {{ old('brand_id', $product->brand_id) == $brand->id ? 'selected' : '' }}>
+                                                    {{ $brand->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('brand_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    {{-- Type --}}
+                                    <div class="form-group">
+                                        <label for="type">Loại <span class="text-danger">*</span></label>
+                                        <select name="type" id="type" class="form-control k_selectpicker" required>
+                                            <option value="">Chọn loại</option>
+                                            @foreach($ProductTypeEnumLabels as $key => $label)
+                                                <option value="{{ $key }}"
+                                                    {{ old('type', $product->type) == $key ? 'selected' : '' }}>
+                                                    {{ $label }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('type') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    {{-- Status --}}
+                                    <div class="form-group d-flex align-items-center">
+                                        <label class="mr-3">Kích hoạt</label>
+                                        <span class="k-switch">
                                             <label>
-                                                <input type="checkbox" checked="" name="status">
+                                                <input type="checkbox" name="status" value="1"
+                                                    {{ old('status', $product->status) ? 'checked' : '' }}>
                                                 <span></span>
                                             </label>
                                         </span>
+                                        @error('status') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="k-portlet__foot">
+                                <div class="k-form__actions">
+                                    <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
+                                    <button type="reset" class="btn btn-secondary">Hủy</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="tab-pane" id="Tag_Detail_Information">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="k-portlet">
-                            <div class="k-portlet__body">
-                                <div class="form-group">
-                                    <label>Hình ảnh *</label>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="upload_image_custom position-relative">
-                                                <input type="text" data-image-ref-path="primary" data-image-ref-index="0" class="form-control image_primary_image_url" name="primary_image[path]" value="" placeholder="Tải ảnh lên hoặc nhập URL ảnh" style="padding-right: 104px;">
-                                                <div data-image-ref-wrapper="primary" data-image-ref-index="0" class="d-none w-100 position-absolute d-none" style="top: 50%; left: 4px; transform: translateY(-50%); height: 90%; background-color: #fff;">
-                                                    <div class="d-flex align-items-center h-100">
-                                                        <img data-image-ref-img="primary" data-image-ref-index="0" src="" alt="Image preview" class="mr-2" style="height: 100%; width: 100px;">
-                                                        <span data-image-ref-delete="primary" data-image-ref-index="0" style="font-size: 16px; cursor: pointer;">×</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <input type="hidden" class="form-control ">
-                                                                                    </div>
-                                        <div class="col-md-6">
-                                            <div class="image_primary_image_review">
-                                                <div data-image-ref-review-wrapper="primary" data-image-ref-index="0" class="" style="width: 100px; height: 100px; border: 1px solid #ccc;">
-                                                    <img data-image-ref-review-img="primary" data-image-ref-index="0" style="width: 100%; height: 100%;" src="" alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="">Bộ sưu tập ảnh</label>
-                                    <div class="media_image_repeater">
-                                        <div data-repeater-list="media[image]">
-                                                                                        <div data-repeater-item="" class="k-repeater__item">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="upload_image_custom position-relative">
-                                                            <input type="text" data-image-ref-path="media" data-image-ref-index="0" class="form-control media_image_path" name="media[image][0][path]" placeholder="Tải ảnh lên hoặc nhập URL ảnh" style="padding-right: 104px;" value="">
-                                                            <div data-image-ref-wrapper="media" data-image-ref-index="0" class="d-none w-100 position-absolute d-none" style="top: 50%; left: 4px; transform: translateY(-50%); height: 90%; background-color: #fff;">
-                                                                <div class="d-flex align-items-center h-100">
-                                                                    <img data-image-ref-img="media" data-image-ref-index="0" src="" alt="Image preview" class="mr-2" style="height: 100%; width: 100px;">
-                                                                    <span data-image-ref-delete="media" data-image-ref-index="0" style="font-size: 16px; cursor: pointer;">×</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="d-flex align-items-start">
-                                                            <div class="image_media_image_review mr-1">
-                                                                <div data-image-ref-review-wrapper="media" data-image-ref-index="0" class="d-none" style="width: 100px; height: 100px; border: 1px solid #ccc;">
-                                                                    <img data-image-ref-review-img="media" data-image-ref-index="0" style="width: 100%; height: 100%;" src="" alt="">
-                                                                </div>
-                                                            </div>
-                                                            <button type="button" data-repeater-delete="" class="btn btn-secondary btn-icon h-100 mr-2" style="width: 30px!important; height: 30px!important;">
-                                                                <i class="la la-close"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="k-separator k-separator--space-sm"></div>
-                                            </div>
-                                                                                    </div>
-                                        <div class="k-repeater__add-data">
-                                            <span data-repeater-create="" class="btn btn-info btn-sm">
-                                                <i class="la la-plus"></i> Thêm
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="">Video</label>
-                                    <div class="video-media-item">
-                                        <input type="text" name="media[video][0][path]" value="" class="form-control " placeholder="Nhập đường dẫn video">
-                                        <input type="hidden" name="media[video][0][order]" value="1">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="content-editor">
-                                    <label for="description">Mô tả</label>
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
-                                </div>
-
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-                        <div class="tab-pane" id="Tag_Inventories">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="k-portlet">
-                            <div class="k-portlet__body">
-                                <div id="table_inventories_index_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer"><div class="row"><div class="col-sm-6 text-left"><div id="table_inventories_index_filter" class="dataTables_filter"><label>Search:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="table_inventories_index"></label></div></div><div class="col-sm-6 text-right"><div class="dt-buttons btn-group"></div></div></div><div class="row"><div class="col-sm-12"><table id="table_inventories_index" data-searching="true" data-request-url="http://127.0.0.1:8003/bo/api/v1/inventories?product_id=110" class="datatable table table-striped table-bordered table-hover table-checkable dataTable no-footer dtr-inline" role="grid" aria-describedby="table_inventories_index_info" style="width: 0px;">
-                                    <thead>
-                                        <tr role="row"><th data-property="id" class="id sorting_desc" tabindex="0" aria-controls="table_inventories_index" rowspan="1" colspan="1" style="width: 0px;" aria-label="ID: activate to sort column ascending" aria-sort="descending">ID</th><th data-orderable="false" data-property="image" data-render-callback="renderCallbackImage" class="image sorting_disabled" rowspan="1" colspan="1" style="width: 0px;" aria-label="Hình ảnh">Hình ảnh</th><th data-orderable="false" data-badge="" data-name="status" data-property="status_name" class="status sorting_disabled" rowspan="1" colspan="1" style="width: 0px;" aria-label="Trạng thái">Trạng thái</th><th data-orderable="false" data-badge="" data-name="display_on_frontend" data-property="display_on_frontend_name" class="display_on_frontend sorting_disabled" rowspan="1" colspan="1" style="width: 0px;" aria-label="Hiển Thị FE">Hiển Thị FE</th><th data-orderable="false" data-badge="" data-name="allow_frontend_search" data-property="allow_frontend_search_name" class="allow_frontend_search sorting_disabled" rowspan="1" colspan="1" style="width: 0px;" aria-label="Tìm kiếm FE">Tìm kiếm FE</th><th data-property="purchase_price" class="purchase_price sorting" tabindex="0" aria-controls="table_inventories_index" rowspan="1" colspan="1" style="width: 0px;" aria-label="Giá mua: activate to sort column ascending">Giá mua</th><th data-property="sale_price" class="sale_price sorting" tabindex="0" aria-controls="table_inventories_index" rowspan="1" colspan="1" style="width: 0px;" aria-label="Giá bán: activate to sort column ascending">Giá bán</th><th data-property="offer_price" data-render-callback="renderCallbackOfferPrice" class="offer_price sorting" tabindex="0" aria-controls="table_inventories_index" rowspan="1" colspan="1" style="width: 0px;" aria-label="Giá khuyến mãi: activate to sort column ascending">Giá khuyến mãi</th><th data-property="sold_count" class="sold_count sorting" tabindex="0" aria-controls="table_inventories_index" rowspan="1" colspan="1" style="width: 0px;" aria-label="Đã bán: activate to sort column ascending">Đã bán</th><th class="datatable-action actions sorting_disabled" data-property="actions" data-action-icon-pack="{&quot;fe_link&quot;:&quot;<i class=\&quot;flaticon2-link-programing-symbol-of-interface\&quot;></i>&quot;}" rowspan="1" colspan="1" style="width: 0px;" aria-label="Hành động">Hành động</th></tr>
-                                    </thead>
-                                    <tbody>
-
-                                    <tr class="odd"><td valign="top" colspan="10" class="dataTables_empty">No data available in table</td></tr></tbody>
-                                </table><div id="table_inventories_index_processing" class="dataTables_processing card" style="display: none;">Processing...</div></div></div><div class="row"><div class="col-sm-12 col-md-5"><div class="dataTables_info" id="table_inventories_index_info" role="status" aria-live="polite">Showing 0 to 0 of 0 entries</div></div><div class="col-sm-12 col-md-7 dataTables_pager"><div class="dataTables_length" id="table_inventories_index_length"><label>Show <select name="table_inventories_index_length" aria-controls="table_inventories_index" class="custom-select custom-select-sm form-control form-control-sm"><option value="10">10</option><option value="20">20</option><option value="50">50</option><option value="100">100</option></select> entries</label></div><div class="dataTables_paginate paging_simple_numbers" id="table_inventories_index_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="table_inventories_index_previous"><a href="#" aria-controls="table_inventories_index" data-dt-idx="0" tabindex="0" class="page-link"><i class="la la-angle-left"></i></a></li><li class="paginate_button page-item next disabled" id="table_inventories_index_next"><a href="#" aria-controls="table_inventories_index" data-dt-idx="1" tabindex="0" class="page-link"><i class="la la-angle-right"></i></a></li></ul></div></div></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane" id="Tag_Connect_Information">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="k-portlet">
-                            <div class="k-portlet__body">
-                                <div class="form-group">
-                                    <label>Sản phẩm liên quan</label>
-                                    <div class="dropdown bootstrap-select show-tick form-control k_ Related_Product_Selector" data-original-title="" title=""><select data-actions-box="true" name="suggested_relationships[inventories][]" title="-- Sản phẩm liên quan --" data-size="5" data-live-search="true" class="form-control k_selectpicker Related_Product_Selector" multiple="" data-selected-text-format="count > 5" tabindex="-98">
-
-                                                                                <option data-tokens="1 | Bơ thực vật nguyên chất Youmy xuất xứ Indonesia 100% tự nhiên [1Kg] | XNA9DF3CAK-VN2TG" data-product-id="1" data-product-name="Bơ thực vật nguyên chất Youmy xuất xứ Indonesia 100% tự nhiên [1Kg]" value="1">Bơ thực vật nguyên chất Youmy xuất xứ Indonesia 100% tự nhiên [1Kg]</option>
-                                                                            </select><button type="button" class="btn dropdown-toggle bs-placeholder btn-light" data-toggle="dropdown" title="-- Sản phẩm liên quan --"><div class="filter-option"><div class="filter-option-inner">-- Sản phẩm liên quan --</div></div>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu "><div class="bs-searchbox"><input type="text" class="form-control" autocomplete="off" role="textbox" aria-label="Search"></div><div class="bs-actionsbox"><div class="btn-group btn-group-sm btn-block"><button type="button" class="actions-btn bs-select-all btn btn-light">Select All</button><button type="button" class="actions-btn bs-deselect-all btn btn-light">Deselect All</button></div></div><div class="inner show" tabindex="-1"><ul class="dropdown-menu inner show"></ul></div></div></div>
-                                    <div class="form-group Related_Product_Allowed_Holder mb-0 mt-2 d-none">
-                                        <div class="Related_Product_Holder_Content"></div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Bài viết liên quan</label>
-                                    <div class="dropdown bootstrap-select show-tick form-control k_ Related_Post_Selector" data-original-title="" title="">
-                                        <select data-actions-box="true" name="linked_posts[]" title="-- Bài viết liên quan --" data-size="5" data-live-search="true" class="form-control k_selectpicker Related_Post_Selector" multiple="" data-selected-text-format="count > 5" tabindex="-98">
-                                        </select>
-                                        <button type="button" class="btn dropdown-toggle btn-light" data-toggle="dropdown" title="">
-                                            <div class="filter-option">
-                                                <div class="filter-option-inner"></div>
-                                            </div><span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu "><div class="bs-searchbox"><input type="text" class="form-control" autocomplete="off" role="textbox" aria-label="Search"></div><div class="bs-actionsbox"><div class="btn-group btn-group-sm btn-block"><button type="button" class="actions-btn bs-select-all btn btn-light">Select All</button><button type="button" class="actions-btn bs-deselect-all btn btn-light">Deselect All</button></div></div><div class="inner show" tabindex="-1"><ul class="dropdown-menu inner show"></ul></div></div></div>
-                                    <div class="form-group Related_Post_Allowed_Holder mb-0 mt-2">
-                                        <div class="Related_Post_Holder_Content">
-                                            <button type="button" title="Remove" class="Related_Post_Badge_Selected btn btn-sm btn-outline-brand btn-primary btn-right-icon mr-3 mb-3" data-id="4" data-name="6JSTE - Sử dụng nến trong trang trí nhà cửa"><span class="bonus-content">6JSTE - Sử dụng nến trong trang trí nhà cửa - 4</span><i class="la la-close"></i></button></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </form>
+                <!-- End::Form -->
             </div>
         </div>
-
-       <div class="row">
-            <div class="col-md-12">
-                <div class="k-portlet__foot">
-                    <div class="k-form__actions d-flex justify-content-start">
-                        <button type="redirect" class="btn btn-secondary mr-2">Huỷ</button>
-                        <button type="submit" class="btn btn-primary">Lưu</button>
-                    </div>
-                </div>
-            </div>
-       </div>
-    </form>
-</div>
-<!-- end:: Content Body -->
-</div>
+    </div>
+    @include('backoffice.pages.products.pagejs.product')
 @endsection

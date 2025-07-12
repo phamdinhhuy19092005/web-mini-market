@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\backoffice;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Backoffice\BaseController;
 use Illuminate\Http\Request;
 
-class MenuGroupController extends Controller
+class MenuGroupController extends BaseController
 {
     /**
      * Display a listing of the resource.

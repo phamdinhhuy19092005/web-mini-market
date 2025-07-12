@@ -38,81 +38,122 @@ $breadcrumbs = [
                     </div>
 
                     <!--begin::Form-->
-                    <form action="{{ route('bo.web.categories.update', $category->id) }}" method="POST" enctype="multipart/form-data">
+                    <form class="k-form k-form--label-right" method="POST" action="{{ route('bo.web.categories.update', $category->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        <div class="k-portlet__body">
-                            <div class="form-group">
-                                <label>Tên danh mục</label>
-                                <input type="text" name="name" class="form-control" placeholder="Nhập tên danh mục"
-                                    value="{{ old('name', $category->name) }}">
-                            </div>
-                            <div class="form-group">
-                                <label>Đường dẫn</label>
-                                <input type="text" name="slug" class="form-control" placeholder="Nhập đường dẫn"
-                                    value="{{ old('slug', $category->slug) }}">
-                            </div>
-                            <div class="form-group">
-                                <label>Nhóm danh mục</label>
-                                <select name="category_group_id" class="form-control">
-                                    <option value="">Chọn nhóm danh mục</option>
-                                    @foreach ($categoryGroups as $group)
-                                        <option value="{{ $group->id }}"
-                                            {{ old('category_group_id', $category->category_group_id) == $group->id ? 'selected' : '' }}>
-                                            {{ $group->name }}
-                                        </option>
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
                                     @endforeach
-                                </select>
+                                </ul>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
                             </div>
+                        @endif
 
-                            <div class="form-group">
-                                <label>Ảnh hiển thị</label>
+                        <div class="k-portlet__body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-label">{{ __('Tên danh mục') }} <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" class="form-control" placeholder="{{ __('Nhập tên danh mục') }}" autocomplete="off" value="{{ old('name', $category->name) }}" required>
+                                        @error('name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
 
-                                <div>
-                                    <input type="file" name="image[file]" class="form-control" accept="image/*" value="{{ $category->image }}">
+                                    <div class="form-group">
+                                        <label class="form-label">{{ __('Đường dẫn') }}</label>
+                                        <input type="text" name="slug" class="form-control" placeholder="{{ __('Nhập đường dẫn') }}" autocomplete="off" value="{{ old('slug', $category->slug) }}">
+                                        @error('slug')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">{{ __('Nhóm danh mục') }} <span class="text-danger">*</span></label>
+                                        <select name="category_group_id" class="form-control selectpicker" data-style="btn-light" required>
+                                            <option value="" disabled {{ old('category_group_id', $category->category_group_id) ? '' : 'selected' }}>{{ __('Chọn nhóm danh mục') }}</option>
+                                            @foreach ($categoryGroups as $group)
+                                                <option value="{{ $group->id }}" {{ old('category_group_id', $category->category_group_id) == $group->id ? 'selected' : '' }}>
+                                                    {{ $group->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('category_group_id')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">{{ __('Mô tả') }}</label>
+                                        <textarea name="description" class="form-control" rows="4">{{ old('description', $category->description) }}</textarea>
+                                        @error('description')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
 
-                                <div style="margin-top: 20px;">
-                                    <input type="text" name="image[path]" class="form-control" value="{{ $category->image }}">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-label">{{ __('Ảnh hiển thị') }}</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control image-url" name="image[path]" placeholder="{{ __('Tải ảnh lên hoặc nhập URL') }}" value="{{ old('image.path', $category->image) }}">
+                                            <div class="input-group-append">
+                                                <label class="btn btn-outline-primary m-0" for="image-file">
+                                                    <i class="flaticon2-image-file mr-2"></i>{{ __('Tải lên') }}
+                                                    <input type="file" id="image-file" name="image[file]" class="d-none image-file" accept="image/*">
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2">
+                                            <img class="img-fluid image-preview" style="max-width: 150px; display: {{ $category->image ? 'block' : 'none' }};" src="{{ $category->image ?? '' }}" alt="Image preview">
+                                        </div>
+                                        @error('image.*')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">{{ __('[SEO] Tiêu đề') }}</label>
+                                        <input type="text" name="seo_title" class="form-control" placeholder="{{ __('Nhập [SEO] Tiêu đề') }}" autocomplete="off" value="{{ old('seo_title', $category->seo_title) }}">
+                                        @error('seo_title')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">{{ __('[SEO] Mô tả') }}</label>
+                                        <input type="text" name="seo_description" class="form-control" placeholder="{{ __('Nhập [SEO] Mô tả') }}" autocomplete="off" value="{{ old('seo_description', $category->seo_description) }}">
+                                        @error('seo_description')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group d-flex align-items-center">
+                                        <label class="form-label">{{ __('Trạng thái') }}</label>
+                                        <div class="k-switch ml-3">
+                                            <label>
+                                                <input type="checkbox" name="status" value="1" {{ old('status', $category->status) ? 'checked' : '' }}>
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                        @error('status')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
-
-                                <div class="form-group" style="margin-top: 20px;">
-                                    <img src="{{ $category->image }}" alt="" width="200">
-                                </div>
-
-                                @error('image')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label>Mô tả</label>
-                                <textarea name="description" class="form-control" rows="10">{{ old('description', $category->description) }}</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>[SEO] Tiêu đề</label>
-                                <input type="text" name="seo_title" class="form-control" placeholder="Nhập [SEO] Tiêu đề"
-                                    value="{{ old('seo_title', $category->seo_title) }}">
-                            </div>
-                            <div class="form-group">
-                                <label>[SEO] Mô tả</label>
-                                <input type="text" name="seo_description" class="form-control" placeholder="Nhập [SEO] Mô tả"
-                                    value="{{ old('seo_description', $category->seo_description) }}">
-                            </div>
-                            <div class="form-group d-flex align-items-center">
-                                <label>Trạng thái</label>
-                                <span class="k-switch d-flex" style="margin-left: 20px;">
-                                    <label>
-                                        <input type="checkbox" name="status" value="1"
-                                            {{ old('status', $category->status) ? 'checked' : '' }}>
-                                        <span></span>
-                                    </label>
-                                </span>
                             </div>
                         </div>
+
                         <div class="k-portlet__foot">
-                            <button type="submit" class="btn btn-primary">Lưu</button>
-                            <button type="reset" class="btn btn-secondary">Hủy</button>
+                            <div class="k-form__actions">
+                                <button type="submit" class="btn btn-primary mr-2">{{ __('Lưu') }}</button>
+                                <a href="{{ route('bo.web.categories.index') }}" class="btn btn-outline-secondary">{{ __('Hủy') }}</a>
+                            </div>
                         </div>
                     </form>
                     <!--end::Form-->
@@ -124,4 +165,6 @@ $breadcrumbs = [
         </div>
     </div>
     <!-- end:: Content Body -->
+
+    @include('backoffice.pages.categories.pagejs.category');
 @endsection

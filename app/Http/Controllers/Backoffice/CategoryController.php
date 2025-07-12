@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Backoffice;
 use App\Contracts\Responses\Backoffice\StoreCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateCategoryResponseContract;
 
-use App\Http\Requests\Interfaces\StoreCategoryRequestInterface;
-use App\Http\Requests\Interfaces\UpdateCategoryRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreCategoryRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateCategoryRequestInterface;
 
 use App\Models\CategoryGroup;
 use App\Services\CategoryService;
@@ -23,19 +23,20 @@ class CategoryController extends BaseController
 
     public function index(Request $request)
     {
-
          return view('backoffice.pages.categories.index');
     }
 
     public function create()
     {
         $categoryGroups = CategoryGroup::all();
+
         return view('backoffice.pages.categories.create', compact('categoryGroups'));
     }
 
     public function store(StoreCategoryRequestInterface $request)
     {
         $category = $this->categoryService->create($request->validated());
+
         return $this->responses(StoreCategoryResponseContract::class, $category);
     }
 
@@ -58,13 +59,7 @@ class CategoryController extends BaseController
 
     public function update(UpdateCategoryRequestInterface $request, $id)
     {
-        $file = $request->imageFile();
-
-        $this->categoryService->update(
-            $id,
-            $request->validated(),
-            $file,
-        );
+        $this->categoryService->update($id, $request->validated());
 
         return $this->responses(UpdateCategoryResponseContract::class);
     }

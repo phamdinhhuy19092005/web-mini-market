@@ -1,8 +1,6 @@
 <?php
-
 namespace App\Services;
 
-use App\Models\Role;
 use App\Repositories\Interfaces\RoleRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -21,15 +19,16 @@ class RoleService extends BaseService
         $perPage = data_get($data, 'per_page', 10);
 
         return $this->roleRepository->model()::query()
+            ->withCount(['users']) 
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                ->orWhere('name', 'like', "%$query%");
+                    ->orWhere('name', 'like', "%$query%");
             })
             ->paginate($perPage);
     }
 
     /**
-     * Tạo mới role với permissions
+     * Create a new role with permissions
      *
      * @param array $attributes
      * @return \Illuminate\Database\Eloquent\Model
@@ -37,23 +36,23 @@ class RoleService extends BaseService
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
-            // Tạo role mới
+            // Create new role
             $role = $this->roleRepository->create([
                 'name' => $attributes['name'],
-                'guard_name' => 'admin', 
+                'guard_name' => 'admin',
             ]);
 
-            // Gán permissions nếu có
+            // Assign permissions if provided
             if (!empty($attributes['permissions'])) {
                 $role->syncPermissions($attributes['permissions']);
             }
 
-            return $role->fresh(); // Trả về role đã làm mới
+            return $role->fresh();
         });
     }
 
     /**
-     * Tìm role theo ID
+     * Find a role by ID
      *
      * @param int $id
      * @return \Illuminate\Database\Eloquent\Model
@@ -64,7 +63,7 @@ class RoleService extends BaseService
     }
 
     /**
-     * Hiển thị role theo ID
+     * Retrieve a role by ID
      *
      * @param int $id
      * @return \Illuminate\Database\Eloquent\Model
@@ -75,7 +74,7 @@ class RoleService extends BaseService
     }
 
     /**
-     * Cập nhật role
+     * Update a role
      *
      * @param int $id
      * @param array $attributes
@@ -86,22 +85,22 @@ class RoleService extends BaseService
         return DB::transaction(function () use ($id, $attributes) {
             $role = $this->roleRepository->findOrFail($id);
 
-            // Cập nhật role
+            // Update role
             $this->roleRepository->update($id, [
                 'name' => $attributes['name'],
             ]);
 
-            // Đồng bộ permissions nếu có
+            // Sync permissions if provided
             if (isset($attributes['permissions'])) {
                 $role->syncPermissions($attributes['permissions']);
             }
 
-            return $role->fresh(); // Trả về role đã làm mới
+            return $role->fresh();
         });
     }
 
     /**
-     * Xóa role
+     * Delete a role
      *
      * @param int $id
      * @return bool

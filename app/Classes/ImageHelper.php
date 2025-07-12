@@ -7,10 +7,12 @@ use Illuminate\Support\Str;
 
 class ImageHelper
 {
+    protected $diskName;
     protected $disk;
 
     public function __construct($disk)
     {
+        $this->diskName = $disk;
         $this->disk = Storage::disk($disk);
     }
 
@@ -45,14 +47,19 @@ class ImageHelper
     {
         $now = now();
         $hash = $now->timestamp;
-        $filename = Str::uuid(); // Sử dụng UUID cho tên file
+        $filename = Str::uuid();
         $extension = strtolower($file->getClientOriginalExtension());
-        $pathname = "banners/{$filename}-{$hash}.{$extension}"; // Lưu vào thư mục banners
+
+        // Lưu trong thư mục theo tên disk
+        $pathname = "{$this->diskName}/{$filename}-{$hash}.{$extension}";
 
         $this->disk->put($pathname, file_get_contents($file));
 
-        return $this->disk->url($pathname); // Trả về: /storage/banners/filename-timestamp.jpg
+        return $this->disk->url($pathname); // Trả về URL đầy đủ
+        // return $pathname;
+
     }
+
 
     /**
      * Xóa tệp
@@ -68,5 +75,6 @@ class ImageHelper
                 $this->disk->delete($filePath);
             }
         }
-    }
+}
+
 }

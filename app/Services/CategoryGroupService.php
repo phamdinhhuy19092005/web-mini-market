@@ -19,42 +19,37 @@ class CategoryGroupService extends BaseService
         $query = data_get($data, 'query');
         $perPage = data_get($data, 'per_page', 10);
 
-        return $this->categoryGroupRepository->model()::query()
+        return $this->categoryGroupRepository->model()::with('categories')
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                ->orWhere('name', 'like', "%$query%");
+                    ->orWhere('name', 'like', "%$query%");
             })
             ->paginate($perPage);
     }
 
+    protected function handleImageUpdate($oldImagePath, $newImage = null)
+    {
+        if (isset($newImage['file']) && $newImage['file'] instanceof \Illuminate\Http\UploadedFile) {
+            if ($oldImagePath) {
+                (new ImageHelper('category_group'))->delete($oldImagePath);
+            }
+
+            return (new ImageHelper('category_group'))->upload($newImage['file']);
+        }
+
+        if (isset($newImage['path'])) {
+            return $newImage['path'];
+        }
+
+        return $oldImagePath;
+    }
+
     public function create(array $attributes = [])
     {
-        return DB::transaction(function() use ($attributes) {
-            /**
-             * cau hinh trong filesystems.php
-             *
-             */
-
-            // users mua sap
-
-            // transanction() A -> mo transanction
-            // {
-            //     -> lay san pham tu db
-            //     -> tao 1 trog gio hang (A)
-            //     -> tao dia chi giao hang
-
-            //     -> lay ra xem san pham A
-
-            //     -> dat hang: chuyen san pham trong gio sang orders
-            //     -> delete sap pham trong gio []
-            //     -> giao hang
-
-            // }
-
-            // transanction B () {
-            //     -> lay ra xem san pham A tu gio hang
-            // }
-            $attributes['image'] = (new ImageHelper('category_group'))->upload($attributes['image']);
+        return DB::transaction(function () use ($attributes) {
+            // Configuration is set in filesystems.php
+            $uploadResult = (new ImageHelper('category_group'))->upload($attributes['image']);
+            $attributes['image'] = is_array($uploadResult) ? $uploadResult['path'] : $uploadResult;
 
             return $this->categoryGroupRepository->create($attributes);
         });
@@ -70,43 +65,29 @@ class CategoryGroupService extends BaseService
         return $this->categoryGroupRepository->findOrFail($id);
     }
 
-    public function update($id, array $attributes, $image = null)
+    public function update($id, array $attributes = [], $image = null)
     {
         return DB::transaction(function () use ($id, $attributes, $image) {
-            $category_group = $this->show($id);
+            $model = $this->categoryGroupRepository->findOrFail($id);
 
-            // Xử lý ảnh
-            if ($image) {
-                // Xóa ảnh cũ nếu tồn tại
-                if ($category_group->image) {
-                    (new ImageHelper('category'))->delete($category_group->image);
-                }
-                // Tải lên ảnh mới
-                $attributes['image'] = (new ImageHelper('category'))->upload(['file' => $image]);
-            // } elseif (isset($attributes['image']['path'])) {
-            } elseif (! data_get($attributes, 'image.path')) {
-                // Giữ đường dẫn hiện tại nếu không có ảnh mới
-                // $attributes['image'] = $attributes['image']['path'];
-                $attributes['image'] = data_get($attributes, 'image.path');
-            } else {
-                // Giữ ảnh cũ nếu không có dữ liệu mới
-                $attributes['image'] = $category_group->image;
-            }
+            $attributes['image'] = $this->handleImageUpdate($model->image, $attributes['image'] ?? null);
 
-            // Cập nhật trạng thái
-            // $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : 0;
-            $attributes['status'] = (bool) data_get($attributes, 'status', 0);
+            // Update status if provided
+            $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : $model->status;
 
-
-            // Cập nhật model
-            $category_group->update($attributes);
-
-            return $category_group;
+            return $this->categoryGroupRepository->update($id, $attributes);
         });
     }
 
     public function delete($id)
     {
         return $this->categoryGroupRepository->delete($id);
+    }
+
+    // Hàm khôi phục
+    public function restore($id)
+    {
+        $model = $this->categoryGroupRepository->model()::withTrashed()->findOrFail($id);
+        return $model->restore();
     }
 }

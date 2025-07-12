@@ -15,6 +15,7 @@ class CategoryGroupController extends BaseApiController
     public function index(Request $request)
     {
         $categoryGroups = $this->categoryGroup->searchByAdmin($request->all());
+        
         return $this->responses(ListCategoryGroupResponseContract::class, $categoryGroups);
     }
 }
