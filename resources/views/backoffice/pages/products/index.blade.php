@@ -31,16 +31,19 @@
                            data-request-url="{{ route('bo.api.products.index') }}" data-searching="true">
                         <thead>
                             <tr>
-                                <th data-property="id" scope="col">{{ __('ID') }}</th>
-                                <th data-property="name" scope="col">{{ __('Tên sản phẩm') }}</th>
-                                <th data-property="slug" scope="col">{{ __('Slug') }}</th>
-                                <th data-property="primary_image" data-render-callback="renderImageColumn" scope="col">{{ __('Ảnh đại diện') }}</th>
-                                <th data-property="code" scope="col">{{ __('Mã sản phẩm') }}</th>
-                                <th data-property="brand_name" scope="col">{{ __('Thương hiệu') }}</th>
-                                <th data-property="type_name" scope="col">{{ __('Loại') }}</th>
-                                <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
-                                <th data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
-                                <th data-property="actions" class="datatable-action" data-render-callback="renderActions" scope="col" aria-label="Hành động">{{ __('Hành động') }}</th>
+                                <th data-property="id">{{ __('ID') }}</th>
+                                <th data-property="name">{{ __('Tên sản phẩm') }}</th>
+                                <th data-property="slug">{{ __('Slug') }}</th>
+                                <th data-property="primary_image" data-render-callback="renderImageColumn">{{ __('Ảnh đại diện') }}</th>
+                                <th data-property="code">{{ __('Mã sản phẩm') }}</th>
+                                <th data-property="brand.name" data-name="brand_id" data-link="brand.actions.update" data-link-target="_blank">{{ __('Thương hiệu') }}</th>
+                                <th data-property="type_name">{{ __('Loại') }}</th>
+                                <th data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
+                                <th data-property="created_at">{{ __('Ngày tạo') }}</th>
+                                <th data-property="updated_at">{{ __('Ngày cập nhật') }}</th>
+                                <th data-property="created_by.name" data-name="created_by_id">{{ __('Người tạo') }}</th>
+                                <th data-property="updated_by.name" data-name="updated_by_id">{{ __('Người cập nhật') }}</th>
+                                <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>

@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attribute extends Model
 {
-    protected $table = 'attributes';
-
     protected $fillable = [
         'name',
         'attribute_type',
@@ -36,5 +34,4 @@ class Attribute extends Model
     {
         return ActivationStatus::label($this->status);
     }
-
 }

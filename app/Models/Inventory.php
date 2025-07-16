@@ -41,13 +41,13 @@ class Inventory extends Model
     ];
 
     protected $casts = [
-        'key_features'      => 'array',
-        'purchase_price'    => 'decimal:8',
-        'sale_price'        => 'decimal:8',
-        'offer_price'       => 'decimal:8',
-        'offer_start'       => 'datetime',
-        'offer_end'         => 'datetime',
-        'available_from'    => 'datetime',
+        'key_features' => 'array',
+        // 'purchase_price' => 'decimal:8',
+        // 'sale_price' => 'decimal:8',
+        // 'offer_price' => 'decimal:8',
+        // 'offer_start' => 'datetime',
+        // 'offer_end' => 'datetime',
+        // 'available_from' => 'datetime',
     ];
 
     public function product(): BelongsTo
@@ -58,15 +58,15 @@ class Inventory extends Model
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'attribute_inventories')
-                    ->withPivot('attribute_value_id') 
-                    ->withTimestamps();
+            ->withPivot('attribute_value_id') 
+            ->withTimestamps();
     }
 
     public function attributeValues()
     {
         return $this->belongsToMany(AttributeValue::class, 'attribute_inventories')
-                    ->withPivot('attribute_id')
-                    ->withTimestamps();
+            ->withPivot('attribute_id')
+            ->withTimestamps();
     }
 
     public function getStatusNameAttribute(): string

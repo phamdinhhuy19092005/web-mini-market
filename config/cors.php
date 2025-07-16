@@ -1,12 +1,11 @@
 <?php
 
 return [
-
-    'paths' => ['api/*', 'bo/api/*'],
+    'paths' => ['api/*', 'bo/api/*'],  
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000'],
+    'allowed_origins' => explode(',', env('CORS_ALLOWED_ORIGINS', '*')),
 
     'allowed_origins_patterns' => [],
 
@@ -16,6 +15,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
-
+    'supports_credentials' => true, 
 ];
+

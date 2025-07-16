@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Enum\ActivationStatus;
 use App\Enum\ProductTypeEnum;
+use App\Models\Traits\Activatable;
+use App\Models\Traits\HasImpactor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
-    protected $table = 'products';
+    use HasImpactor;
+    use Activatable;
 
     protected $fillable = [
         'name',
@@ -58,10 +60,5 @@ class Product extends Model
     public function getTypeNameAttribute(): string
     {
         return ProductTypeEnum::label($this->type);
-    }
-
-    public function getStatusNameAttribute(): string
-    {
-        return ActivationStatus::label($this->status);
     }
 }

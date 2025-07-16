@@ -41,7 +41,7 @@
                                     <th data-property="slug" scope="col">{{ __('Slug') }}</th>
                                     <th data-property="category_group_name" data-render-callback="renderCallbackCategoryGroups" scope="col">{{ __('Nhóm danh mục') }}</th>
                                     <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
-                                    <th class="datatable-action" data-property="actions" data-render-callback="renderActions">{{ __('Hành động') }}</th>  
+                                    <th class="datatable-action" data-property="actions">{{ __('Hành động') }}</th>  
                                 </tr>
                             </thead>
                             <tbody></tbody>

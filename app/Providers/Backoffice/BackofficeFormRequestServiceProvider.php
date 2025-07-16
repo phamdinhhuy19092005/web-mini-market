@@ -54,10 +54,13 @@ use App\Http\Requests\Backoffice\UpdatePostRequest;
 
 // Pages
 use App\Http\Requests\Backoffice\Interfaces\StorePageRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StorePaymentOptionRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StorePaymentProviderRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreProductRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreShippingRateRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreShippingZoneRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreSubCategoryRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreUserRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeValueRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateBrandRequestInterface;
@@ -65,10 +68,13 @@ use App\Http\Requests\Backoffice\Interfaces\UpdateFaqRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateFaqTopicRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateInventoryRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdatePageRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdatePaymentOptionRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdatePaymentProviderRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateProductRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateShippingRateRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateShippingZoneRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateSubCategoryRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateUserRequestInterface;
 use App\Http\Requests\Backoffice\StoreAttributeRequest;
 use App\Http\Requests\Backoffice\StoreAttributeValueRequest;
 use App\Http\Requests\Backoffice\StoreBrandRequest;
@@ -76,10 +82,13 @@ use App\Http\Requests\Backoffice\StoreFaqRequest;
 use App\Http\Requests\Backoffice\StoreFaqTopicRequest;
 use App\Http\Requests\Backoffice\StoreInventoryRequest;
 use App\Http\Requests\Backoffice\StorePageRequest;
+use App\Http\Requests\Backoffice\StorePaymentOptionRequest;
+use App\Http\Requests\Backoffice\StorePaymentProviderRequest;
 use App\Http\Requests\Backoffice\StoreProductRequest;
 use App\Http\Requests\Backoffice\StoreShippingRateRequest;
 use App\Http\Requests\Backoffice\StoreShippingZoneRequest;
 use App\Http\Requests\Backoffice\StoreSubCategoryRequest;
+use App\Http\Requests\Backoffice\StoreUserRequest;
 use App\Http\Requests\Backoffice\UpdateAttributeRequest;
 use App\Http\Requests\Backoffice\UpdateAttributeValueRequest;
 use App\Http\Requests\Backoffice\UpdateBrandRequest;
@@ -87,10 +96,13 @@ use App\Http\Requests\Backoffice\UpdateFaqRequest;
 use App\Http\Requests\Backoffice\UpdateFaqTopicRequest;
 use App\Http\Requests\Backoffice\UpdateInventoryRequest;
 use App\Http\Requests\Backoffice\UpdatePageRequest;
+use App\Http\Requests\Backoffice\UpdatePaymentOptionRequest;
+use App\Http\Requests\Backoffice\UpdatePaymentProviderRequest;
 use App\Http\Requests\Backoffice\UpdateProductRequest;
 use App\Http\Requests\Backoffice\UpdateShippingRateRequest;
 use App\Http\Requests\Backoffice\UpdateShippingZoneRequest;
 use App\Http\Requests\Backoffice\UpdateSubCategoryRequest;
+use App\Http\Requests\Backoffice\UpdateUserRequest;
 
 class BackofficeFormRequestServiceProvider extends ServiceProvider
 {
@@ -240,6 +252,30 @@ class BackofficeFormRequestServiceProvider extends ServiceProvider
         */
         StoreInventoryRequestInterface::class          => StoreInventoryRequest::class,
         UpdateInventoryRequestInterface::class         => UpdateInventoryRequest::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Users
+        |--------------------------------------------------------------------------
+        */
+        StoreUserRequestInterface::class => StoreUserRequest::class,
+        UpdateUserRequestInterface::class => UpdateUserRequest::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment Providers
+        |--------------------------------------------------------------------------
+        */
+        StorePaymentProviderRequestInterface::class => StorePaymentProviderRequest::class,
+        UpdatePaymentProviderRequestInterface::class => UpdatePaymentProviderRequest::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment Options
+        |--------------------------------------------------------------------------
+        */
+        StorePaymentOptionRequestInterface::class => StorePaymentOptionRequest::class,
+        UpdatePaymentOptionRequestInterface::class => UpdatePaymentOptionRequest::class,
 
 
     ];

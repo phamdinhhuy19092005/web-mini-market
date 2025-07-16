@@ -10,6 +10,7 @@ use App\Http\Controllers\Backoffice\CategoryGroupController;
 use App\Http\Controllers\Backoffice\CountryController;
 use App\Http\Controllers\Backoffice\CurrencyController;
 use App\Http\Controllers\Backoffice\DashboardController;
+use App\Http\Controllers\Backoffice\EmailController;
 use App\Http\Controllers\Backoffice\FaqController;
 use App\Http\Controllers\Backoffice\FaqTopicController;
 use App\Http\Controllers\Backoffice\FileManagerController;
@@ -17,6 +18,8 @@ use App\Http\Controllers\Backoffice\InventoryController;
 use App\Http\Controllers\Backoffice\MenuGroupController;
 // use App\Http\Controllers\Backoffice\MenuSubGroupController;
 use App\Http\Controllers\Backoffice\PageController;
+use App\Http\Controllers\Backoffice\PaymentOptionController;
+use App\Http\Controllers\Backoffice\PaymentProviderController;
 use App\Http\Controllers\Backoffice\PostCategoryController;
 use App\Http\Controllers\Backoffice\PostController;
 use App\Http\Controllers\Backoffice\ProductController;
@@ -26,6 +29,7 @@ use App\Http\Controllers\Backoffice\ShippingZoneController;
 use App\Http\Controllers\Backoffice\SubCategoryController;
 use App\Http\Controllers\Backoffice\SubscriberController;
 use App\Http\Controllers\Backoffice\SystemSettingController;
+use App\Http\Controllers\Backoffice\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -343,8 +347,59 @@ Route::delete('/inventories/{id}', [InventoryController::class, 'destroy'])->nam
 
 /*
 |--------------------------------------------------------------------------
+| Users
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+Route::post('users', [UserController::class, 'store'])->name('users.store');
+Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+Route::post('users/{id}/deactivate', [UserController::class, 'deactivate'])->name('users.action.deactivate');
+Route::post('active/{id}/active', [UserController::class, 'active'])->name('users.action.active');
+
+/*
+|--------------------------------------------------------------------------
+| Payment Providers
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/payment-providers', [PaymentProviderController::class, 'index'])->name('payment-providers.index');
+Route::get('/payment-providers/create', [PaymentProviderController::class, 'create'])->name('payment-providers.create');
+Route::post('payment-providers', [PaymentProviderController::class, 'store'])->name('payment-providers.store');
+Route::get('/payment-providers/{id}/edit', [PaymentProviderController::class, 'edit'])->name('payment-providers.edit');
+Route::get('/payment-providers/{id}', [PaymentProviderController::class, 'show'])->name('payment-providers.show');
+Route::put('/payment-providers/{id}', [PaymentProviderController::class, 'update'])->name('payment-providers.update');
+Route::delete('/payment-providers/{id}', [PaymentProviderController::class, 'destroy'])->name('payment-providers.destroy');
+
+
+/*
+|--------------------------------------------------------------------------
+| Payment Options
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/payment-options', [PaymentOptionController::class, 'index'])->name('payment-options.index');
+Route::get('/payment-options/create', [PaymentOptionController::class, 'create'])->name('payment-options.create');
+Route::post('payment-options', [PaymentOptionController::class, 'store'])->name('payment-options.store');
+Route::get('/payment-options/{id}/edit', [PaymentOptionController::class, 'edit'])->name('payment-options.edit');
+Route::get('/payment-options/{id}', [PaymentOptionController::class, 'show'])->name('payment-options.show');
+Route::put('/payment-options/{id}', [PaymentOptionController::class, 'update'])->name('payment-options.update');
+Route::delete('/payment-options/{id}', [PaymentOptionController::class, 'destroy'])->name('payment-options.destroy');
+
+/*
+|--------------------------------------------------------------------------
 | Test
 |--------------------------------------------------------------------------
 */
 
 Route::post('/file-manager/upload', [FileManagerController::class, 'upload'])->name('file-manager.upload');
+
+Route::get('/admin/emails/send', [EmailController::class, 'showForm'])->name('admin.emails.form');
+Route::post('/admin/emails/send', [EmailController::class, 'send'])->name('admin.emails.send');
+
+Route::post('/subscribers/send-mail', [SubscriberController::class, 'sendMail'])->name('subscribers.sendmail');

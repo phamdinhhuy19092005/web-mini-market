@@ -166,5 +166,5 @@ $breadcrumbs = [
     </div>
     <!-- end:: Content Body -->
 
-    @include('backoffice.pages.categories.pagejs.category');
+    {{-- @include('backoffice.pages.categories.pagejs.category'); --}}
 @endsection

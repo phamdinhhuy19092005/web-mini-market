@@ -14,12 +14,14 @@ class FrontendRouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
     }
 
-    public function mapWebRoutes() 
+    public function mapWebRoutes()
     {
-        Route::namespace($this->namespace)
-        ->as('fe.web.')
-        ->group(base_path('routes/frontend/web.php'));
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->as('fe.web.')
+            ->group(base_path('routes/frontend/web.php'));
     }
+
 
     public function mapApiRoutes()
     {

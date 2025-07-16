@@ -39,7 +39,7 @@
                                     <th data-property="name" scope="col">{{ __('Tên') }}</th>
                                     <th data-property="order" scope="col">{{ __('Thứ tự') }}</th>
                                     <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
-                                    <th class="actions" data-orderable="false" scope="col" aria-label="Hành động">{{ __('Hành động') }}</th>
+                                    <th class="datatable-action" data-property="actions" data-render-callback="renderActions">{{ __('Hành động') }}</th>      
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -50,28 +50,6 @@
         </div>
     </div>
 @endsection
-
-@push('js_pages')
-<script>
-    function renderImageColumn(data, type, full, meta) {
-        if (!data) return '';
-        return `<img src="${data}" alt="Hình ảnh" style="height: 60px;">`;
-    }
-    function renderStatusColumn(data, type, full, meta) {
-        if (!data) return '';
-        let classMap = {
-            'Active': 'k-badge--success',
-            'Inactive': 'k-badge--danger',
-            'Pending': 'k-badge--warning'
-        };
-
-        // Mặc định là success nếu không xác định
-        let badgeClass = classMap[data] || 'k-badge--secondary';
-
-        return `<span style="width:max-content" class="k-badge k-badge--inline k-badge--pill ${badgeClass}">${data}</span>`;
-    }
-</script>
-@endpush
 
 @component('backoffice.partials.datatable')
 @endcomponent

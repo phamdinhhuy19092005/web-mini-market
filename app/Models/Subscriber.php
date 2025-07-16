@@ -17,6 +17,4 @@ class Subscriber extends Model
     protected $casts = [
         'sent_post' => 'json'
     ];
-
 }
-

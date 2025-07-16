@@ -9,6 +9,7 @@ use App\Http\Requests\Backoffice\Interfaces\StoreProductRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateProductRequestInterface;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\CategoryGroup;
 use App\Models\SubCategory;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -30,10 +31,11 @@ class ProductController extends BaseController
     public function create()
     {
         $brands = Brand::all(); 
-        $categories = Category::all();
-        $sub_categories = SubCategory::all();
+        $categories = Category::with('subCategories')->get();
+        $categoryGroups = CategoryGroup::all();
+        $subCategories = SubCategory::all();
         $ProductTypeEnumLabels = ProductTypeEnum::labels();
-        return view('backoffice.pages.products.create', compact('brands', 'categories', 'sub_categories', 'ProductTypeEnumLabels'));
+        return view('backoffice.pages.products.create', compact('brands', 'categories','categoryGroups', 'subCategories', 'ProductTypeEnumLabels'));
     }
 
     public function store(StoreProductRequestInterface $request)
@@ -78,5 +80,6 @@ class ProductController extends BaseController
 
         return redirect()->route('bo.web.products.index');
     }
+    
 
 }

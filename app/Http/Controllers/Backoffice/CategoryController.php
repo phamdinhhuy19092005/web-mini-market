@@ -63,11 +63,11 @@ class CategoryController extends BaseController
 
         return $this->responses(UpdateCategoryResponseContract::class);
     }
-
     public function destroy($id)
     {
-        $this->categoryService->delete($id);
+        $group = CategoryGroup::findOrFail($id);
+        $group->delete();
 
-        return redirect()->route('bo.web.categories.index');
+        return redirect()->route('bo.web.category-groups.index');
     }
 }

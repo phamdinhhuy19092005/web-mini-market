@@ -62,5 +62,6 @@
     @stack('js_pages')
     @yield('js_script')
     @stack('scripts')
+    @stack('modals')
 </body>
 </html>

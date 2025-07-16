@@ -35,6 +35,12 @@ class Category extends Model
     {
         return $this->belongsToMany(Attribute::class, 'attribute_categories');
     }
+
+    public function subCategories()
+    {
+        return $this->hasMany(SubCategory::class);
+    }
+
     
     public function getStatusNameAttribute(): string
     {

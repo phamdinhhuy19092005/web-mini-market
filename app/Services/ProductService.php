@@ -21,6 +21,7 @@ class ProductService extends BaseService
         $perPage = data_get($data, 'per_page', 10);
 
         return $this->productRepository->model()::query()
+            ->with(['brand', 'createdBy', 'updatedBy'])
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
                     ->orWhere('name', 'like', "%$query%");
@@ -55,7 +56,7 @@ class ProductService extends BaseService
         return $code;
     }
 
-    public function create(array $attributes = [])
+   public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
             $imageHelper = new ImageHelper('product');
@@ -63,41 +64,31 @@ class ProductService extends BaseService
             $attributes['primary_image'] = $this->handleImageUpdate(null, $attributes['primary_image']);
             
             $mediaPaths = [];
-
             $mediaFiles = $attributes['media']['file'] ?? [];
-            $mediaUrls  = $attributes['media']['path'] ?? [];
+            $mediaUrls = $attributes['media']['path'] ?? [];
 
             foreach ($mediaFiles as $index => $file) {
-                if ($file instanceof \Illuminate\Http\UploadedFile) {
-                    $mediaPaths[] = $imageHelper->upload($file);
-                } elseif (!empty($mediaUrls[$index])) {
-                    $mediaPaths[] = $mediaUrls[$index];
-                }
+                $mediaPaths[] = $file instanceof \Illuminate\Http\UploadedFile 
+                    ? $imageHelper->upload($file) 
+                    : ($mediaUrls[$index] ?? null);
             }
-
-            // Lưu lại dưới dạng mảng JSON
-            $attributes['media'] = json_encode($mediaPaths);
+            $attributes['media'] = json_encode(array_filter($mediaPaths));
 
             $adminClass = \App\Models\Admin::class;
-            $adminId = optional(auth('admin')->user())->id;
-
-            $attributes['created_by_type'] = $adminClass;
-            $attributes['created_by_id'] = $adminId;
-            $attributes['updated_by_type'] = $adminClass;
-            $attributes['updated_by_id'] = $adminId;
-
-            $attributes['code'] = $attributes['code'] ?? $this->generateUniqueCode();
+            $adminId = auth('admin')->id();
+            $attributes = array_merge($attributes, [
+                'created_by_type' => $adminClass,
+                'created_by_id' => $adminId,
+                'updated_by_type' => $adminClass,
+                'updated_by_id' => $adminId,
+                'code' => $attributes['code'] ?? $this->generateUniqueCode(),
+            ]);
 
             $categoryIds = $attributes['category_ids'] ?? [];
-            unset($attributes['category_ids']);
-
             $subcategoryIds = $attributes['subcategory_ids'] ?? [];
-            unset($attributes['subcategory_ids']);
-
+            unset($attributes['category_ids'], $attributes['subcategory_ids']);
 
             $product = $this->productRepository->create($attributes);
-            
-
             $product->categories()->sync($categoryIds);
             $product->subcategories()->sync($subcategoryIds);
 

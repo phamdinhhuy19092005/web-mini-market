@@ -23,4 +23,9 @@ class Admin extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function getDisplayNameAttribute()
+    {
+        return $this->name;
+    }
 }

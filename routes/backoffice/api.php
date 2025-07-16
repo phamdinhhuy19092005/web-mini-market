@@ -13,6 +13,8 @@ use App\Http\Controllers\Backoffice\Api\FaqController;
 use App\Http\Controllers\Backoffice\Api\FaqTopicController;
 use App\Http\Controllers\Backoffice\Api\InventoryController;
 use App\Http\Controllers\Backoffice\Api\PageController;
+use App\Http\Controllers\Backoffice\Api\PaymentOptionController;
+use App\Http\Controllers\Backoffice\Api\PaymentProviderController;
 use App\Http\Controllers\Backoffice\Api\PostCategoryController;
 use App\Http\Controllers\Backoffice\Api\PostController;
 use App\Http\Controllers\Backoffice\Api\ProductController;
@@ -21,10 +23,11 @@ use App\Http\Controllers\Backoffice\Api\ShippingRateController;
 use App\Http\Controllers\Backoffice\Api\ShippingZoneController;
 use App\Http\Controllers\Backoffice\Api\SubCategoryController;
 use App\Http\Controllers\Backoffice\Api\SubscriberController;
+use App\Http\Controllers\Backoffice\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('bo/api')->name('bo.api.')->group(function () {
-  
+
 });
 
 Route::get('/admins', [AdminController::class, 'index'])->name('admins.index');
@@ -36,7 +39,7 @@ Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('su
 Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
 Route::get('/post-categories', [PostCategoryController::class, 'index'])->name('post-categories.index');
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-Route::get('/pages', [PageController::class, 'index'])->name('pages.index');    
+Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
 Route::get('/faq-topics', [FaqTopicController::class, 'index'])->name('faq-topics.index');
 Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
 Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
@@ -48,3 +51,6 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/attributes', [AttributeController::class, 'index'])->name('attributes.index');
 Route::get('/attribute-values', [AttributeValueController::class, 'index'])->name('attribute-values.index');
 Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/payment-providers', [PaymentProviderController::class, 'index'])->name('payment-providers.index');
+Route::get('/payment-options', [PaymentOptionController::class, 'index'])->name('payment-options.index');

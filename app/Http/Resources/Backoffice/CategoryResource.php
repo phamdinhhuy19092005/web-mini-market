@@ -12,16 +12,19 @@ class CategoryResource extends BaseResource
             'category_group_name' => optional($this->categoryGroup)->name,
             'category_group_id' => $this->category_group_id,
             'slug' => $this->slug,
-            'image' => $this->formatImageUrl($this->image),
+            'image' => $this->image,
             'description' => $this->description,
             'status' => $this->status,
             'status_name' => $this->status_name,
+            'subcategories' => $this->subcategories->map(function ($subcategory) {
+                return [
+                    'id' => $subcategory->id,
+                    'name' => $subcategory->name,
+                ];
+            }),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'actions' => [
-                'update' => route('bo.web.categories.edit', $this->id),
-                'delete' => route('bo.web.categories.destroy', $this->id),
-            ],
+            'actions' => $this->defaultActions('categories'),
         ];
     }
 }

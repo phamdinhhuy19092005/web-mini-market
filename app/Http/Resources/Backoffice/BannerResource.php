@@ -15,7 +15,7 @@ class BannerResource extends BaseResource
             'redirect_url' => $this->redirect_url,
             'order' => $this->order,
             'color' => $this->color,
-            'desktop_image' => $this->formatImageUrl($this->desktop_image),
+            'desktop_image' => $this->desktop_image,
             'mobile_image' => $this->mobile_image,
             'description' => $this->description,
             'start_at' => $this->start_at,
@@ -26,7 +26,6 @@ class BannerResource extends BaseResource
             'updated_at' => $this->updated_at,
             'actions' => [
                 'update' => route('bo.web.banners.edit', $this->id),
-                'delete' => route('bo.web.banners.destroy', $this->id),
             ],
         ];
     }

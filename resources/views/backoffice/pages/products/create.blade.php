@@ -230,39 +230,33 @@
                                 <div class="k-portlet__body">
                                     <!-- Category Field -->
                                     <div class="form-group">
-                                        <label for="category_ids">Danh mục <span class="text-danger">*</span></label>
-                                        <select name="category_ids[]"
-                                                id="category_ids"
-                                                class="form-control k_selectpicker"
-                                                data-live-search="true"
-                                                data-none-selected-text="-- Chọn danh mục --"
-                                                multiple
-                                                required>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->id }}"
-                                                        {{ collect(old('category_ids'))->contains($category->id) ? 'selected' : '' }}>
-                                                    {{ $category->name }}
-                                                </option>
+                                        <label>{{ __('Danh mục') }} *</label>
+                                        <select name="category_ids[]" id="category_ids" class="form-control k_selectpicker" multiple data-actions-box="true" required data-live-search="true" data-none-selected-text="-- Chọn danh mục --">
+                                            @foreach($categoryGroups as $categoryGroup)
+                                                <optgroup label="{{ $categoryGroup->name }}">
+                                                    @foreach($categoryGroup->categories as $category)
+                                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                    @endforeach
+                                                </optgroup>
                                             @endforeach
                                         </select>
-                                        @error('category_ids')
-                                            <span class="text-danger">{{ $message }}</span>
+                                        @error('categories')
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                     <!-- Subcategory Field -->
                                     <div class="form-group">
                                         <label for="subcategory_ids">Danh mục con <span class="text-danger">*</span></label>
-                                        <select name="subcategory_ids[]"
-                                                class="form-control k_selectpicker"
-                                                data-none-selected-text="-- Chọn danh mục con --"
-                                                multiple
-                                                required>
-                                            @foreach($sub_categories as $sub_category)
-                                                <option value="{{ $sub_category->id }}"
-                                                        {{ collect(old('subcategory_ids'))->contains($sub_category->id) ? 'selected' : '' }}>
-                                                    {{ $sub_category->name }}
-                                                </option>
+                                        <select name="subcategory_ids[]" id="subcategory_ids" class="form-control k_selectpicker"  data-live-search="true" multiple data-actions-box="true" required data-none-selected-text="-- Chọn danh mục con --">
+                                            @foreach($categories as $category)
+                                                <optgroup label="{{ $category->name }}">
+                                                    @foreach($category->subCategories ?? [] as $subCategory)
+                                                        <option value="{{ $subCategory->id }}" data-tokens="{{ $category->name }} {{ $subCategory->name }}" {{ in_array($subCategory->id, old('subcategory_ids', [])) ? 'selected' : '' }}>
+                                                            {{ $subCategory->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </optgroup>
                                             @endforeach
                                         </select>
                                         @error('subcategory_ids')

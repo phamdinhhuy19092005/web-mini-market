@@ -201,14 +201,7 @@
                                    class="flaticon-questions-circular-button"
                                    data-title="Trường được đề xuất. Điều này sẽ giúp tính toán lợi nhuận và tạo báo cáo"></i>
                             </label>
-                            <input type="text"
-                                   data-digits="2"
-                                   data-type="inputmask_numeric"
-                                   data-allow-minus="false"
-                                   class="form-control {{ $errors->has('purchase_price') ? 'is-invalid' : '' }}"
-                                   data-key="purchase_price"
-                                   id="purchase_price"
-                                   value="{{ old('purchase_price', $inventory->purchase_price ?? '') }}">
+                            <input type="text" data-digits="2" data-type="inputmask_numeric" data-allow-minus="false" class="form-control {{ $errors->has('purchase_price') ? 'is-invalid' : '' }}" data-key="purchase_price" id="purchase_price" value="{{ old('purchase_price', $inventory->purchase_price ?? '') }}">
                             <input type="hidden"
                                    data-type="inputmask_numeric_unmasked"
                                    name="purchase_price"

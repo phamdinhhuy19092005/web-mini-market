@@ -8,6 +8,7 @@ use App\Enum\ProductAttributeTypeEnum;
 use App\Http\Requests\Backoffice\Interfaces\StoreAttributeRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeRequestInterface;
 use App\Models\Category;
+use App\Models\CategoryGroup;
 use App\Services\AttributeService;
 use Illuminate\Http\Request;
 
@@ -28,8 +29,9 @@ class AttributeController extends BaseController
     public function create()
     {
         $ProductAttributeTypeEnum = ProductAttributeTypeEnum::labels();
-        $Categories = Category::all();
-        return view('backoffice.pages.attributes.create', compact('ProductAttributeTypeEnum', 'Categories'));
+        $categories = Category::with('subCategories')->get();
+        $categoryGroups = CategoryGroup::all();
+        return view('backoffice.pages.attributes.create', compact('ProductAttributeTypeEnum', 'categories', 'categoryGroups'));
     }
 
     public function store(StoreAttributeRequestInterface $request)

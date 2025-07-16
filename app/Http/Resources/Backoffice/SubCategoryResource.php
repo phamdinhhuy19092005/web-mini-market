@@ -12,7 +12,7 @@ namespace App\Http\Resources\Backoffice;;
                 'category_name' => optional($this->category)->name,
                 'category_id' => $this->category_id,
                 'slug' => $this->slug,
-                'image' => $this->formatImageUrl($this->image),
+                'image' => $this->image,
                 'description' => $this->description,
                 'status' => $this->status,
                 'status_name' => $this->status_name,

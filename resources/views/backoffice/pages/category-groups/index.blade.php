@@ -38,12 +38,12 @@
                             <thead>
                                 <tr>
                                     <th data-property="id" scope="col">{{ __('ID') }}</th>
-                                    <th data-property="image" data-orderable="false" data-render-callback="renderCallbackPrimaryImage" scope="col">{{ __('Hình ảnh') }}</th>
+                                    <th data-property="image" data-orderable="false" data-render-callback="renderImageColumn" scope="col">{{ __('Hình ảnh') }}</th>
                                     <th data-property="name" scope="col">{{ __('Tên') }}</th>
                                     <th data-property="slug" scope="col">{{ __('Slug') }}</th>
                                     <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
                                     <th data-orderable="false" data-property="categories" data-render-callback="renderCallbackCategories">{{ __('Danh mục') }}</th>
-                                    <th class="actions" data-orderable="false" data-render-callback="" scope="col" aria-label="Hành động">{{ __('Hành động') }}</th>
+                                    <th class="datatable-action" data-property="actions">{{ __('Hành động') }}</th>      
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -54,49 +54,6 @@
         </div>
     </div>
 @endsection
-
-<script>
-    function renderCallbackPrimaryImage(data, type, full) {
-        const image = $('<img>', {
-            src: data,
-            width: 40,
-            height: 40,
-        });
-
-        return image.prop('outerHTML');
-    }
-
-    function renderCallbackCategories(data, type, full) {
-        const count = data?.length || 0;
-
-        if (! count) {
-            return;
-        }
-
-        const categoriesBadge = data.map((category, index) => {
-            return $('<span>', { class: `mr-1 mt-1 mb-1 d-inline-block` })
-                    .append(`<span class="k-badge k-badge--brand k-badge--inline k-badge--outline k-badge--pill">${category.name}</span>`).prop('outerHTML');
-        });
-
-        const container = $('<div>', { class: 'category-see-more' }).append(categoriesBadge.join(''));
-
-        return container.prop('outerHTML');
-    }
-
-    function renderStatusColumn(data, type, full, meta) {
-        if (!data) return '';
-        let classMap = {
-            'Active': 'k-badge--success',
-            'Inactive': 'k-badge--danger',
-            'Pending': 'k-badge--warning'
-        };
-
-        // Mặc định là success nếu không xác định
-        let badgeClass = classMap[data] || 'k-badge--secondary';
-
-        return `<span style="width:max-content" class="k-badge k-badge--inline k-badge--pill ${badgeClass}">${data}</span>`;
-    }
-</script>
 
 @component('backoffice.partials.datatable')
 @endcomponent

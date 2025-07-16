@@ -23,9 +23,12 @@ abstract class BaseResource extends JsonResource
         });
     }
 
-    protected function formatImageUrl(?string $path): ?string
+    protected function defaultActions(string $routePrefix): array
     {
-        return Str::startsWith($path, 'http') ? $path : asset('storage/' . ltrim($path, '/'));
+        return [
+            'update' => route("bo.web.{$routePrefix}.edit", $this->id),
+            'delete' => route("bo.web.{$routePrefix}.destroy", $this->id),
+        ];
     }
 
 }

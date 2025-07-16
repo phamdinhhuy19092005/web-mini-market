@@ -20,6 +20,6 @@ class Currency extends Model
 
     protected $casts = [
         'used_countries' => 'array',
-        'status' => 'boolean',
+        // 'status' => 'boolean',
     ];
 }

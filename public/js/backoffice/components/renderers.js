@@ -15,16 +15,16 @@ window.renderStatusColumn = function(data) {
     return `<span class="k-badge k-badge--inline k-badge--pill ${badgeClass}">${data}</span>`;
 };
 
-window.renderActions = function (data) {
-    let html = '';
-    if (data.update) {
-        html += `<a href="${data.update}" class="btn btn-sm btn-warning mr-1" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>`;
-    }
-    if (data.delete) {
-        html += `<button class="btn btn-sm btn-danger" onclick="handleDelete('${data.delete}')" title="Xóa"><i class="fa fa-trash"></i></button>`;
-    }
-    return html || '<span class="text-muted">No actions</span>';
-};
+// window.renderActions = function (data) {
+//     let html = '';
+//     if (data.update) {
+//         html += `<a href="${data.update}" class="btn btn-sm btn-warning mr-1" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>`;
+//     }
+//     if (data.delete) {
+//         html += `<button class="btn btn-sm btn-danger" onclick="handleDelete('${data.delete}')" title="Xóa"><i class="fa fa-trash"></i></button>`;
+//     }
+//     return html || '<span class="text-muted">No actions</span>';
+// };
 
 window.handleDelete = function (url) {
     if (confirm("Bạn có chắc chắn muốn xóa?")) {
@@ -56,3 +56,21 @@ window.renderCallbackCategoryGroups = function (data) {
     if (!data) return '';
     return `<span class="k-badge k-badge--brand k-badge--inline k-badge--outline k-badge--pill">${data}</span>`;
 }
+
+window.renderCallbackCategories = (data, type, full) => {
+    const count = data?.length || 0;
+
+    if (!count) {
+        return;
+    }
+
+    const categoriesBadge = data.map((category) => {
+        return $('<span>', { class: `mr-1 mt-1 mb-1 d-inline-block` })
+            .append(`<span class="k-badge k-badge--brand k-badge--inline k-badge--outline k-badge--pill">${category.name}</span>`)
+            .prop('outerHTML');
+    });
+
+    const container = $('<div>', { class: 'category-see-more' }).append(categoriesBadge.join(''));
+
+    return container.prop('outerHTML');
+};

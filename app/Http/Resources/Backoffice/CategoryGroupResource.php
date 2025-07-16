@@ -10,7 +10,7 @@ class CategoryGroupResource extends BaseResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'image' => $this->formatImageUrl($this->image),
+            'image' => $this->image,
             'description' => $this->description,
             'status' => $this->status,
             'status_name' => $this->status_name,
@@ -22,6 +22,7 @@ class CategoryGroupResource extends BaseResource
                     'name' => $category->name,
                 ];
             }),
+            'actions' => $this->defaultActions('categories'),
         ];
     }
 }

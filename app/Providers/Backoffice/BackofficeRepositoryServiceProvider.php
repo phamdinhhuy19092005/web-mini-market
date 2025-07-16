@@ -34,13 +34,18 @@ use App\Repositories\Interfaces\AttributeRepositoryInterface;
 use App\Repositories\Interfaces\AttributeValueRepositoryInterface;
 use App\Repositories\Interfaces\BrandRepositoryInterface;
 use App\Repositories\Interfaces\InventoryRepositoryInterface;
+use App\Repositories\Interfaces\PaymentOptionRepositoryInterface;
+use App\Repositories\Interfaces\PaymentProviderRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\Interfaces\ShippingRateRepositoryInterface;
 use App\Repositories\Interfaces\ShippingZoneRepositoryInterface;
 use App\Repositories\Interfaces\SubCategoryRepositoryInterface;
 use App\Repositories\Interfaces\SubscriberRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\InventoryRepository;
 use App\Repositories\PageRepository;
+use App\Repositories\PaymentOptionRepository;
+use App\Repositories\PaymentProviderRepository;
 use App\Repositories\PostCategoryRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\ProductRepository;
@@ -49,6 +54,7 @@ use App\Repositories\ShippingRateRepository;
 use App\Repositories\ShippingZoneRepository;
 use App\Repositories\SubCategoryRepository;
 use App\Repositories\SubscriberRepository;
+use App\Repositories\UserRepository;
 
 class BackofficeRepositoryServiceProvider extends ServiceProvider
 {
@@ -200,5 +206,26 @@ class BackofficeRepositoryServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         InventoryRepositoryInterface::class        => InventoryRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Users
+        |--------------------------------------------------------------------------
+        */
+        UserRepositoryInterface::class        => UserRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment Providers
+        |--------------------------------------------------------------------------
+        */
+        PaymentProviderRepositoryInterface::class        => PaymentProviderRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment Options
+        |--------------------------------------------------------------------------
+        */
+        PaymentOptionRepositoryInterface::class        => PaymentOptionRepository::class,
     ];
 }

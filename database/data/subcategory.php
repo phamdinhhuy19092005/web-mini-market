@@ -403,7 +403,7 @@ return [
     ],
     [
         'name' => 'Cá đông lạnh',
-        'slug' => 'ca-dong-lanh',
+        'slug' => 'ca-dong-lanh-9',
         'category_id' => 9,
         'seo_title' => 'Cá đông lạnh',
         'seo_description' => 'Cá đông lạnh tiện lợi cho bảo quản và chế biến',
@@ -419,7 +419,7 @@ return [
     ],
     [
         'name' => 'Chả cá',
-        'slug' => 'cha-ca',
+        'slug' => 'cha-ca-9',
         'category_id' => 9,
         'seo_title' => 'Chả cá',
         'seo_description' => 'Chả cá dai ngon, phù hợp chiên hoặc hấp',
@@ -427,7 +427,7 @@ return [
     ],
     [
         'name' => 'Hải sản đông lạnh',
-        'slug' => 'hai-san-dong-lanh',
+        'slug' => 'hai-san-dong-lanh-9',
         'category_id' => 9,
         'seo_title' => 'Hải sản đông lạnh',
         'seo_description' => 'Hải sản được cấp đông giữ nguyên vị tươi ngon',
@@ -435,7 +435,7 @@ return [
     ],
     [
         'name' => 'Cá viên',
-        'slug' => 'ca-vien',
+        'slug' => 'ca-vien-9',
         'category_id' => 9,
         'seo_title' => 'Cá viên',
         'seo_description' => 'Cá viên chế biến sẵn, tiện lợi cho món lẩu, chiên',
@@ -443,7 +443,7 @@ return [
     ],
     [
         'name' => 'Cá khô',
-        'slug' => 'ca-kho',
+        'slug' => 'ca-kho-9',
         'category_id' => 9,
         'seo_title' => 'Cá khô',
         'seo_description' => 'Các loại cá khô truyền thống, đậm đà hương vị',
@@ -451,7 +451,7 @@ return [
     ],
     [
         'name' => 'Mực viên, tôm viên',
-        'slug' => 'muc-vien-tom-vien',
+        'slug' => 'muc-vien-tom-vien-9',
         'category_id' => 9,
         'seo_title' => 'Mực viên, tôm viên',
         'seo_description' => 'Mực viên, tôm viên tiện lợi, thơm ngon',
@@ -459,7 +459,7 @@ return [
     ],
     [
         'name' => 'Tôm, mực khô',
-        'slug' => 'tom-muc-kho',
+        'slug' => 'tom-muc-kho-9',
         'category_id' => 9,
         'seo_title' => 'Tôm, mực khô',
         'seo_description' => 'Tôm và mực khô bảo quản lâu, đậm vị biển',
@@ -571,7 +571,7 @@ return [
     ],
     [
         'name' => 'Bò viên',
-        'slug' => 'bo-vien',
+        'slug' => 'bo-vien-11',
         'category_id' => 11,
         'seo_title' => 'Bò viên',
         'seo_description' => 'Bò viên dai ngon, thích hợp lẩu, bún bò, mì',
@@ -635,7 +635,7 @@ return [
     ],
     [
         'name' => 'Sữa chua uống trẻ em',
-        'slug' => 'sua-chua-uong-tre-em',
+        'slug' => 'sua-chua-uong-tre-em-14',
         'category_id' => 14,
         'seo_title' => 'Sữa chua uống trẻ em',
         'seo_description' => 'Sữa chua uống bổ sung lợi khuẩn dành cho trẻ nhỏ',
@@ -643,7 +643,7 @@ return [
     ],
     [
         'name' => 'Phô mai',
-        'slug' => 'pho-mai',
+        'slug' => 'pho-mai-14',
         'category_id' => 14,
         'seo_title' => 'Phô mai',
         'seo_description' => 'Phô mai các loại giàu canxi và đạm, tốt cho sức khỏe',
@@ -651,7 +651,7 @@ return [
     ],
     [
         'name' => 'Kem sữa, whipping cream',
-        'slug' => 'kem-sua-whipping-cream',
+        'slug' => 'kem-sua-whipping-cream-14',
         'category_id' => 14,
         'seo_title' => 'Kem sữa, whipping cream',
         'seo_description' => 'Kem sữa tươi và whipping cream dùng cho món tráng miệng',
@@ -659,7 +659,7 @@ return [
     ],
     [
         'name' => 'Sữa chua uống men tiêu hoá',
-        'slug' => 'sua-chua-uong-men-tieu-hoa',
+        'slug' => 'sua-chua-uong-men-tieu-hoa-14',
         'category_id' => 14,
         'seo_title' => 'Sữa chua uống men tiêu hoá',
         'seo_description' => 'Sữa chua uống hỗ trợ tiêu hoá và tăng đề kháng',
@@ -667,7 +667,7 @@ return [
     ],
     [
         'name' => 'Sữa chua Hy Lạp',
-        'slug' => 'sua-chua-hy-lap',
+        'slug' => 'sua-chua-hy-lap-14',
         'category_id' => 14,
         'seo_title' => 'Sữa chua Hy Lạp',
         'seo_description' => 'Sữa chua Hy Lạp đặc, giàu protein và ít béo',
@@ -675,7 +675,7 @@ return [
     ],
     [
         'name' => 'Bơ',
-        'slug' => 'bo',
+        'slug' => 'bo-14',
         'category_id' => 14,
         'seo_title' => 'Bơ',
         'seo_description' => 'Bơ thực vật và bơ động vật dùng cho nấu ăn và làm bánh',
@@ -683,7 +683,7 @@ return [
     ],
     [
         'name' => 'Váng sữa',
-        'slug' => 'vang-sua',
+        'slug' => 'vang-sua-14',
         'category_id' => 14,
         'seo_title' => 'Váng sữa',
         'seo_description' => 'Váng sữa béo ngậy, thơm ngon, phù hợp cho trẻ em',
@@ -737,6 +737,19 @@ return [
         'seo_description' => 'Sữa công thức bổ sung vi chất, hỗ trợ phát triển toàn diện',
         'status' => 1,
     ],
+
+
+
+
+
+
+
+
+
+
+
+
+
     [
         'name' => 'Sữa gạo',
         'slug' => 'sua-gao',
@@ -771,7 +784,7 @@ return [
     ],
     [
         'name' => 'Khác',
-        'slug' => 'khac-11',
+        'slug' => 'khac-17',
         'category_id' => 17,
         'seo_title' => '',
         'seo_description' => '',
@@ -803,7 +816,7 @@ return [
     ],
     [
         'name' => 'Sữa chua uống trẻ em',
-        'slug' => 'sua-chua-uong-tre-em',
+        'slug' => 'sua-chua-uong-tre-em-22',
         'category_id' => 21,
         'seo_title' => 'Sữa chua uống trẻ em',
         'seo_description' => 'Sữa chua uống bổ sung lợi khuẩn dành cho trẻ nhỏ',
@@ -819,7 +832,7 @@ return [
     ],
     [
         'name' => 'Kem sữa, whipping cream',
-        'slug' => 'kem-sua-whipping-cream',
+        'slug' => 'kem-sua-whipping-cream-21',
         'category_id' => 21,
         'seo_title' => 'Kem sữa, whipping cream',
         'seo_description' => 'Kem sữa tươi và whipping cream dùng cho món tráng miệng',
@@ -827,7 +840,7 @@ return [
     ],
     [
         'name' => 'Bơ',
-        'slug' => 'bo',
+        'slug' => 'bo-21',
         'category_id' => 21,
         'seo_title' => 'Bơ',
         'seo_description' => 'Bơ thực vật và bơ động vật dùng cho nấu ăn và làm bánh',
@@ -835,7 +848,7 @@ return [
     ],
     [
         'name' => 'Váng sữa',
-        'slug' => 'vang-sua',
+        'slug' => 'vang-sua-21',
         'category_id' => 21,
         'seo_title' => 'Váng sữa',
         'seo_description' => 'Váng sữa béo ngậy, thơm ngon, phù hợp cho trẻ em',
@@ -843,7 +856,7 @@ return [
     ],
     [
         'name' => 'Sữa chua Hy Lạp',
-        'slug' => 'sua-chua-hy-lap',
+        'slug' => 'sua-chua-hy-lap-21',
         'category_id' => 21,
         'seo_title' => 'Sữa chua Hy Lạp',
         'seo_description' => 'Sữa chua Hy Lạp đặc, giàu protein và ít béo',
@@ -851,7 +864,7 @@ return [
     ],
     [
         'name' => 'Sữa chua uống men tiêu hoá',
-        'slug' => 'sua-chua-uong-men-tieu-hoa',
+        'slug' => 'sua-chua-uong-men-tieu-hoa-21',
         'category_id' => 21,
         'seo_title' => 'Sữa chua uống men tiêu hoá',
         'seo_description' => 'Sữa chua uống hỗ trợ tiêu hoá và tăng đề kháng',
@@ -859,7 +872,7 @@ return [
     ],
     [
         'name' => 'Bánh mì',
-        'slug' => 'banh-mi',
+        'slug' => 'banh-mi-22',
         'category_id' => 22,
         'seo_title' => 'Bánh mì',
         'seo_description' => 'Bánh mì tươi, giòn ngon cho bữa sáng và ăn vặt',
@@ -899,7 +912,7 @@ return [
     ],
     [
         'name' => 'Cá đông lạnh',
-        'slug' => 'ca-dong-lanh',
+        'slug' => 'ca-dong-lanh-23',
         'category_id' => 23,
         'seo_title' => 'Cá đông lạnh',
         'seo_description' => 'Cá được cấp đông giữ trọn độ tươi và vị ngon',
@@ -915,7 +928,7 @@ return [
     ],
     [
         'name' => 'Hải sản đông lạnh',
-        'slug' => 'hai-san-dong-lanh',
+        'slug' => 'hai-san-dong-lanh-23',
         'category_id' => 23,
         'seo_title' => 'Hải sản đông lạnh',
         'seo_description' => 'Hải sản cấp đông nhanh, giữ nguyên chất dinh dưỡng',
@@ -1067,7 +1080,7 @@ return [
     ],
     [
         'name' => 'Cá viên',
-        'slug' => 'ca-vien',
+        'slug' => 'ca-vien-31',
         'category_id' => 31,
         'seo_title' => 'Cá viên',
         'seo_description' => 'Cá viên tươi ngon, thích hợp chiên, nấu lẩu',
@@ -1075,7 +1088,7 @@ return [
     ],
     [
         'name' => 'Bò viên',
-        'slug' => 'bo-vien',
+        'slug' => 'bo-vien-31',
         'category_id' => 31,
         'seo_title' => 'Bò viên',
         'seo_description' => 'Bò viên dai ngon, đậm vị, dùng cho bún bò, mì',
@@ -1083,7 +1096,7 @@ return [
     ],
     [
         'name' => 'Mực viên, tôm viên',
-        'slug' => 'muc-vien-tom-vien',
+        'slug' => 'muc-vien-tom-vien-31',
         'category_id' => 31,
         'seo_title' => 'Mực viên, tôm viên',
         'seo_description' => 'Viên mực, tôm thơm ngon cho món lẩu, chiên giòn',
@@ -1091,7 +1104,7 @@ return [
     ],
     [
         'name' => 'Chả cá',
-        'slug' => 'cha-ca',
+        'slug' => 'cha-ca-31',
         'category_id' => 31,
         'seo_title' => 'Chả cá',
         'seo_description' => 'Chả cá dai thơm, chế biến sẵn tiện lợi ăn liền',
@@ -1203,7 +1216,7 @@ return [
     ],
     [
         'name' => 'Tôm, mực khô',
-        'slug' => 'tom-muc-kho',
+        'slug' => 'tom-muc-kho-37',
         'category_id' => 37,
         'seo_title' => 'Tôm, mực khô',
         'seo_description' => 'Tôm và mực khô đậm đà, thích hợp chế biến món nhậu',
@@ -1211,7 +1224,7 @@ return [
     ],
     [
         'name' => 'Cá khô',
-        'slug' => 'ca-kho',
+        'slug' => 'ca-kho-37',
         'category_id' => 37,
         'seo_title' => 'Cá khô',
         'seo_description' => 'Cá khô thơm ngon, tiện lợi bảo quản và chế biến',
@@ -1315,12 +1328,22 @@ return [
     ],
     [
         'name' => 'Bánh Bông Lan',
-        'slug' => 'banh-bong-lan',
+        'slug' => 'banh-bong-lan-41',
         'category_id' => 41,
         'seo_title' => 'Bánh bông lan',
         'seo_description' => 'Bánh bông lan mềm mịn, nhiều hương vị hấp dẫn',
         'status' => 1,
     ],
+
+
+
+
+
+
+
+
+
+    
     [
         'name' => 'Kẹo cứng, kẹo mút',
         'slug' => 'keo-cung-keo-mut',
@@ -1531,7 +1554,7 @@ return [
     ],
     [
         'name' => 'Nước mắm chay',
-        'slug' => 'nuoc-mam-chay',
+        'slug' => 'nuoc-mam-chay-54',
         'category_id' => 54,
         'seo_title' => 'Nước mắm chay',
         'seo_description' => 'Nước mắm chế biến từ thực vật, dành cho người ăn chay.',
@@ -1667,7 +1690,7 @@ return [
     ],
     [
         'name' => 'Hạt nêm chay',
-        'slug' => 'hat-nem-chay',
+        'slug' => 'hat-nem-chay-58',
         'category_id' => 58,
         'seo_title' => 'Hạt nêm chay',
         'seo_description' => 'Hạt nêm rau củ cho người ăn chay, vị ngọt thanh tự nhiên.',
@@ -1731,7 +1754,7 @@ return [
     ],
     [
         'name' => 'Khác',
-        'slug' => 'khac-11',
+        'slug' => 'khac-60',
         'category_id' => 60,
         'seo_title' => 'Gia vị khác',
         'seo_description' => 'Các loại gia vị và sản phẩm khác chưa phân loại cụ thể.',
@@ -1747,7 +1770,7 @@ return [
     ],
     [
         'name' => 'Bơ',
-        'slug' => 'bo',
+        'slug' => 'bo-61',
         'category_id' => 61,
         'seo_title' => 'Bơ nấu ăn',
         'seo_description' => 'Bơ động vật hoặc thực vật, dùng làm bánh hoặc chiên xào.',
@@ -2059,7 +2082,7 @@ return [
     ],
     [
         'name' => 'Mì chay',
-        'slug' => 'mi-chay',
+        'slug' => 'mi-chay-72',
         'category_id' => 72,
         'seo_title' => 'Mì chay',
         'seo_description' => 'Mì gói chay nhiều vị, phù hợp người ăn chay trường.',
@@ -2067,7 +2090,7 @@ return [
     ],
     [
         'name' => 'Nước mắm chay',
-        'slug' => 'nuoc-mam-chay',
+        'slug' => 'nuoc-mam-chay-72',
         'category_id' => 72,
         'seo_title' => 'Nước mắm chay',
         'seo_description' => 'Nước mắm từ nấm và đậu nành, dùng thay thế mắm thường.',
@@ -2083,7 +2106,7 @@ return [
     ],
     [
         'name' => 'Hạt nêm chay',
-        'slug' => 'hat-nem-chay',
+        'slug' => 'hat-nem-chay-72',
         'category_id' => 72,
         'seo_title' => 'Hạt nêm chay',
         'seo_description' => 'Gia vị nêm món chay từ nấm, rau củ.',
@@ -2171,7 +2194,7 @@ return [
     ],
     [
         'name' => 'Mì chay',
-        'slug' => 'mi-chay',
+        'slug' => 'mi-chay-75',
         'category_id' => 75,
         'seo_title' => 'Mì chay',
         'seo_description' => 'Mì gói chay cho người ăn chay trường và theo chế độ thực dưỡng.',
@@ -2299,7 +2322,7 @@ return [
     ],
     [
         'name' => 'Sốt phô mai',
-        'slug' => 'sot-pho-mai',
+        'slug' => 'sot--81',
         'category_id' => 81,
         'seo_title' => 'Sốt phô mai',
         'seo_description' => 'Sốt phô mai béo ngậy, ăn kèm mì Ý, hamburger.',
@@ -2339,7 +2362,7 @@ return [
     ],
     [
         'name' => 'Bánh Mì',
-        'slug' => 'banh-mi',
+        'slug' => 'banh-mi-84',
         'category_id' => 84,
         'seo_title' => 'Bánh mì Việt Nam',
         'seo_description' => 'Bánh mì đặc ruột, giòn thơm, ăn kèm nhân đa dạng.',
@@ -2363,7 +2386,7 @@ return [
     ],
     [
         'name' => 'Bánh Bông Lan',
-        'slug' => 'banh-bong-lan',
+        'slug' => 'banh-bong-lan-85',
         'category_id' => 85,
         'seo_title' => 'Bánh bông lan',
         'seo_description' => 'Bánh bông lan mềm, thơm trứng sữa, thích hợp ăn sáng.',
@@ -2650,22 +2673,6 @@ return [
     'status' => 1,
 ],
 [
-    'name' => 'Món xào, xốt, luộc, khác',
-    'slug' => 'mon-xao-xot-luoc-khac',
-    'category_id' => 98,
-    'seo_title' => 'Món xào, sốt, luộc',
-    'seo_description' => 'Các món ăn chế biến nhanh như xào, sốt, luộc.',
-    'status' => 1,
-],
-[
-    'name' => 'Món kho',
-    'slug' => 'mon-kho',
-    'category_id' => 98,
-    'seo_title' => 'Món kho',
-    'seo_description' => 'Món kho đậm đà, chuẩn vị truyền thống Việt.',
-    'status' => 1,
-],
-[
     'name' => 'Bánh hotteok',
     'slug' => 'banh-hotteok',
     'category_id' => 99,
@@ -2687,22 +2694,6 @@ return [
     'category_id' => 99,
     'seo_title' => 'Món chiên, nướng',
     'seo_description' => 'Món chiên, nướng hấp dẫn, ngon miệng.',
-    'status' => 1,
-],
-[
-    'name' => 'Canh thịt nhồi',
-    'slug' => 'canh-thit-nhoi',
-    'category_id' => 100,
-    'seo_title' => 'Canh thịt nhồi',
-    'seo_description' => 'Canh với thịt nhồi rau củ hoặc đậu hũ thơm ngon.',
-    'status' => 1,
-],
-[
-    'name' => 'Canh rau củ, soup',
-    'slug' => 'canh-rau-cu-soup',
-    'category_id' => 100,
-    'seo_title' => 'Canh rau củ, súp',
-    'seo_description' => 'Món canh thanh đạm và súp dinh dưỡng.',
     'status' => 1,
 ],
 [

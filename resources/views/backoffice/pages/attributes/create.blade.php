@@ -80,11 +80,12 @@
                                         data-size="5"
                                         data-selected-text-format="count > 5"
                                         multiple required>
-                                    @foreach($Categories as $category)
-                                        <option value="{{ $category->id }}"
-                                            {{ collect(old('category_ids', []))->contains($category->id) ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
+                                    @foreach($categoryGroups as $categoryGroup)
+                                        <optgroup label="{{ $categoryGroup->name }}">
+                                            @foreach($categoryGroup->categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </optgroup>
                                     @endforeach
                                 </select>
                                 @error('category_ids')

@@ -86,9 +86,9 @@ $breadcrumbs = [
                                 </div>
 
                                 <!-- Trạng thái -->
-                                <div class="form-group">
-                                    <label class="form-label">{{ __('Hoạt động') }}</label>
-                                    <div class="k-switch">
+                                <div class="form-group d-flex align-items-center">
+                                    <label class="form-label">{{ __('Trạng thái') }}</label>
+                                    <div class="k-switch ml-3">
                                         <label>
                                             <input type="checkbox" name="status" value="1" {{ old('status', $brand->status) ? 'checked' : '' }}>
                                             <span></span>

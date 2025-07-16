@@ -218,52 +218,6 @@ $breadcrumbs = [
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('desktop_image_file').addEventListener('change', function (event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const preview = document.getElementById('desktop_image_preview');
-                    preview.src = e.target.result;
-                    preview.classList.remove('d-none');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        document.getElementById('mobile_image_file').addEventListener('change', function (event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const preview = document.getElementById('mobile_image_preview');
-                    preview.src = e.target.result;
-                    preview.classList.remove('d-none');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        document.getElementById('desktop_image_path').addEventListener('input', function () {
-            const url = this.value;
-            const preview = document.getElementById('desktop_image_preview');
-            if (url) {
-                preview.src = url;
-                preview.classList.remove('d-none');
-            }
-        });
-
-        document.getElementById('mobile_image_path').addEventListener('input', function () {
-            const url = this.value;
-            const preview = document.getElementById('mobile_image_preview');
-            if (url) {
-                preview.src = url;
-                preview.classList.remove('d-none');
-            }
-        });
-    </script>
-
+@include('backoffice.pages.banners.pagejs.banner') 
 @endsection
 
