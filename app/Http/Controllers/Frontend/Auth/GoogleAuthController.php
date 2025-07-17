@@ -19,7 +19,6 @@ class GoogleAuthController extends BaseController
     {
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
-
             // Tìm user theo Google ID
             $user = User::where('google_id', $googleUser->getId())->first();
 
