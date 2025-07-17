@@ -20,8 +20,20 @@ class CategoryGroupResource extends BaseResource
                 return [
                     'id' => $category->id,
                     'name' => $category->name,
+                    'slug' => $category->slug,
+                    'image' => $category->image,
+                    'status' => $category->status,
+                    'subcategories' => $category->subCategories->map(function ($sub) {
+                        return [
+                            'id' => $sub->id,
+                            'name' => $sub->name,
+                            'slug' => $sub->slug,
+                            'status' => $sub->status,
+                        ];
+                    }),
                 ];
             }),
+
             'actions' => $this->defaultActions('categories'),
         ];
     }

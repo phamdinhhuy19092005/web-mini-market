@@ -20,6 +20,7 @@ class CategoryResource extends BaseResource
                 return [
                     'id' => $subcategory->id,
                     'name' => $subcategory->name,
+                    'slug' => $subcategory->slug,
                 ];
             }),
             'created_at' => $this->created_at,
