@@ -105,6 +105,10 @@ return [
         ),
     ],
 
+
+    'frontend_url' => env('FRONTEND_URL', 'http://localhost:3001'),
+
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
