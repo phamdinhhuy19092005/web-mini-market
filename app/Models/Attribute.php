@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Enum\ActivationStatus;
 use App\Enum\ProductAttributeTypeEnum;
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
 
 class Attribute extends Model
 {
+    use Activatable;
+    
     protected $fillable = [
         'name',
         'attribute_type',
@@ -30,8 +33,4 @@ class Attribute extends Model
         return ProductAttributeTypeEnum::label($this->attribute_type);
     }
 
-    public function getStatusNameAttribute(): string
-    {
-        return ActivationStatus::label($this->status);
-    }
 }

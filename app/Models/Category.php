@@ -3,13 +3,17 @@
 namespace App\Models;
 
 use App\Enum\ActivationStatus;
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Category -> Model
 
 class Category extends Model
 {
-    protected $table = 'categories';
+    use SoftDeletes;
+    use Activatable;
+
     protected $fillable = [
         'name',
         'slug',
@@ -40,12 +44,5 @@ class Category extends Model
     {
         return $this->hasMany(SubCategory::class);
     }
-
-    
-    public function getStatusNameAttribute(): string
-    {
-        return ActivationStatus::label($this->status);
-    }
-
 }
 

@@ -22,13 +22,4 @@ abstract class BaseResource extends JsonResource
             }
         });
     }
-
-    protected function defaultActions(string $routePrefix): array
-    {
-        return [
-            'update' => route("bo.web.{$routePrefix}.edit", $this->id),
-            'delete' => route("bo.web.{$routePrefix}.destroy", $this->id),
-        ];
-    }
-
 }

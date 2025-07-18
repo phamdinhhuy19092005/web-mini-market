@@ -80,6 +80,9 @@ Route::get('/category-groups/{id}/edit', [CategoryGroupController::class, 'edit'
 Route::put('/category-groups/{id}', [CategoryGroupController::class, 'update'])->name('category-groups.update')->middleware(['can:category-groups.update']);
 Route::delete('/category-groups/{id}', [CategoryGroupController::class, 'destroy'])->name('category-groups.destroy')->middleware(['can:category-groups.delete']);
 
+Route::get('/category-groups/trash', [CategoryGroupController::class, 'trash'])->name('category-groups.trash');
+Route::post('/category-groups/{id}/restore', [CategoryGroupController::class, 'restore'])->name('category-groups.restore');
+
 /*
 |--------------------------------------------------------------------------
 | Categories
@@ -94,6 +97,9 @@ Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('
 Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update')->middleware(['can:categories.update']);
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy')->middleware(['can:categories.delete']);
 
+Route::get('/categories/trash', [CategoryController::class, 'trash'])->name('categories.trash');
+Route::post('/categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+
 /*
 |--------------------------------------------------------------------------
 | Sub Categories
@@ -107,6 +113,9 @@ Route::get('/sub-categories/{id}', [SubCategoryController::class, 'show'])->name
 Route::get('/sub-categories/{id}/edit', [SubCategoryController::class, 'edit'])->name('sub-categories.edit')->middleware(['can:categories.update']);
 Route::put('/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('sub-categories.update')->middleware(['can:categories.update']);
 Route::delete('/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('sub-categories.destroy')->middleware(['can:categories.delete']);
+
+Route::get('/sub-categories/trash', [SubCategoryController::class, 'trash'])->name('sub-categories.trash');
+Route::post('/sub-categories/{id}/restore', [SubCategoryController::class, 'restore'])->name('sub-categories.restore');
 
 /*
 |--------------------------------------------------------------------------

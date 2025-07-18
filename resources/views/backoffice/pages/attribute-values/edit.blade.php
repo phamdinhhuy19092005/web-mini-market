@@ -22,90 +22,61 @@
                     </div>
                 </div>
 
-                <form action="{{ route('bo.web.attributes.update', $attribute->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('bo.web.attribute-values.update', $attribute_value->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
                     <div class="k-portlet__body">
                         <div class="row">
-                            {{-- Tên thuộc tính --}}
                             <div class="col-md-6 form-group">
-                                <label for="name">{{ __('Tên') }} <span class="text-danger">*</span></label>
-                                <input type="text" name="name" id="name" class="form-control"
-                                       placeholder="{{ __('Nhập tên thuộc tính') }}"
-                                       value="{{ old('name', $attribute->name) }}" autocomplete="off" required>
+                                <label for="attributes">{{ __('Thuộc tính') }} <span class="text-danger">*</span></label>
+                                <select name="attribute_id" id="attributes" class="form-control k_selectpicker"
+                                        data-live-search="true"
+                                        data-none-selected-text="{{ __('-- Chọn thuộc tính --') }}"
+                                        data-actions-box="true"
+                                        data-size="5"
+                                        data-selected-text-format="count > 5"
+                                        required>
+                                    <option value="">{{ __('-- Chọn thuộc tính --') }}</option>
+                                    @foreach($Attributes as $attribute)
+                                        <option value="{{ $attribute->id }}"
+                                            {{ old('attribute_id', $attribute_value->attribute_id) == $attribute->id ? 'selected' : '' }}>
+                                            {{ $attribute->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('attribute_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6 form-group">
+                                <label for="name">{{ __('Giá trị') }} <span class="text-danger">*</span></label>
+                                <input type="text" name="value" id="name" class="form-control"
+                                       placeholder="{{ __('Nhập giá trị') }}"
+                                       value="{{ old('value', $attribute_value->value) }}" autocomplete="off" required>
                                 @error('name')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
 
-                            {{-- Loại thuộc tính --}}
-                            <div class="col-md-6 form-group">
-                                <label for="attribute_type">{{ __('Loại') }} <span class="text-danger">*</span></label>
-                                <select name="attribute_type" id="attribute_type" class="form-control k_selectpicker" required>
-                                    <option value="">{{ __('-- Chọn loại --') }}</option>
-                                    @foreach($ProductAttributeTypeEnum as $key => $label)
-                                        <option value="{{ $key }}" {{ old('attribute_type', $attribute->attribute_type) == $key ? 'selected' : '' }}>
-                                            {{ $label }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('attribute_type')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            {{-- Thứ tự hiển thị --}}
                             <div class="col-md-6 form-group">
                                 <label for="order">{{ __('Thứ tự hiển thị') }}</label>
                                 <input type="number" min="1" name="order" id="order" class="form-control"
-                                       value="{{ old('order', $attribute->order) }}">
+                                       value="{{ old('order', $attribute_value->order) }}">
                                 @error('order')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
 
-                            {{-- Danh mục --}}
-                            <div class="col-md-6 form-group">
-                                <label for="category_ids">{{ __('Danh mục') }} <span class="text-danger">*</span></label>
-                                <select name="category_ids[]" id="category_ids" class="form-control k_selectpicker"
-                                        data-live-search="true"
-                                        data-none-selected-text="{{ __('-- Chọn danh mục --') }}"
-                                        data-actions-box="true"
-                                        data-size="5"
-                                        data-selected-text-format="count > 5"
-                                        multiple required>
-                                    @foreach($Categories as $category)
-                                        <option value="{{ $category->id }}"
-                                            {{ in_array($category->id, old('category_ids', $attribute->categories->pluck('id')->toArray())) ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('category_ids')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            {{-- Trạng thái --}}
                             <div class="col-md-6 form-group d-flex align-items-center">
-                                <label class="mr-3">{{ __('Kích hoạt') }}</label>
-                                <span class="k-switch">
+                                <label class="form-label">{{ __('Trạng thái') }}</label>
+                                <div class="k-switch ml-3">
                                     <label>
-                                        <input type="checkbox" name="status" value="1" {{ old('status', $attribute->status) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="status" value="1" {{ old('status', $attribute_value->status) ? 'checked' : '' }}>
                                         <span></span>
                                     </label>
-                                </span>
+                                </div>
                                 @error('status')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror

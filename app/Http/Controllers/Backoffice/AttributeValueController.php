@@ -42,14 +42,17 @@ class AttributeValueController extends BaseController
     public function show($id)
     {
         $attribute_value = $this->attributeValueService->show($id);
+        $Attributes = Attribute::all();
 
-        return view('backoffice.pages.attribute-values.edit', compact('attribute_value'));
+        return view('backoffice.pages.attribute-values.edit', compact('attribute_value', 'Attributes'));
     }
 
     public function edit($id)
     {
         $attribute_value = $this->attributeValueService->show($id);
-        return view('backoffice.pages.attribute-values.edit', compact('attribute_value'));
+        $Attributes = Attribute::all();
+
+        return view('backoffice.pages.attribute-values.edit', compact('attribute_value', 'Attributes'));
     }
 
     public function update(UpdateAttributeValueRequestInterface $request, $id)

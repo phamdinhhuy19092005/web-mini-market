@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Enum\AccessChannelEnum;
 use App\Enum\ActivationStatus;
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+    use Activatable;
 
     protected $fillable = [
         'name',
@@ -43,11 +43,6 @@ class User extends Authenticatable
     public function actionLogs()
     {
         return $this->hasMany(UserActionLog::class);
-    }
-
-    public function getStatusNameAttribute(): string
-    {
-        return ActivationStatus::label($this->status);
     }
 
     public function getAccessChannelTypeNameAttribute(): string

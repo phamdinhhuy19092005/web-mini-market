@@ -25,7 +25,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="phome_number">Số điện thoại <span class="text-danger">*</span></label>
-                    <input type="number" name="phone_number" id="phone_number" class="form-control" autocomplete="off" value="{{ old('phone_number', $user->emphone_numberail) }}" disabled>
+                    <input type="number" name="phone_number" id="phone_number" class="form-control" autocomplete="off" value="{{ old('phone_number', $user->phone_number) }}" disabled>
                     @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div> 

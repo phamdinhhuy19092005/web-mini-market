@@ -61,4 +61,10 @@ class SubCategoryService extends BaseService
     {
         return $this->subCategoryRepository->delete($id);
     }
+
+    public function restore($id)
+    {
+        $model = $this->subCategoryRepository->model()::withTrashed()->findOrFail($id);
+        return $model->restore();
+    }
 }

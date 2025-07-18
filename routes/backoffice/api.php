@@ -33,9 +33,17 @@ Route::prefix('bo/api')->name('bo.api.')->group(function () {
 Route::get('/admins', [AdminController::class, 'index'])->name('admins.index');
 Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');
 Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
+
+
 Route::get('/category-groups', [CategoryGroupController::class, 'index'])->name('category-groups.index');
+Route::get('/category-groups/trash', [CategoryGroupController::class, 'trashList'])->name('category-groups.trash');
+
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/categories/trash', [CategoryController::class, 'trashList'])->name('categories.trash');
+
 Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-categories.index');
+Route::get('/sub-categories/trash', [SubCategoryController::class, 'trashList'])->name('sub-categories.trash');
+
 Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
 Route::get('/post-categories', [PostCategoryController::class, 'index'])->name('post-categories.index');
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');

@@ -27,7 +27,7 @@ class GoogleAuthController extends BaseController
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
-                    'avatar' => $googleUser->getAvatar(), // <-- thêm avatar nếu muốn
+                    'avatar' => $googleUser->getAvatar(), 
                     'password' => bcrypt(Str::random(16)),
                     'status' => 1,
                     'email_verified_at' => now(),
@@ -43,7 +43,6 @@ class GoogleAuthController extends BaseController
 
             Auth::login($user);
 
-            // Redirect về FE (dùng config hoặc hardcode tạm)
             $frontendUrl = config('app.frontend_url', 'http://localhost:3001');
             return redirect()->away($frontendUrl . '/login-gg-success?email=' . urlencode($user->email) . '&name=' . urlencode($user->name) . '&avatar=' . urlencode($user->avatar));
 

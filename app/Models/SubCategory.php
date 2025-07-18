@@ -2,16 +2,25 @@
 
 namespace App\Models;
 
-use App\Enum\ActivationStatus;
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Category -> Model
 
 class SubCategory extends Model
 {
+    use SoftDeletes;
+    use Activatable;
+
     protected $table = 'sub_categories';
     protected $fillable = [
-        'name', 'slug', 'category_id', 'seo_title', 'seo_description', 'status'
+        'name',
+        'slug',
+        'category_id', 
+        'seo_title', 
+        'seo_description', 
+        'status'
     ];
 
     public function category()
@@ -22,11 +31,6 @@ class SubCategory extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_subcategories');   
-    }
-
-    public function getStatusNameAttribute(): string
-    {
-        return ActivationStatus::label($this->status);
     }
 
 }

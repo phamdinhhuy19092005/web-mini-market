@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Backoffice;;
+namespace App\Http\Resources\Backoffice;
 
 class CategoryGroupResource extends BaseResource
 {
     public function toArray($request): array
     {
-        return [
+        return array_merge([
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
@@ -33,8 +33,15 @@ class CategoryGroupResource extends BaseResource
                     }),
                 ];
             }),
+        ], $this->generateActionPermissions());
+    }
 
-            'actions' => $this->defaultActions('categories'),
-        ];
+    public function generateActionPermissions() : array
+    {
+        return array_filter([
+            'actions' => array_filter([
+                'update' => route('bo.web.category-groups.edit', $this->id),
+            ]),
+        ]);
     }
 }

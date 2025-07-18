@@ -10,7 +10,7 @@ class PostCategoryResource extends BaseResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'image' => $this->formatImageUrl( $this->image),
+            'image' => $this->image,
             'description' => $this->description,
             'order' => $this->order,
             'display_on_frontend' => $this->display_on_frontend,

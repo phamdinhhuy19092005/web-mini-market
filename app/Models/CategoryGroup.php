@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enum\ActivationStatus;
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CategoryGroup extends Model
 {
-    use SoftDeletes;
-    
-    protected $dates = ['deleted_at'];
+    use SoftDeletes, Activatable;
 
+    protected $dates = ['deleted_at'];
+    
     protected $fillable = [
         'name',
         'slug',
@@ -23,15 +23,12 @@ class CategoryGroup extends Model
         'seo_description',
         'status',
         'created_at',
-        'updated_at'];
+        'updated_at',
+        'deleted_at',
+    ];
 
     public function categories()
     {
         return $this->hasMany(Category::class);
-    }
-
-    public function getStatusNameAttribute(): string
-    {
-        return ActivationStatus::label($this->status);
     }
 }

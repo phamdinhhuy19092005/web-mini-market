@@ -35,9 +35,11 @@
                                 <th data-property="name" scope="col">{{ __('Tên') }}</th>
                                 <th data-property="order" scope="col">{{ __('Thứ tự') }}</th>
                                 <th data-property="attribute_type_name" scope="col">{{ __('Loại') }}</th>
-                                <th data-property="supported_categories_names" data-render-callback="renderCallbackCategories" scope="col">{{ __('Danh mục') }}</th>
+                                <th data-property="supported_categories_names" data-render-callback="renderCallbackCategories" style="width: 50%;" class="text-nowrap">{{ __('Danh mục') }}</th>
                                 <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
-                                <th class="actions" data-orderable="false" scope="col" aria-label="Hành động">{{ __('Hành động') }}</th>
+                                <th class="none" data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
+                                <th class="none" data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>
+                                <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>

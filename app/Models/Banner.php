@@ -2,11 +2,12 @@
 namespace App\Models;
 
 use App\Enum\ActivationStatus;
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
 
 class Banner extends Model
 {
-    protected $table = 'banners';
+    use Activatable;
 
     protected $fillable = [
         'name', 
@@ -24,8 +25,4 @@ class Banner extends Model
         'status'
     ];
 
-    public function getStatusNameAttribute(): string
-    {
-        return ActivationStatus::label($this->status);
-    }
 }

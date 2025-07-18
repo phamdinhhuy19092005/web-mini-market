@@ -1,58 +1,50 @@
 @extends('backoffice.layouts.master')
 
 @php
-$title = __('Manage Category Groups');
+    $title = __('Manage Category Groups');
 
-$breadcrumbs = [
-    [
-        'label' => __('Products'),
-    ],
-    [
-        'label' => __('Danh mục'),
-    ],
-    [
-        'label' => __('Manage Category Groups'),
-    ],
-];
+    $breadcrumbs = [
+        [
+            'label' => __('Products'),
+        ],
+        [
+            'label' => __('Danh mục'),
+        ],
+        [
+            'label' => __('Manage Category Groups'),
+        ],
+    ];
 @endphp
 
-
-@component('backoffice.partials.breadcrumb', ['title' => $title,'items' => $breadcrumbs])
+@component('backoffice.partials.breadcrumb', ['title' => $title, 'items' => $breadcrumbs])
 @endcomponent
-
-
 
 <!-- begin:: Content Body -->
 @section('content_body')
-    <!-- begin:: Content Body -->
-    <div class="k-content__body	k-grid__item k-grid__item--fluid" id="k_content_body">
+    <div class="k-content__body k-grid__item k-grid__item--fluid" id="k_content_body">
         <div class="row">
             <div class="col-md">
-
                 <!--begin::Portlet-->
                 <div class="k-portlet">
                     <div class="k-portlet__head">
                         <div class="k-portlet__head-label">
-                            <h3 class="k-portlet__head-title">Edit Category Groups</h3>
+                            <h3 class="k-portlet__head-title">Chỉnh sửa nhóm danh mục</h3>
+                        </div>
+                        <div class="k-portlet__head-label">
+                            @can('category-groups.delete')
+                                <form id="delete-form" action="{{ route('bo.web.category-groups.destroy', $categoryGroup->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa nhóm danh mục này?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button style="width: 150px" type="submit" class="btn btn-danger ml-2">{{ __('Xóa') }}</button>
+                                </form>
+                            @endcan
                         </div>
                     </div>
 
                     <!--begin::Form-->
-                   <form class="k-form k-form--label-right" method="POST" action="{{ route('bo.web.category-groups.update', $categoryGroup->id) }}" enctype="multipart/form-data">
+                    <form class="k-form k-form--label-right" method="POST" action="{{ route('bo.web.category-groups.update', $categoryGroup->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <ul class="mb-0">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                        @endif
 
                         <div class="k-portlet__body">
                             <div class="row">
@@ -141,17 +133,16 @@ $breadcrumbs = [
                             </div>
                         </div>
                     </form>
+
                     <!--end::Form-->
                 </div>
-
                 <!--end::Portlet-->
             </div>
-
         </div>
     </div>
     <!-- end:: Content Body -->
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
+    <script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
 @endpush

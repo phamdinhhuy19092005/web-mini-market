@@ -1,10 +1,10 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Create Administrator');
+    $title = __('Tạo quản trị viên');
     $breadcrumbs = [
-        ['label' => __('Administration')],
-        ['label' => __('Create Administrator')],
+        ['label' => __('Quản trị viên')],
+        ['label' => __('Tạo quản trị viên')],
     ];
 @endphp
 

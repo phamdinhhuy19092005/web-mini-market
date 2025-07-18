@@ -9,6 +9,7 @@ use App\Http\Requests\Backoffice\Interfaces\StoreSubCategoryRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateSubCategoryRequestInterface;
 use App\Models\Category;
 use App\Models\CategoryGroup;
+use App\Models\SubCategory;
 use App\Services\SubCategoryService;
 use Illuminate\Http\Request;
 
@@ -69,5 +70,18 @@ class SubCategoryController extends BaseController
         $this->subCategoryService->delete($id);
 
         return redirect()->route('bo.web.sub-categories.index');
+    }
+
+     public function trash()
+    {
+        return view('backoffice.pages.sub-categories.trash');
+    }
+
+    public function restore($id)
+    {
+        $subCategory = SubCategory::withTrashed()->findOrFail($id);
+        $subCategory->restore();
+
+        return redirect()->back()->with('success', 'Danh mục đã được khôi phục thành công.');
     }
 }

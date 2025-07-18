@@ -37,7 +37,7 @@
                                     <th data-property="last_logged_in_at" scope="col">{{ __('Đăng nhập lần cuối') }}</th>
                                     <th data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
                                     <th data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>
-                                    <th data-property="actions" class="datatable-action" data-render-callback="renderActions" scope="col" aria-label="Hành động">{{ __('Hành động') }}</th>
+                                    <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                                 </tr>
                             </thead>
                         </table>

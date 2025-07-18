@@ -12,12 +12,10 @@ class UpdateAttributeValueRequest extends BaseFormRequest implements UpdateAttri
     {
         // dd($this->all());
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'attribute_type' => ['nullable', 'integer'],
+            'value' => ['required', 'string', 'max:255'],
+            'attribute_id' => ['required', 'exists:attributes,id'],
             'order' => ['nullable', 'integer'],
             'status' => ['required', Rule::in(ActivationStatus::all())],
-            'category_ids' => ['required', 'array'],
-            'category_ids.*' => ['exists:categories,id'],
         ];
     }
 

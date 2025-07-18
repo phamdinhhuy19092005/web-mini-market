@@ -83,30 +83,11 @@
                         </div>
                         <div class="form-group">
                             <label>Tên *</label>
-                            <input name="name" required type="text" class="form-control" value="{{ auth('admin')->user()->name ?? 'admin' }}">
+                            <input name="name" required type="text" class="form-control" value="{{ auth('admin')->user()->name ?? 'admin' }}" disabled>
                         </div>
-                        <div class="form-group mb-2 text-right">
-                            <button type="submit" class="btn btn-primary">Lưu</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="k-separator k-separator--border-dashed"></div>
-                <div class="form-group mb-2">
-                    <h5 class="my-4">Đổi mật khẩu</h5>
-                    <form id="Form_UpdateCurrentAdminPassword" action="{{ route('bo.web.admin.password.update') }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <div class="form-group">
-                            <label>Mật khẩu hiện tại *</label>
-                            <input required name="password" type="password" class="form-control" autocomplete="current-password">
-                        </div>
-                        <div class="form-group">
-                            <label>Mật khẩu mới *</label>
-                            <input required name="new_password" type="password" class="form-control" autocomplete="new-password">
-                        </div>
-                        <div class="form-group mb-0 text-right">
-                            <button type="submit" class="btn btn-primary">Lưu</button>
-                        </div>
+                        <a href="{{ route('bo.web.admins.edit', auth('admin')->user()->id) }}" class="btn btn-primary">
+                            Xem chi tiết
+                        </a>
                     </form>
                 </div>
             </div>

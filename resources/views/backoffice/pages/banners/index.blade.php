@@ -58,9 +58,9 @@
                                         <th data-property="color">{{ __('Màu sắc') }}</th>
                                         <th data-property="start_at">{{ __('Ngày bắt đầu') }}</th>
                                         <th data-property="end_at">{{ __('Ngày kết thúc') }}</th>
-                                        <th data-property="created_at">{{ __('Ngày tạo') }}</th>
-                                        <th data-property="updated_at">{{ __('Ngày cập nhật') }}</th>
-                                        <th class="datatable-action" data-property="actions" data-render-callback="renderActions">{{ __('Hành động') }}</th>                                
+                                        <th class="none" data-property="created_at">{{ __('Ngày tạo') }}</th>
+                                        <th class="none" data-property="updated_at">{{ __('Ngày cập nhật') }}</th>
+                                        <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>                                
                                     </tr>
                                 </thead>
                                 <tbody></tbody>

@@ -94,4 +94,10 @@ class CategoryService extends BaseService
     {
         return $this->categoryRepository->delete($id);
     }
+
+    public function restore($id)
+    {
+        $model = $this->categoryRepository->model()::withTrashed()->findOrFail($id);
+        return $model->restore();
+    }
 }

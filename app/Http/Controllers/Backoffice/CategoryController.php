@@ -7,7 +7,7 @@ use App\Contracts\Responses\Backoffice\UpdateCategoryResponseContract;
 
 use App\Http\Requests\Backoffice\Interfaces\StoreCategoryRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateCategoryRequestInterface;
-
+use App\Models\Category;
 use App\Models\CategoryGroup;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
@@ -63,11 +63,25 @@ class CategoryController extends BaseController
 
         return $this->responses(UpdateCategoryResponseContract::class);
     }
+
     public function destroy($id)
     {
-        $group = CategoryGroup::findOrFail($id);
+        $group = Category::findOrFail($id);
         $group->delete();
 
-        return redirect()->route('bo.web.category-groups.index');
+        return redirect()->route('bo.web.categories.index');
+    }
+
+    public function trash()
+    {
+        return view('backoffice.pages.categories.trash');
+    }
+
+    public function restore($id)
+    {
+        $category = Category::withTrashed()->findOrFail($id);
+        $category->restore();
+
+        return redirect()->back()->with('success', 'Danh mục đã được khôi phục thành công.');
     }
 }

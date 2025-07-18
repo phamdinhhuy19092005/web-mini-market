@@ -19,7 +19,6 @@ class StoreAttributeValueRequest extends BaseFormRequest implements StoreAttribu
         ];
     }
 
-
     protected function prepareForValidation(): void
     {
         $this->merge([

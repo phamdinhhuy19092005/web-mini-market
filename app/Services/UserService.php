@@ -7,19 +7,21 @@ use App\Enum\UserActionLogTypeEnum;
 use App\Models\Role;
 use App\Models\UserActionLog;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserService extends BaseService
 {
-    protected $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
     public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
-    public function searchByAdmin(array $data = [])
+    public function searchByAdmin(array $data = []): LengthAwarePaginator
     {
         $query = data_get($data, 'query');
         $perPage = data_get($data, 'per_page', 10);
@@ -27,12 +29,12 @@ class UserService extends BaseService
         return $this->userRepository->model()::query()
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                    ->orWhere('name', 'like', "%$query%");
+                    ->orWhere('name', 'like', "%{$query}%");
             })
             ->paginate($perPage);
     }
 
-    public function changeStatus($id, int $status, string $reason = null)
+    public function changeStatus(int $id, int $status, ?string $reason = null): Model
     {
         return DB::transaction(function () use ($id, $status, $reason) {
             $user = $this->userRepository->findOrFail($id);
@@ -53,68 +55,63 @@ class UserService extends BaseService
         });
     }
 
-
-    public function create(array $attributes = [])
+    public function create(array $attributes = []): Model
     {
         return DB::transaction(function () use ($attributes) {
-            if (isset($attributes['password'])) {
+            if (!empty($attributes['password'])) {
                 $attributes['password'] = Hash::make($attributes['password']);
             }
 
             $roleIds = array_keys($attributes['roles'] ?? []);
             unset($attributes['roles']);
 
-            $admin = $this->userRepository->create($attributes);
+            $user = $this->userRepository->create($attributes);
 
             if (!empty($roleIds)) {
                 $roles = Role::whereIn('id', $roleIds)->get();
-                $admin->syncRoles($roles);
+                $user->syncRoles($roles);
             }
 
-            return $admin;
+            return $user;
         });
     }
 
-    public function find($id)
+    public function find(int $id): ?Model
     {
         return $this->userRepository->find($id);
     }
 
-    public function show($id)
+    public function show(int $id): Model
     {
         return $this->userRepository->findOrFail($id);
     }
 
-    public function update($id, array $attributes = [])
+    public function update(int $id, array $attributes = []): Model
     {
         return DB::transaction(function () use ($id, $attributes) {
-            $model = $this->userRepository->findOrFail($id);
+            $user = $this->userRepository->findOrFail($id);
 
-            // Hash password if provided
             if (!empty($attributes['password'])) {
                 $attributes['password'] = Hash::make($attributes['password']);
             } else {
                 unset($attributes['password']);
             }
 
-            // Handle roles
             $roleIds = array_keys($attributes['roles'] ?? []);
             unset($attributes['roles']);
 
-            // Update admin
             $this->userRepository->update($id, $attributes);
 
-            // Sync roles if provided
             if (!empty($roleIds)) {
                 $roles = Role::whereIn('id', $roleIds)->get();
-                $model->syncRoles($roles);
+                $user->syncRoles($roles);
             }
 
-            return $model->fresh();
+            return $user->fresh();
         });
     }
 
-    public function delete($id)
+    public function delete(int $id): bool
     {
         return DB::transaction(function () use ($id) {
             $this->userRepository->findOrFail($id);

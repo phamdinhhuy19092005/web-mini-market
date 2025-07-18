@@ -39,7 +39,7 @@
                                     <th data-property="name" scope="col">{{ __('Tên') }}</th>
                                     <th data-property="order" scope="col">{{ __('Thứ tự') }}</th>
                                     <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
-                                    <th class="datatable-action" data-property="actions" data-render-callback="renderActions">{{ __('Hành động') }}</th>      
+                                    <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th> 
                                 </tr>
                             </thead>
                             <tbody></tbody>

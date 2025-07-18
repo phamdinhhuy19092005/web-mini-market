@@ -41,8 +41,8 @@
                                 <th data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
                                 <th data-property="created_at">{{ __('Ngày tạo') }}</th>
                                 <th data-property="updated_at">{{ __('Ngày cập nhật') }}</th>
-                                <th data-property="created_by.name" data-name="created_by_id">{{ __('Người tạo') }}</th>
-                                <th data-property="updated_by.name" data-name="updated_by_id">{{ __('Người cập nhật') }}</th>
+                                <th class="none" data-property="created_by.name" data-name="created_by_id">{{ __('Người tạo') }}</th>
+                                <th class="none" data-property="updated_by.name" data-name="updated_by_id">{{ __('Người cập nhật') }}</th>
                                 <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                             </tr>
                         </thead>
@@ -54,38 +54,6 @@
     </div>
 </div>
 @endsection
-
-@push('js_pages')
-<script>
-    function renderImageColumn(data, type, full, meta) {
-        if (!data) return '';
-        return `<img src="${data}" alt="Hình ảnh" style="height: 60px;">`;
-    }
-    function renderStatusColumn(data, type, full, meta) {
-        if (!data) return '';
-        let classMap = {
-            'Active': 'k-badge--success',
-            'Inactive': 'k-badge--danger',
-            'Pending': 'k-badge--warning'
-        };
-
-        let badgeClass = classMap[data] || 'k-badge--secondary';
-
-        return `<span style="width:max-content" class="k-badge k-badge--inline k-badge--pill ${badgeClass}">${data}</span>`;
-    }
-
-    function renderActions(data) {
-        let html = '';
-        if (data.update) {
-            html += `<a href="${data.update}" class="btn btn-sm btn-warning mr-1" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>`;
-        }
-        if (data.delete) {
-            html += `<button class="btn btn-sm btn-danger" onclick="handleDelete('${data.delete}')" title="Xóa"><i class="fa fa-trash"></i></button>`;
-        }
-        return html || '<span class="text-muted">No actions</span>';
-    }
-</script>
-@endpush
 
 @component('backoffice.partials.datatable')
 @endcomponent

@@ -1,10 +1,10 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Edit Administrator');
+    $title = __('Chỉnh sửa quản trị viên');
     $breadcrumbs = [
-        ['label' => __('Administration')],
-        ['label' => __('Edit Administrator')],
+        ['label' => __('Quản trị viên')],
+        ['label' => __('Chỉnh sửa quản trị viên')],
     ];
 @endphp
 
@@ -19,7 +19,7 @@
             <div class="k-portlet k-portlet--tabs">
                 <div class="k-portlet__head">
                     <div class="k-portlet__head-label">
-                        <h3 class="k-portlet__head-title">Administrator information</h3>
+                        <h3 class="k-portlet__head-title">Thông tin quản trị viên</h3>
                     </div>
                 </div>
 
@@ -27,24 +27,13 @@
                 <form class="k-form" method="POST" action="{{ route('bo.web.admins.update', $admin->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
                     <div class="k-portlet__body">
                         <div class="tab-content">
                             <div class="tab-pane active show" id="mainTab">
                                 <!-- Email -->
                                 <div class="form-group">
                                     <label>Email *</label>
-                                    <input type="text" class="form-control" name="email" placeholder="Enter email" value="{{ $admin->email }}" required>
+                                    <input type="text" class="form-control" name="email" placeholder="Enter email" value="{{ $admin->email }}" readonly required>
                                 </div>
 
                                 <!-- Name -->
@@ -72,12 +61,14 @@
                                 <div class="form-group">
                                     <label>Password *</label>
                                     <div class="input-group">
-                                        <input type="password" class="form-control" name="password" id="password" placeholder="Nhập password" value="{{ $admin->password }}" required>
+                                        <input type="password" class="form-control" name="password" id="password" placeholder="Nhập password" value="">
+                                        <input type="hidden" class="form-control" name="password" id="password" placeholder="Nhập password" value="{{ $admin->password }}" required>
                                         <div class="input-group-append">
                                             <button class="btn btn-primary" id="toggle-password" type="button"><i class="fa fa-eye"></i></button>
                                             <button class="btn btn-primary" id="random-password" type="button">Random Password</button>
                                         </div>
                                     </div>
+                                    <span class="form-text text-muted">{{ __('Để trống trường mật khẩu để giữ mật khẩu hiện tại của bạn.') }}</span>
                                 </div>
                             </div>
                         </div>

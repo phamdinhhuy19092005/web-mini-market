@@ -43,7 +43,7 @@
                                     <th data-property="email" scope="col">{{ __('Email') }}</th>
                                     <th data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
                                     <th data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>
-                                    <th class="datatable-action" data-orderable="false" scope="col" aria-label="Hành động">{{ __('Hành động') }}</th>
+                                    <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                                 </tr>
                             </thead>
                         </table>
@@ -52,7 +52,5 @@
             </div>
         </div>
     </div>
-
-    @component('backoffice.partials.datatable')
-    @endcomponent
-@endsection
+    @endsection
+    @component('backoffice.partials.datatable')@endcomponent
