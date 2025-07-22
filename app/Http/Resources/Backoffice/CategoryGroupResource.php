@@ -11,6 +11,7 @@ class CategoryGroupResource extends BaseResource
             'name' => $this->name,
             'slug' => $this->slug,
             'image' => $this->image,
+            'cover' => $this->cover,
             'description' => $this->description,
             'status' => $this->status,
             'status_name' => $this->status_name,

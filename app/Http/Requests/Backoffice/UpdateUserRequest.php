@@ -9,22 +9,18 @@ class UpdateUserRequest extends BaseFormRequest implements UpdateUserRequestInte
 {
     public function rules(): array
     {
-        $adminId = $this->route('id');
-
+        // dd($this->all());
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required','email','max:255',Rule::unique('admins', 'email')->ignore($adminId)],
-            'password' => ['nullable', 'string', 'min:8'],
-            'roles' => ['sometimes', 'array'],
+            'email' => ['required', 'email'],
+            'phone_number' => ['nullable', 'string', 'max:20'],
+            'access_channel_type' => ['required', 'string'],
+            'allow_login' => ['required', 'boolean'],
+            'birthday' => ['nullable', 'date', 'before:tomorrow'],
+            'genders' => ['required', 'in:0,1'],
         ];
     }
-
-    public function prepareForValidation()
-    {
-        $this->merge([
-            'name' => trim($this->input('name')),
-        ]);
-    }
+    
 
     public function imageFile()
     {

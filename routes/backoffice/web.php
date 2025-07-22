@@ -3,11 +3,13 @@
 use App\Http\Controllers\Backoffice\AdminController;
 use App\Http\Controllers\Backoffice\AttributeController;
 use App\Http\Controllers\Backoffice\AttributeValueController;
+use App\Http\Controllers\Backoffice\AutoDiscountController;
 use App\Http\Controllers\Backoffice\BannerController;
 use App\Http\Controllers\Backoffice\BrandController;
 use App\Http\Controllers\Backoffice\CategoryController;
 use App\Http\Controllers\Backoffice\CategoryGroupController;
 use App\Http\Controllers\Backoffice\CountryController;
+use App\Http\Controllers\Backoffice\CouponController;
 use App\Http\Controllers\Backoffice\CurrencyController;
 use App\Http\Controllers\Backoffice\DashboardController;
 use App\Http\Controllers\Backoffice\EmailController;
@@ -399,6 +401,36 @@ Route::get('/payment-options/{id}/edit', [PaymentOptionController::class, 'edit'
 Route::get('/payment-options/{id}', [PaymentOptionController::class, 'show'])->name('payment-options.show');
 Route::put('/payment-options/{id}', [PaymentOptionController::class, 'update'])->name('payment-options.update');
 Route::delete('/payment-options/{id}', [PaymentOptionController::class, 'destroy'])->name('payment-options.destroy');
+
+
+/*
+|--------------------------------------------------------------------------
+| Coupons
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
+Route::get('/coupons/create', [CouponController::class, 'create'])->name('coupons.create');
+Route::post('coupons', [CouponController::class, 'store'])->name('coupons.store');
+Route::get('/coupons/{id}/edit', [CouponController::class, 'edit'])->name('coupons.edit');
+Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.show');
+Route::put('/coupons/{id}', [CouponController::class, 'update'])->name('coupons.update');
+Route::delete('/coupons/{id}', [CouponController::class, 'destroy'])->name('coupons.destroy');
+
+
+/*
+|--------------------------------------------------------------------------
+| Discount Rules
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
+Route::get('/auto-discounts/create', [AutoDiscountController::class, 'create'])->name('auto-discounts.create');
+Route::post('auto-discounts', [AutoDiscountController::class, 'store'])->name('auto-discounts.store');
+Route::get('/auto-discounts/{id}/edit', [AutoDiscountController::class, 'edit'])->name('auto-discounts.edit');
+Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
+Route::put('/auto-discounts/{id}', [AutoDiscountController::class, 'update'])->name('auto-discounts.update');
+Route::delete('/auto-discounts/{id}', [AutoDiscountController::class, 'destroy'])->name('auto-discounts.destroy');
 
 /*
 |--------------------------------------------------------------------------

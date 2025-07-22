@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('sub_categories', function (Blueprint $table) {
-            $table->softDeletes(); 
+        Schema::table('auto_discounts', function (Blueprint $table) {
+            $table->string('code')->unique()->after('title');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sub_categories', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+        Schema::table('auto_discounts', function (Blueprint $table) {
+            $table->dropColumn('code');
         });
     }
 };

@@ -334,5 +334,8 @@
             </div>
         </div>
     </div>
-    @include('backoffice.pages.products.pagejs.product')
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
+@endpush

@@ -22,17 +22,21 @@ use App\Repositories\Interfaces\FaqRepositoryInterface;
 use App\Repositories\AdminRepository;
 use App\Repositories\AttributeRepository;
 use App\Repositories\AttributeValueRepository;
+use App\Repositories\AutoDiscountRepository;
 use App\Repositories\BannerRepository;
 use App\Repositories\BrandRepository;
 use App\Repositories\CategoryGroupRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\FaqTopicRepository;
 use App\Repositories\CountryRepository;
+use App\Repositories\CouponRepository;
 use App\Repositories\CurrencyRepository;
 use App\Repositories\FaqRepository;
 use App\Repositories\Interfaces\AttributeRepositoryInterface;
 use App\Repositories\Interfaces\AttributeValueRepositoryInterface;
+use App\Repositories\Interfaces\AutoDiscountRepositoryInterface;
 use App\Repositories\Interfaces\BrandRepositoryInterface;
+use App\Repositories\Interfaces\CouponRepositoryInterface;
 use App\Repositories\Interfaces\InventoryRepositoryInterface;
 use App\Repositories\Interfaces\PaymentOptionRepositoryInterface;
 use App\Repositories\Interfaces\PaymentProviderRepositoryInterface;
@@ -227,5 +231,19 @@ class BackofficeRepositoryServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         PaymentOptionRepositoryInterface::class        => PaymentOptionRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Coupons
+        |--------------------------------------------------------------------------
+        */
+        CouponRepositoryInterface::class        => CouponRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Auto Discounts
+        |--------------------------------------------------------------------------
+        */
+        AutoDiscountRepositoryInterface::class        => AutoDiscountRepository::class,
     ];
 }

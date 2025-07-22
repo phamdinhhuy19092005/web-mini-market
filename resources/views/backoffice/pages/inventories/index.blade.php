@@ -33,7 +33,7 @@
                         <thead>
                             <tr>
                                 <th class="all" data-property="id">ID</th>
-                                <th class="all" data-property="image" data-render-callback="renderImageColumn" data-width="200">{{ __('Hình ảnh') }}</th>
+                                <th class="all" data-property="image" data-render-callback="renderImageColumn" data-width="100">{{ __('Hình ảnh') }}</th>
                                 <th class="all" data-property="sku">{{ __('SKU Kho') }}</th>
                                 <th class="all" data-property="init_sold_count">{{ __('Đã bán ảo') }}</th>
                                 <th class="all" data-property="sold_count">{{ __('Đã bán thật') }}</th>

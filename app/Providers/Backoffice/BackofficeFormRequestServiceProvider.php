@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Http\Requests\Backoffice\Interfaces\StoreAdminRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreAttributeRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreAttributeValueRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreAutoDiscountRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAdminRequestInterface;
 use App\Http\Requests\Backoffice\StoreAdminRequest;
 use App\Http\Requests\Backoffice\UpdateAdminRequest;
@@ -27,6 +28,7 @@ use App\Http\Requests\Backoffice\UpdateCategoryRequest;
 // Banners
 use App\Http\Requests\Backoffice\Interfaces\StoreBannerRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreBrandRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreCouponRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreFaqRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreFaqTopicRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreInventoryRequestInterface;
@@ -63,7 +65,9 @@ use App\Http\Requests\Backoffice\Interfaces\StoreSubCategoryRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreUserRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeValueRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateAutoDiscountRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateBrandRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateCouponRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateFaqRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateFaqTopicRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateInventoryRequestInterface;
@@ -77,7 +81,9 @@ use App\Http\Requests\Backoffice\Interfaces\UpdateSubCategoryRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateUserRequestInterface;
 use App\Http\Requests\Backoffice\StoreAttributeRequest;
 use App\Http\Requests\Backoffice\StoreAttributeValueRequest;
+use App\Http\Requests\Backoffice\StoreAutoDiscountRequest;
 use App\Http\Requests\Backoffice\StoreBrandRequest;
+use App\Http\Requests\Backoffice\StoreCouponRequest;
 use App\Http\Requests\Backoffice\StoreFaqRequest;
 use App\Http\Requests\Backoffice\StoreFaqTopicRequest;
 use App\Http\Requests\Backoffice\StoreInventoryRequest;
@@ -91,7 +97,9 @@ use App\Http\Requests\Backoffice\StoreSubCategoryRequest;
 use App\Http\Requests\Backoffice\StoreUserRequest;
 use App\Http\Requests\Backoffice\UpdateAttributeRequest;
 use App\Http\Requests\Backoffice\UpdateAttributeValueRequest;
+use App\Http\Requests\Backoffice\UpdateAutoDiscountRequest;
 use App\Http\Requests\Backoffice\UpdateBrandRequest;
+use App\Http\Requests\Backoffice\UpdateCouponRequest;
 use App\Http\Requests\Backoffice\UpdateFaqRequest;
 use App\Http\Requests\Backoffice\UpdateFaqTopicRequest;
 use App\Http\Requests\Backoffice\UpdateInventoryRequest;
@@ -277,6 +285,21 @@ class BackofficeFormRequestServiceProvider extends ServiceProvider
         StorePaymentOptionRequestInterface::class => StorePaymentOptionRequest::class,
         UpdatePaymentOptionRequestInterface::class => UpdatePaymentOptionRequest::class,
 
+        /*
+        |--------------------------------------------------------------------------
+        | Coupons
+        |--------------------------------------------------------------------------
+        */
+        StoreCouponRequestInterface::class => StoreCouponRequest::class,
+        UpdateCouponRequestInterface::class => UpdateCouponRequest::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Auto Discounts
+        |--------------------------------------------------------------------------
+        */
+        StoreAutoDiscountRequestInterface::class => StoreAutoDiscountRequest::class,
+        UpdateAutoDiscountRequestInterface::class => UpdateAutoDiscountRequest::class,
 
     ];
 }

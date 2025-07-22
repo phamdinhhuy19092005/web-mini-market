@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Classes\ImageHelper;
+use App\Models\Admin;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -21,7 +22,7 @@ class ProductService extends BaseService
         $perPage = data_get($data, 'per_page', 10);
 
         return $this->productRepository->model()::query()
-            ->with(['brand', 'createdBy', 'updatedBy'])
+            ->with(['brand', 'createdBy', 'updatedBy', 'inventories'])
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
                     ->orWhere('name', 'like', "%$query%");
@@ -56,25 +57,25 @@ class ProductService extends BaseService
         return $code;
     }
 
-   public function create(array $attributes = [])
+    public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
             $imageHelper = new ImageHelper('product');
 
             $attributes['primary_image'] = $this->handleImageUpdate(null, $attributes['primary_image']);
-            
+
             $mediaPaths = [];
             $mediaFiles = $attributes['media']['file'] ?? [];
             $mediaUrls = $attributes['media']['path'] ?? [];
 
             foreach ($mediaFiles as $index => $file) {
-                $mediaPaths[] = $file instanceof \Illuminate\Http\UploadedFile 
-                    ? $imageHelper->upload($file) 
+                $mediaPaths[] = $file instanceof \Illuminate\Http\UploadedFile
+                    ? $imageHelper->upload($file)
                     : ($mediaUrls[$index] ?? null);
             }
             $attributes['media'] = json_encode(array_filter($mediaPaths));
 
-            $adminClass = \App\Models\Admin::class;
+            $adminClass = Admin::class;
             $adminId = auth('admin')->id();
             $attributes = array_merge($attributes, [
                 'created_by_type' => $adminClass,

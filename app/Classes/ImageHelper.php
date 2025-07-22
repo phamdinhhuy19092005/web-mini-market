@@ -9,11 +9,13 @@ class ImageHelper
 {
     protected $diskName;
     protected $disk;
+    protected $folder;
 
-    public function __construct($disk)
+
+    public function __construct($folder = 'uploads')
     {
-        $this->diskName = $disk;
-        $this->disk = Storage::disk($disk);
+        $this->disk = Storage::disk('public');
+        $this->folder = $folder;
     }
 
     /**
@@ -24,17 +26,15 @@ class ImageHelper
      */
     public function upload($image)
     {
-        // Xử lý nếu $image là UploadedFile trực tiếp
-        if ($image instanceof UploadedFile) {
+         if ($image instanceof UploadedFile) {
             return $this->handleUploadFile($image);
         }
 
-        // Xử lý nếu $image là mảng chứa file
         if (is_array($image) && isset($image['file']) && $image['file'] instanceof UploadedFile) {
             return $this->handleUploadFile($image['file']);
         }
 
-        return null; // Trả về null nếu không có file hợp lệ
+        return null;
     }
 
     /**
@@ -45,18 +45,12 @@ class ImageHelper
      */
     protected function handleUploadFile(UploadedFile $file)
     {
-        $now = now();
-        $hash = $now->timestamp;
-        $filename = Str::uuid();
-        $extension = strtolower($file->getClientOriginalExtension());
+        $filename = Str::uuid() . '-' . now()->timestamp . '.' . strtolower($file->getClientOriginalExtension());
+        $path = "{$this->folder}/{$filename}";
 
-        // Lưu trong thư mục theo tên disk
-        $pathname = "{$this->diskName}/{$filename}-{$hash}.{$extension}";
+        $this->disk->put($path, file_get_contents($file));
 
-        $this->disk->put($pathname, file_get_contents($file));
-
-        return $this->disk->url($pathname); // Trả về URL đầy đủ
-        // return $pathname;
+        return $this->disk->url($path);
 
     }
 
@@ -67,14 +61,16 @@ class ImageHelper
      * @param string $path
      * @return void
      */
-    public function delete($path)
+    public function delete($url)
     {
-        if ($path) {
-            $filePath = str_replace($this->disk->url(''), '', $path);
-            if ($this->disk->exists($filePath)) {
-                $this->disk->delete($filePath);
-            }
+        if (!$url) return;
+
+        $publicUrl = $this->disk->url('');
+        $relativePath = str_replace($publicUrl, '', $url);
+
+        if ($this->disk->exists($relativePath)) {
+            $this->disk->delete($relativePath);
         }
-}
+    }
 
 }

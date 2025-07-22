@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backoffice;
 
 use App\Contracts\Responses\Backoffice\StoreUserResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateUserResponseContract;
+use App\Enum\AccessChannelEnum;
 use App\Enum\ActivationStatusEnum;
 use App\Http\Requests\Backoffice\Interfaces\StoreUserRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateUserRequestInterface;
@@ -38,25 +39,22 @@ class UserController extends BaseController
     {
         $user = $this->userService->show($id);
         $activationStatus = ActivationStatusEnum::class;
-        return view('backoffice.pages.users.edit', compact('user', 'activationStatus'));
-    }
-
-    public function edit($id)
-    { 
-        $user = $this->userService->show($id);
-        $activationStatus = ActivationStatusEnum::class;
-        return view('backoffice.pages.users.edit', compact('user', 'activationStatus'));
+        $accessChannelTypeLables = AccessChannelEnum::labels();
+        
+        return view('backoffice.pages.users.edit', compact('user', 'activationStatus', 'accessChannelTypeLables'));
     }
 
     public function update(UpdateUserRequestInterface $request, string $id)
     {
-        $admin = $this->userService->update($id, $request->validated());
-        return $this->responses(UpdateUserResponseContract::class, $admin);
+        $user = $this->userService->update($id, $request->validated());
+
+        return $this->responses(UpdateUserResponseContract::class, $user);
     }
 
     public function destroy(string $id)
     {
         $this->userService->delete($id);
+
         return redirect()->route('users.index');
     }
 

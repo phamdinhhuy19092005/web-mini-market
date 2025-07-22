@@ -47,7 +47,9 @@
                                     <th data-property="slug" scope="col">{{ __('Slug') }}</th>
                                     <th data-property="category_group_name" data-render-callback="renderCallbackCategoryGroups" scope="col">{{ __('Nhóm danh mục') }}</th>
                                     <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
-                                    <th class="datatable-action" data-property="actions">{{ __('Hành động') }}</th>  
+                                    <th class="none" data-property="created_at">{{ __('Ngày tạo') }}</th>
+                                    <th class="none" data-property="updated_at">{{ __('Ngày cập nhật') }}</th>
+                                    <th class="datatable-action" data-property="actions">{{ __('Hành động') }}</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>

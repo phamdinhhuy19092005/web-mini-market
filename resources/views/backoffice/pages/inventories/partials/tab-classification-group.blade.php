@@ -1,46 +1,71 @@
-<div class="row">
-    <!-- Attribute Group Section -->
-    <div class="col-md-12">
-        <div class="k-portlet">
-            <div class="k-portlet__head">
-                <div class="k-portlet__head-label">
-                    <h3 class="k-portlet__head-title">Nhóm phân loại</h3>
-                </div>
-            </div>
-            <div class="k-portlet__body">
-                @php
-                    $grouped = $inventory->attributeValues
-                        ->groupBy(fn($value) => optional($value->attribute)->name);
-                @endphp
-
-                @if ($grouped->isEmpty())
-                    <p class="text-muted mb-0">Không có nhóm phân loại.</p>
-                @else
-                    <div class="attribute-list">
-                        @foreach ($grouped as $attributeName => $values)
-                            <div class="border border-success rounded px-3 py-2 mb-2 d-inline-block">
-                                <div class="d-flex align-items-center">
-                                    <span class="font-weight-bold mr-2" style="color: #1EC9B7;">
-                                        [{{ $loop->iteration }}] {{ $attributeName }}:
-                                    </span>
-                                    <span class="text-dark">
-                                        {{ $values->pluck('value')->join(' ; ') }}
-                                    </span>
-                                    <button type="button"
-                                            class="btn btn-sm btn-outline-danger ml-3"
-                                            onclick="removeAttributeGroup('{{ $attributeName }}')">
-                                        ×
-                                    </button>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
+<div class="tab-pane" id="Tab_Classification_Group">
+    <div class="k-portlet">
+        <div class="k-portlet__head">
+            <div class="k-portlet__head-label">
+                <h3 class="k-portlet__head-title">Nhóm phân loại</h3>
             </div>
         </div>
-    </div>
+        <div class="k-portlet__body">
+            <div class="form-group">
+                <label>Chọn thuộc tính</label>
+                @if(isset($attributes) && $attributes->isNotEmpty())
+                    @foreach ($attributes as $attribute)
+                        <div class="mb-3">
+                            <label>{{ $attribute->name }}</label>
+                            <select name="attribute_values[{{ $attribute->id }}]" class="form-control k_selectpicker">
+                                <option value="">Chọn giá trị</option>
+                                @foreach ($attribute->attributeValues as $value)
+                                    <option value="{{ $value->id }}"
+                                            {{ in_array($value->id, old('attribute_values.' . $attribute->id, $inventory->attributeValues->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                        {{ $value->value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endforeach
+                @else
+                    <p class="text-muted mb-0">Không có thuộc tính nào khả dụng.</p>
+                @endif
+            </div>
 
-    <!-- Product Details Section -->
+            <!-- Hiển thị attribute_values đã chọn -->
+            @php
+                $grouped = $inventory->attributeValues
+                    ->groupBy(fn($value) => optional($value->attribute)->name);
+            @endphp
+
+            @if ($grouped->isNotEmpty())
+                <div class="attribute-list">
+                    @foreach ($grouped as $attributeName => $values)
+                        <div class="border border-success rounded px-3 py-2 mb-2 d-inline-block">
+                            <div class="d-flex align-items-center">
+                                <span class="font-weight-bold mr-2" style="color: #1EC9B7;">
+                                    [{{ $loop->iteration }}] {{ $attributeName }}:
+                                </span>
+                                <span class="text-dark">
+                                    {{ $values->pluck('value')->join(' ; ') }}
+                                </span>
+                                @foreach ($values as $value)
+                                    <input type="hidden"
+                                           name="attribute_values[{{ $value->attribute->id }}][]"
+                                           value="{{ $value->id }}">
+                                @endforeach
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger ml-3"
+                                        onclick="removeAttributeGroup('{{ $attributeName }}', this)">
+                                    ×
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<!-- Product Details Section -->
+<div class="row">
     <div class="col-md-12">
         <div class="k-portlet">
             <div class="k-portlet__body">
@@ -58,7 +83,7 @@
                                                class="form-control image-url"
                                                name="image[path]"
                                                placeholder="{{ __('Tải ảnh lên hoặc nhập URL') }}"
-                                               value="{{ old('image.path', $product->primary_image ?? '') }}">
+                                               value="{{ old('image.path', $inventory->image ?? $product->primary_image) }}">
                                         <div class="input-group-append">
                                             <label class="btn btn-outline-primary m-0" for="image-file">
                                                 <i class="flaticon2-image-file mr-2"></i>{{ __('Tải lên') }}
@@ -72,13 +97,12 @@
                                     </div>
                                 </div>
                                 <div class="ml-3">
-                                    <img class="img-thumbnail image-preview"
-                                         style="width: 100px; height: 100px; object-fit: cover; display: {{ $product->primary_image ? 'block' : 'none' }};"
-                                         src="{{ $product->primary_image ?? '' }}"
+                                    <img class="img-thumbnail image-preview" style="width: 100px; height: 100px; object-fit: cover; display: {{ old('image.path', $inventory->image ?? $product->primary_image) ? 'block' : 'none' }};"
+                                         src="{{ old('image.path', $inventory->image ?? $product->primary_image) }}"
                                          alt="Image preview">
                                 </div>
                             </div>
-                            @error('primary_image.*')
+                            @error('image.*')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -94,7 +118,7 @@
                            class="form-control"
                            placeholder="{{ __('Nhập tiêu đề sản phẩm') }}"
                            autocomplete="off"
-                           value="{{ old('title', $product->name ?? '') }}"
+                           value="{{ old('title', $inventory->title ?? $product->name) }}"
                            required>
                     @error('title')
                         <span class="text-danger">{{ $message }}</span>
@@ -110,7 +134,7 @@
                            class="form-control"
                            placeholder="{{ __('Nhập slug sản phẩm') }}"
                            autocomplete="off"
-                           value="{{ old('slug', $product->slug ?? '') }}"
+                           value="{{ old('slug', $inventory->slug ?? $product->slug) }}"
                            required>
                     @error('slug')
                         <span class="text-danger">{{ $message }}</span>
@@ -123,15 +147,15 @@
                         <div class="form-group">
                             <label for="sku">{{ __('SKU') }} <span class="text-danger">*</span>
                                 <i data-toggle="tooltip"
-                                class="flaticon-questions-circular-button"
-                                data-title="SKU (Đơn vị lưu kho) là mã nhận dạng cụ thể của người bán. Nó sẽ giúp quản lý hàng tồn kho của bạn."></i>
+                                   class="flaticon-questions-circular-button"
+                                   data-title="SKU (Đơn vị lưu kho) là mã nhận dạng cụ thể của người bán. Nó sẽ giúp quản lý hàng tồn kho của bạn."></i>
                             </label>
                             <div class="input-group">
                                 <input id="sku"
-                                    type="text"
-                                    name="sku"
-                                    class="form-control {{ $errors->has('sku') ? 'is-invalid' : '' }}"
-                                    value="{{ old('sku', $inventory->sku ?? '') }}">
+                                       type="text"
+                                       name="sku"
+                                       class="form-control {{ $errors->has('sku') ? 'is-invalid' : '' }}"
+                                       value="{{ old('sku', $inventory->sku ?? '') }}">
                                 @empty($inventory->id)
                                     <div class="input-group-append">
                                         <button class="btn btn-primary"
@@ -172,7 +196,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Stock Quantity and Purchase Price -->
                 <div class="row">
                     <div class="col-md-6">
@@ -197,11 +221,18 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="purchase_price">{{ __('Giá mua') }}
-                                <i data-toggle="tooltip"
+                                <i data-toggle apparatus="tooltip"
                                    class="flaticon-questions-circular-button"
                                    data-title="Trường được đề xuất. Điều này sẽ giúp tính toán lợi nhuận và tạo báo cáo"></i>
                             </label>
-                            <input type="text" data-digits="2" data-type="inputmask_numeric" data-allow-minus="false" class="form-control {{ $errors->has('purchase_price') ? 'is-invalid' : '' }}" data-key="purchase_price" id="purchase_price" value="{{ old('purchase_price', $inventory->purchase_price ?? '') }}">
+                            <input type="text"
+                                   data-digits="2"
+                                   data-type="inputmask_numeric"
+                                   data-allow-minus="false"
+                                   class="form-control {{ $errors->has('purchase_price') ? 'is-invalid' : '' }}"
+                                   data-key="purchase_price"
+                                   id="purchase_price"
+                                   value="{{ old('purchase_price', $inventory->purchase_price ?? '') }}">
                             <input type="hidden"
                                    data-type="inputmask_numeric_unmasked"
                                    name="purchase_price"
@@ -276,38 +307,38 @@
 </div>
 
 @push('scripts')
-    <script>
-        function removeAttributeGroup(attributeName) {
-            if (!confirm('Bạn có chắc muốn xóa nhóm phân loại này không?')) return;
+<script>
+    $(document).ready(function () {
+        // Khởi tạo selectpicker
+        $('.k_selectpicker').selectpicker();
 
-            document.querySelectorAll('.attribute-list > div').forEach(function(group) {
-                if (group.textContent.includes(attributeName)) {
-                    group.remove();
-                }
-            });
-        }
+        // Xử lý generate SKU
+        $('[data-generate]').on('click', function () {
+            const length = $(this).data('generate-length') || 5;
+            const ref = $(this).data('generate-ref');
+            const prefix = $(this).data('generate-prefix') || '';
+            const uppercase = $(this).data('generate-uppercase') ?? true;
 
-        $(document).ready(function () {
-            $('[data-generate]').on('click', function () {
-                const length = $(this).data('generate-length') || 5;
-                const ref = $(this).data('generate-ref');
-                const prefix = $(this).data('generate-prefix') || '';
-                const uppercase = $(this).data('generate-uppercase') ?? true;
+            let charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            if (uppercase) {
+                charset = charset.toUpperCase();
+            }
 
-                let charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
-                if (uppercase) {
-                    charset = charset.toUpperCase();
-                }
+            let randomStr = '';
+            for (let i = 0; i < length; i++) {
+                const randIndex = Math.floor(Math.random() * charset.length);
+                randomStr += charset[randIndex];
+            }
 
-                let randomStr = '';
-                for (let i = 0; i < length; i++) {
-                    const randIndex = Math.floor(Math.random() * charset.length);
-                    randomStr += charset[randIndex];
-                }
-
-                const result = prefix + randomStr;
-                $(ref).val(result);
-            });
+            const result = prefix + randomStr;
+            $(ref).val(result);
         });
-    </script>
+
+        // Xử lý xóa attribute group
+        window.removeAttributeGroup = function(attributeName, button) {
+            if (!confirm('Bạn có chắc muốn xóa nhóm phân loại này không?')) return;
+            button.closest('.border').remove();
+        };
+    });
+</script>
 @endpush

@@ -1,0 +1,98 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // ===== Xử lý Upload File Ảnh =====
+    const fileInput = document.querySelector('.image-file');
+    const urlInput = document.querySelector('.image-url');
+    const previewImg = document.querySelector('.image-preview');
+
+    if (!fileInput || !urlInput || !previewImg) {
+        console.error('Một hoặc nhiều selector không tìm thấy. Vui lòng kiểm tra HTML.');
+        return;
+    }
+
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                previewImg.style.display = 'block';
+                urlInput.value = file.name;
+            };
+            reader.onerror = function(e) {
+                console.error('FileReader error:', e);
+                alert('Không thể đọc file ảnh. Vui lòng thử lại.');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // ===== Xử lý nhập URL ảnh =====
+    urlInput.addEventListener('input', function () {
+        const url = this.value.trim();
+        if (url) {
+            previewImg.src = url;
+            previewImg.style.display = 'block';
+            previewImg.onerror = function () {
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+                previewImg.onerror = null;
+            };
+        } else {
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+            fileInput.value = '';
+        }
+    });
+
+    urlInput.addEventListener('change', function () {
+        if (!this.value) {
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+            fileInput.value = '';
+        }
+    });
+
+    // ===== Xử lý nút tạo mã tự động =====
+    document.querySelectorAll('button[data-generate]').forEach(button => {
+        button.addEventListener('click', function () {
+            const length = parseInt(this.getAttribute('data-generate-length')) || 5;
+            const refInput = this.getAttribute('data-generate-ref');
+            const uppercase = this.getAttribute('data-generate-uppercase') === 'true';
+            const input = document.querySelector(refInput);
+            if (!input) {
+                console.error('Input element not found for selector:', refInput);
+                return;
+            }
+
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters[Math.floor(Math.random() * characters.length)];
+            }
+            input.value = uppercase ? result.toUpperCase() : result;
+        });
+    });
+
+    // ===== Tự động tạo slug từ tiêu đề =====
+    const titleInput = document.querySelector('#name');
+    const slugInput = document.querySelector('#slug');
+
+    if (titleInput && slugInput) {
+        titleInput.addEventListener('input', function () {
+            slugInput.value = generateSlug(titleInput.value);
+        });
+    }
+
+    function generateSlug(str) {
+        return str
+            .toLowerCase()
+            .trim()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+    }
+});
+</script>

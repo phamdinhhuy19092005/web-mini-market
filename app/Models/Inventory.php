@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
-use App\Enum\ActivationStatus;
+use App\Models\Traits\Activatable;
+use App\Models\Traits\HasImpactor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Inventory extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Activatable;
 
     protected $table = 'inventories';
 
@@ -28,6 +31,7 @@ class Inventory extends Model
         'offer_price',
         'offer_start',
         'offer_end',
+        'init_sold_count',
         'stock_quantity',
         'min_order_quantity',
         'available_from',
@@ -42,43 +46,39 @@ class Inventory extends Model
 
     protected $casts = [
         'key_features' => 'array',
-        // 'purchase_price' => 'decimal:8',
-        // 'sale_price' => 'decimal:8',
-        // 'offer_price' => 'decimal:8',
-        // 'offer_start' => 'datetime',
-        // 'offer_end' => 'datetime',
-        // 'available_from' => 'datetime',
     ];
+
 
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
-    public function attributes()
+    public function attributes(): BelongsToMany
     {
         return $this->belongsToMany(Attribute::class, 'attribute_inventories')
-            ->withPivot('attribute_value_id') 
+            ->withPivot('attribute_value_id')
             ->withTimestamps();
     }
 
-    public function attributeValues()
+    public function attributeValues(): BelongsToMany
     {
         return $this->belongsToMany(AttributeValue::class, 'attribute_inventories')
             ->withPivot('attribute_id')
+            ->with('attribute')
             ->withTimestamps();
     }
 
-    public function getStatusNameAttribute(): string
+    public function attributeInventories(): HasMany
     {
-        return ActivationStatus::label($this->status);
+        return $this->hasMany(AttributeInventory::class);
     }
 
     public function createdBy(): MorphTo
     {
         return $this->morphTo('created_by');
     }
-    
+
     public function updatedBy(): MorphTo
     {
         return $this->morphTo('updated_by');

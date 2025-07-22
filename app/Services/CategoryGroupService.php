@@ -30,11 +30,16 @@ class CategoryGroupService extends BaseService
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
-            $uploadResult = (new ImageHelper('category_group'))->upload($attributes['image']);
-            $attributes['image'] = is_array($uploadResult) ? $uploadResult['path'] : $uploadResult;
+            $imageResult = (new ImageHelper('category_group'))->upload($attributes['image']);
+            $coverResult = (new ImageHelper('category_group'))->upload($attributes['cover']);
+
+            $attributes['image'] = is_array($imageResult) ? $imageResult['path'] : $imageResult;
+            $attributes['cover'] = is_array($coverResult) ? $coverResult['path'] : $coverResult;
+
             return $this->categoryGroupRepository->create($attributes);
         });
     }
+
 
     public function find($id)
     {
@@ -46,16 +51,19 @@ class CategoryGroupService extends BaseService
         return $this->categoryGroupRepository->findOrFail($id);
     }
 
-    public function update($id, array $attributes = [], $image = null)
+    public function update($id, array $attributes = [])
     {
-        return DB::transaction(function () use ($id, $attributes, $image) {
+        return DB::transaction(function () use ($id, $attributes) {
             $model = $this->categoryGroupRepository->findOrFail($id);
+
             $attributes['image'] = $this->handleImageUpdate($model->image, $attributes['image'] ?? null);
+            $attributes['cover'] = $this->handleImageUpdate($model->cover, $attributes['cover'] ?? null);
             $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : $model->status;
 
             return $this->categoryGroupRepository->update($id, $attributes);
         });
     }
+
 
     public function delete($id)
     {

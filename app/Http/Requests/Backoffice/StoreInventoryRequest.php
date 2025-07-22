@@ -12,7 +12,6 @@ class StoreInventoryRequest extends BaseFormRequest implements StoreInventoryReq
 {
     public function rules(): array
     {
-        // dd($this->all());
         return [
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'title' => ['required', 'string', 'max:255'],
@@ -38,9 +37,9 @@ class StoreInventoryRequest extends BaseFormRequest implements StoreInventoryReq
             'display_on_frontend' => ['boolean'],
             'allow_frontend_search' => ['boolean'],
             'status' => ['required', Rule::in(ActivationStatus::all())],
-
-            'image.path' => ['nullable', 'url'],
-            'image.file' => ['nullable', 'image', 'max:2048'], 
+            'image.path' => ['nullable', 'string', 'max:255'],
+            'image.file' => ['nullable', 'image', 'max:2048'],
+            'attribute_values.*' => ['nullable', 'exists:attribute_values,id'],
         ];
     }
 

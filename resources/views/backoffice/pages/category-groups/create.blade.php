@@ -86,9 +86,9 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control image-url" name="image[path]" placeholder="{{ __('Tải ảnh lên hoặc nhập URL') }}" value="{{ old('image.path') }}">
                                         <div class="input-group-append">
-                                            <label class="btn btn-outline-primary m-0" for="image-file">
+                                            <label class="btn btn-outline-primary m-0" for="image-file-main">
                                                 <i class="flaticon2-image-file mr-2"></i>{{ __('Tải lên') }}
-                                                <input type="file" id="image-file" name="image[file]" class="d-none image-file" accept="image/*">
+                                                <input type="file" id="image-file-main" name="image[file]" class="d-none image-file" accept="image/*">
                                             </label>
                                         </div>
                                     </div>
@@ -96,6 +96,25 @@
                                         <img class="img-fluid image-preview" style="max-width: 150px; display: none;" src="" alt="Image preview">
                                     </div>
                                     @error('image.*')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">{{ __('Ảnh bìa') }}</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control image-url" name="cover[path]" placeholder="{{ __('Tải ảnh lên hoặc nhập URL') }}" value="{{ old('cover.path') }}">
+                                        <div class="input-group-append">
+                                            <label class="btn btn-outline-primary m-0" for="image-file-cover">
+                                                <i class="flaticon2-image-file mr-2"></i>{{ __('Tải lên') }}
+                                                <input type="file" id="image-file-cover" name="cover[file]" class="d-none image-file" accept="image/*">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <img class="img-fluid image-preview" style="max-width: 150px; display: none;" src="" alt="Cover preview">
+                                    </div>
+                                    @error('cover.*')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>

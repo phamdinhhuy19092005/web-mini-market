@@ -8,11 +8,13 @@ use Illuminate\Support\ServiceProvider;
 use App\Contracts\Responses\Backoffice\ListAdminResponseContract;
 use App\Contracts\Responses\Backoffice\ListAttributeResponseContract;
 use App\Contracts\Responses\Backoffice\ListAttributeValueResponseContract;
+use App\Contracts\Responses\Backoffice\ListAutoDiscountResponseContract;
 use App\Contracts\Responses\Backoffice\ListBannerResponseContract;
 use App\Contracts\Responses\Backoffice\ListBrandResponseContract;
 use App\Contracts\Responses\Backoffice\ListCategoryGroupResponseContract;
 use App\Contracts\Responses\Backoffice\ListCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\ListCountryResponseContract;
+use App\Contracts\Responses\Backoffice\ListCouponResponseContract;
 use App\Contracts\Responses\Backoffice\ListCurrencyResponseContract;
 use App\Contracts\Responses\Backoffice\ListFaqResponseContract;
 use App\Contracts\Responses\Backoffice\ListFaqTopicResponseContract;
@@ -32,10 +34,12 @@ use App\Contracts\Responses\Backoffice\ListUserResponseContract;
 use App\Contracts\Responses\Backoffice\StoreAdminResponseContract;
 use App\Contracts\Responses\Backoffice\StoreAttributeResponseContract;
 use App\Contracts\Responses\Backoffice\StoreAttributeValueResponseContract;
+use App\Contracts\Responses\Backoffice\StoreAutoDiscountResponseContract;
 use App\Contracts\Responses\Backoffice\StoreBannerResponseContract;
 use App\Contracts\Responses\Backoffice\StoreBrandResponseContract;
 use App\Contracts\Responses\Backoffice\StoreCategoryGroupResponseContract;
 use App\Contracts\Responses\Backoffice\StoreCategoryResponseContract;
+use App\Contracts\Responses\Backoffice\StoreCouponResponseContract;
 use App\Contracts\Responses\Backoffice\StoreFaqResponseContract;
 use App\Contracts\Responses\Backoffice\StoreFaqTopicResponseContract;
 use App\Contracts\Responses\Backoffice\StoreInventoryResponseContract;
@@ -53,10 +57,12 @@ use App\Contracts\Responses\Backoffice\StoreUserResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateAdminResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateAttributeResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateAttributeValueResponseContract;
+use App\Contracts\Responses\Backoffice\UpdateAutoDiscountResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateBannerResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateBrandResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateCategoryGroupResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateCategoryResponseContract;
+use App\Contracts\Responses\Backoffice\UpdateCouponResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateFaqResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateFaqTopicResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateInventoryResponseContract;
@@ -71,15 +77,18 @@ use App\Contracts\Responses\Backoffice\UpdateShippingRateResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateShippingZoneResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateSubCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateUserResponseContract;
+
 // Responses
 use App\Http\Responses\Backoffice\ListAdminResponse;
 use App\Http\Responses\Backoffice\ListAttributeResponse;
 use App\Http\Responses\Backoffice\ListAttributeValueResponse;
+use App\Http\Responses\Backoffice\ListAutoDiscountResponse;
 use App\Http\Responses\Backoffice\ListBannerResponse;
 use App\Http\Responses\Backoffice\ListBrandResponse;
 use App\Http\Responses\Backoffice\ListCategoryGroupResponse;
 use App\Http\Responses\Backoffice\ListCategoryResponse;
 use App\Http\Responses\Backoffice\ListCountryResponse;
+use App\Http\Responses\Backoffice\ListCouponResponse;
 use App\Http\Responses\Backoffice\ListCurrencyResponse;
 use App\Http\Responses\Backoffice\ListFaqResponse;
 use App\Http\Responses\Backoffice\ListFaqTopicResponse;
@@ -99,10 +108,12 @@ use App\Http\Responses\Backoffice\ListUserResponse;
 use App\Http\Responses\Backoffice\StoreAdminResponses;
 use App\Http\Responses\Backoffice\StoreAttributeResponses;
 use App\Http\Responses\Backoffice\StoreAttributeValueResponses;
+use App\Http\Responses\Backoffice\StoreAutoDiscountResponses;
 use App\Http\Responses\Backoffice\StoreBannerResponses;
 use App\Http\Responses\Backoffice\StoreBrandResponses;
 use App\Http\Responses\Backoffice\StoreCategoryGroupResponses;
 use App\Http\Responses\Backoffice\StoreCategoryResponses;
+use App\Http\Responses\Backoffice\StoreCouponResponses;
 use App\Http\Responses\Backoffice\StoreFaqResponses;
 use App\Http\Responses\Backoffice\StoreFaqTopicResponses;
 use App\Http\Responses\Backoffice\StoreInventoryResponses;
@@ -120,10 +131,12 @@ use App\Http\Responses\Backoffice\StoreUserResponses;
 use App\Http\Responses\Backoffice\UpdateAdminResponses;
 use App\Http\Responses\Backoffice\UpdateAttributeResponses;
 use App\Http\Responses\Backoffice\UpdateAttributeValueResponses;
+use App\Http\Responses\Backoffice\UpdateAutoDiscountResponses;
 use App\Http\Responses\Backoffice\UpdateBannerResponses;
 use App\Http\Responses\Backoffice\UpdateBrandResponses;
 use App\Http\Responses\Backoffice\UpdateCategoryGroupResponses;
 use App\Http\Responses\Backoffice\UpdateCategoryResponses;
+use App\Http\Responses\Backoffice\UpdateCouponResponses;
 use App\Http\Responses\Backoffice\UpdateFaqResponses;
 use App\Http\Responses\Backoffice\UpdateFaqTopicResponses;
 use App\Http\Responses\Backoffice\UpdateInventoryResponses;
@@ -352,6 +365,24 @@ class BackofficeResponseServiceProvider extends ServiceProvider
         StorePaymentOptionResponseContract::class         => StorePaymentOptionResponses::class,
         UpdatePaymentOptionResponseContract::class        => UpdatePaymentOptionResponses::class,
         ListPaymentOptionResponseContract::class          => ListPaymentOptionResponse::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Coupons
+        |--------------------------------------------------------------------------
+        */
+        StoreCouponResponseContract::class         => StoreCouponResponses::class,
+        UpdateCouponResponseContract::class        => UpdateCouponResponses::class,
+        ListCouponResponseContract::class          => ListCouponResponse::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Auto Discounts
+        |--------------------------------------------------------------------------
+        */
+        StoreAutoDiscountResponseContract::class         => StoreAutoDiscountResponses::class,
+        UpdateAutoDiscountResponseContract::class        => UpdateAutoDiscountResponses::class,
+        ListAutoDiscountResponseContract::class          => ListAutoDiscountResponse::class,
 
     ];
 }

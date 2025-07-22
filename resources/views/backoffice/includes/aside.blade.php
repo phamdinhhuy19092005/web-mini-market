@@ -108,6 +108,32 @@
                                 <span class="k-menu__link-text">Kho sản phẩm</span>
                             </a>
                         </li>
+                        <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.coupons.*', 'bo.web.discounts.*') ? 'k-menu__item--open' : '' }}" aria-haspopup="true" data-kmenu-submenu-toggle="hover">
+                            <a href="javascript:;" class="k-menu__link k-menu__toggle">
+                                <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
+                                <span class="k-menu__link-text">Mã giảm giá</span>
+                                <i class="k-menu__ver-arrow la la-angle-right"></i>
+                            </a>
+                            <div class="k-menu__submenu">
+                                <span class="k-menu__arrow"></span>
+                                <ul class="k-menu__subnav">
+                                    <li class="k-menu__item {{ request()->routeIs('bo.web.coupons.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
+                                        <a href="{{ route('bo.web.coupons.index') }}" class="k-menu__link">
+                                            <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
+                                            <span class="k-menu__link-text">Mã giảm giá nhập tay</span>
+                                        </a>
+                                    </li>
+                                    {{-- {{ request()->routeIs('bo.web.discounts.*') ? 'k-menu__item--active' : '' }} --}}
+                                    <li class="k-menu__item " aria-haspopup="true"> 
+                                        <a href="{{ route('bo.web.inventories.index') }}" class="k-menu__link">
+                                            <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
+                                            <span class="k-menu__link-text">Giảm giá tự động</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
                     </ul>
                 </div>
             </li>

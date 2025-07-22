@@ -22,6 +22,9 @@ class User extends Authenticatable
         'last_logged_in_at',
         'email_verified_at',
         'password',
+        'birthday',
+        'genders',
+        'allow_login',
         'access_channel_type',
         'google_id',
     ];
@@ -45,8 +48,14 @@ class User extends Authenticatable
         return $this->hasMany(UserActionLog::class);
     }
 
+    public function usedCoupons()
+    {
+        return $this->belongsToMany(Coupon::class, 'used_coupons')->withPivot('order_id')->withTimestamps();
+    }
+
     public function getAccessChannelTypeNameAttribute(): string
     {
         return $this->access_channel_type?->label() ?? 'Không xác định';
     }
+
 }

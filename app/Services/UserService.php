@@ -86,28 +86,11 @@ class UserService extends BaseService
         return $this->userRepository->findOrFail($id);
     }
 
-    public function update(int $id, array $attributes = []): Model
+ public function update(int $id, array $attributes = []): Model
     {
         return DB::transaction(function () use ($id, $attributes) {
-            $user = $this->userRepository->findOrFail($id);
-
-            if (!empty($attributes['password'])) {
-                $attributes['password'] = Hash::make($attributes['password']);
-            } else {
-                unset($attributes['password']);
-            }
-
-            $roleIds = array_keys($attributes['roles'] ?? []);
-            unset($attributes['roles']);
-
             $this->userRepository->update($id, $attributes);
-
-            if (!empty($roleIds)) {
-                $roles = Role::whereIn('id', $roleIds)->get();
-                $user->syncRoles($roles);
-            }
-
-            return $user->fresh();
+            return $this->userRepository->findOrFail($id);
         });
     }
 

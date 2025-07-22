@@ -24,11 +24,6 @@ class ProductResource extends BaseResource
             'media' => json_decode($this->media, true) ?? [],
             'suggested_relationships' => $this->suggested_relationships,
 
-            // 'attributes' => $this->whenLoaded('attributes'),
-
-            // 'attributes' => AttributeResource::collection($this->attributes), // nếu có
-            // 'inventories' => InventoryResource::collection($this->inventories),
-            // 'suggested_relationships' => ProductRelationResource::collection($this->suggestedProducts),
             'brand' => $this->whenLoaded('brand', function() {
                 return new BrandResource($this->brand);
             }),
@@ -37,6 +32,10 @@ class ProductResource extends BaseResource
             }),
             'updated_by' => $this->whenLoaded('updatedBy', function() {
                 return new UpdatedByResource($this->updatedBy);
+            }),
+
+            'inventories' => $this->whenLoaded('inventories', function(){
+                return InventoryResource::collection($this->inventories);
             }),
 
             'created_at' => $this->created_at,

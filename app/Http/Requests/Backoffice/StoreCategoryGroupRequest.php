@@ -19,6 +19,10 @@ class StoreCategoryGroupRequest extends BaseFormRequest implements StoreCategory
             'image.file' => ['nullable', 'file', 'mimes:jpeg,png,gif,webp', 'max:5200'],
             'image.path' => ['nullable', 'string'],
 
+            'cover' => ['required', 'array'],
+            'cover.file' => ['nullable', 'file', 'mimes:jpeg,png,gif,webp', 'max:5200'],
+            'cover.path' => ['nullable', 'string'],
+
             'description' => ['nullable', 'string'],
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string', 'max:255'],
@@ -35,6 +39,6 @@ class StoreCategoryGroupRequest extends BaseFormRequest implements StoreCategory
 
     public function imageFile()
     {
-        return $this->file('image');
+        return $this->file('image', 'cover');
     }
 }

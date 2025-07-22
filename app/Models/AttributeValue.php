@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Enum\ActivationStatus;
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
 
 class AttributeValue extends Model
 {
-    protected $table = 'attribute_values';
+    use Activatable;
 
     protected $fillable = [
         'value',
@@ -17,10 +18,6 @@ class AttributeValue extends Model
         'status',
     ];
 
-    public function getStatusNameAttribute(): string
-    {
-        return ActivationStatus::label($this->status);
-    }
 
     public function attribute()
     {

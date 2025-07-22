@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('phone', 20);
             $table->char('country_code', 3)->nullable()->default('VND');
             $table->string('address_line')->nullable();
-
             $table->timestamps();
         });
     }

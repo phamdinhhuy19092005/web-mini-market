@@ -3,11 +3,13 @@
 use App\Http\Controllers\Backoffice\Api\AdminController;
 use App\Http\Controllers\Backoffice\Api\AttributeController;
 use App\Http\Controllers\Backoffice\Api\AttributeValueController;
+use App\Http\Controllers\Backoffice\Api\AutoDiscountController;
 use App\Http\Controllers\Backoffice\Api\BannerController;
 use App\Http\Controllers\Backoffice\Api\BrandController;
 use App\Http\Controllers\Backoffice\Api\CategoryController;
 use App\Http\Controllers\Backoffice\Api\CategoryGroupController;
 use App\Http\Controllers\Backoffice\Api\CountryController;
+use App\Http\Controllers\Backoffice\Api\CouponController;
 use App\Http\Controllers\Backoffice\Api\CurrencyController;
 use App\Http\Controllers\Backoffice\Api\FaqController;
 use App\Http\Controllers\Backoffice\Api\FaqTopicController;
@@ -62,3 +64,5 @@ Route::get('/inventories', [InventoryController::class, 'index'])->name('invento
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::get('/payment-providers', [PaymentProviderController::class, 'index'])->name('payment-providers.index');
 Route::get('/payment-options', [PaymentOptionController::class, 'index'])->name('payment-options.index');
+Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
+Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');

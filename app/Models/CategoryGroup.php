@@ -18,6 +18,7 @@ class CategoryGroup extends Model
         'name',
         'slug',
         'image',
+        'cover',
         'description',
         'seo_title',
         'seo_description',

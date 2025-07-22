@@ -87,10 +87,16 @@
                                     {{-- Slug --}}
                                     <div class="form-group">
                                         <label for="slug">Đường dẫn URL</label>
-                                        <input type="text" name="slug" id="slug" class="form-control"
-                                            placeholder="Nhập đường dẫn URL" autocomplete="off"
+                                        <input type="text"
+                                            name="slug"
+                                            id="slug"
+                                            class="form-control"
+                                            placeholder="Nhập đường dẫn URL"
+                                            autocomplete="off"
                                             value="{{ old('slug', $product->slug) }}">
-                                        @error('slug') <span class="text-danger">{{ $message }}</span> @enderror
+                                        @error('slug')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
 
                                     {{-- Code --}}
@@ -173,7 +179,6 @@
                                         <label class="form-label">{{ __('Bộ sưu tập ảnh') }}</label>
                                         
                                         @php
-                                            // Giải mã JSON media thành mảng, đảm bảo không lỗi nếu media là null hoặc không phải JSON
                                             $media = is_string($product->media) ? json_decode($product->media, true) : ($product->media ?? []);
                                             $media = is_array($media) ? $media : [];
                                         @endphp
@@ -317,5 +322,8 @@
             </div>
         </div>
     </div>
-    @include('backoffice.pages.products.pagejs.product')
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
+@endpush
