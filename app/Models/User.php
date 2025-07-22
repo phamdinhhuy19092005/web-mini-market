@@ -27,6 +27,7 @@ class User extends Authenticatable
         'allow_login',
         'access_channel_type',
         'google_id',
+        'provider',
     ];
 
     protected $hidden = [
