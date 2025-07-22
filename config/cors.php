@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'paths' => ['api/*', 'bo/api/*'],  
+    'paths' => ['api/*', 'bo/api/*', 'backoffice/*'], 
 
     'allowed_methods' => ['*'],
 

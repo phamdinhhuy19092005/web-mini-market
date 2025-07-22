@@ -44,7 +44,16 @@ class GoogleAuthController extends BaseController
             Auth::login($user);
 
             $frontendUrl = config('app.frontend_url', 'http://localhost:3001');
-            return redirect()->away($frontendUrl . '/login-gg-success?email=' . urlencode($user->email) . '&name=' . urlencode($user->name) . '&avatar=' . urlencode($user->avatar));
+            return redirect()->away($frontendUrl . '/login-gg-success?' . http_build_query([
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => $user->avatar,
+                'phone_number' => $user->phone_number,
+                'birthday' => $user->birthday,
+                'genders' => $user->genders,
+            ]));
+
 
         } catch (\Exception $e) {
             return redirect('/login')->withErrors(['login' => 'Đăng nhập Google thất bại.']);

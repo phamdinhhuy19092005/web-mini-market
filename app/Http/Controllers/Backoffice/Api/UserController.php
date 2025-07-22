@@ -13,6 +13,18 @@ class UserController extends BaseApiController
         //
     }
 
+    public function show($id)
+{
+    $user = $this->userService->show($id);
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
+    return response()->json($user);
+}
+
+
     public function index(Request $request)
     {
         $users = $this->userService->searchByAdmin($request->all());
