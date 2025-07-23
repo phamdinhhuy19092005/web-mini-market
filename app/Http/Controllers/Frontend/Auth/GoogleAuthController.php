@@ -33,13 +33,12 @@ class GoogleAuthController extends BaseController
                     'email_verified_at' => now(),
                     'last_logged_in_at' => now(),
                     'access_channel_type' => 1,
-                    'provider' => 'google',
                 ]);
             } else {
                 // Cập nhật login time và provider nếu chưa có
             $user->update([
                 'last_logged_in_at' => now(),
-                'provider' => $user->provider ?? 'google', // ✅ thêm dòng này
+                'access_channel_type' => $user->access_channel_type ?? 1, // ✅ thêm dòng này
             ]);
             }
 
@@ -54,7 +53,7 @@ class GoogleAuthController extends BaseController
                 'phone_number' => $user->phone_number,
                 'birthday' => $user->birthday,
                 'genders' => $user->genders,
-                'provider' => $user->provider,
+                'access_channel_type' => $user->access_channel_type,
             ]));
 
 

@@ -27,6 +27,28 @@ class CouponService extends BaseService
             ->paginate($perPage);
     }
 
+
+public function searchByFrontend($data = [])
+{
+    $query = data_get($data, 'query');
+    $perPage = data_get($data, 'per_page', 10);
+
+    return $this->couponRepository->model()::query()
+        ->where('status', \App\Enum\ActivationStatusEnum::ACTIVE)
+        ->whereDate('end_date', '>=', now())
+        ->when($query, function ($q) use ($query) {
+            $q->where('title', 'like', "%$query%")
+              ->orWhere('code', 'like', "%$query%");
+        })
+        ->paginate($perPage);
+}
+
+
+
+
+
+
+
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
