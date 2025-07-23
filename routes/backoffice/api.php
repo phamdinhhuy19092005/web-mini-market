@@ -26,6 +26,7 @@ use App\Http\Controllers\Backoffice\Api\ShippingZoneController;
 use App\Http\Controllers\Backoffice\Api\SubCategoryController;
 use App\Http\Controllers\Backoffice\Api\SubscriberController;
 use App\Http\Controllers\Backoffice\Api\UserController;
+use App\Http\Controllers\Backoffice\Api\WebsiteReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('bo/api')->name('bo.api.')->group(function () {
@@ -66,3 +67,4 @@ Route::get('/payment-providers', [PaymentProviderController::class, 'index'])->n
 Route::get('/payment-options', [PaymentOptionController::class, 'index'])->name('payment-options.index');
 Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
 Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
+Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');

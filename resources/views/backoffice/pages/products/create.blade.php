@@ -309,10 +309,7 @@
                                         <label class="mr-3">Kích hoạt</label>
                                         <span class="k-switch">
                                             <label>
-                                                <input type="checkbox"
-                                                       name="status"
-                                                       value="1"
-                                                       checked>
+                                                <input type="checkbox" name="status" value="1" checked>
                                                 <span></span>
                                             </label>
                                         </span>

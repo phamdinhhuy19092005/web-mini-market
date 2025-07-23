@@ -100,6 +100,21 @@
                                     <input type="datetime-local" name="end_date" id="end_date" class="form-control" value="{{ old('end_date') }}">
                                     @error('end_date') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
+
+                                <div class="col-md-12 form-group">
+                                    <label for="content">Điều khoản</label>
+                                    <x-backoffice.content-editor
+                                        id="terms"
+                                        name="terms"
+                                        :value="old('terms')"
+                                        :cols="30"
+                                        :rows="10"
+                                        placeholder="Nhập điều khoản mã..."
+                                        disk="public"
+                                        class=""
+                                        :config="[]"
+                                    />
+                                </div>
                             </div>
 
                             <div class="form-group">

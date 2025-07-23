@@ -14,6 +14,7 @@ class AutoDiscount extends Model
         'title',
         'code',
         'description',
+        'terms',
         'condition_type',
         'condition_value',
         'discount_type',

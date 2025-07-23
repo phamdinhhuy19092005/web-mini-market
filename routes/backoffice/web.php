@@ -32,6 +32,7 @@ use App\Http\Controllers\Backoffice\SubCategoryController;
 use App\Http\Controllers\Backoffice\SubscriberController;
 use App\Http\Controllers\Backoffice\SystemSettingController;
 use App\Http\Controllers\Backoffice\UserController;
+use App\Http\Controllers\Backoffice\WebsiteReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -431,6 +432,34 @@ Route::get('/auto-discounts/{id}/edit', [AutoDiscountController::class, 'edit'])
 Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
 Route::put('/auto-discounts/{id}', [AutoDiscountController::class, 'update'])->name('auto-discounts.update');
 Route::delete('/auto-discounts/{id}', [AutoDiscountController::class, 'destroy'])->name('auto-discounts.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Discount Rules
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
+Route::get('/auto-discounts/create', [AutoDiscountController::class, 'create'])->name('auto-discounts.create');
+Route::post('auto-discounts', [AutoDiscountController::class, 'store'])->name('auto-discounts.store');
+Route::get('/auto-discounts/{id}/edit', [AutoDiscountController::class, 'edit'])->name('auto-discounts.edit');
+Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
+Route::put('/auto-discounts/{id}', [AutoDiscountController::class, 'update'])->name('auto-discounts.update');
+Route::delete('/auto-discounts/{id}', [AutoDiscountController::class, 'destroy'])->name('auto-discounts.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Website Reviews
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');
+Route::get('/website-reviews/create', [WebsiteReviewController::class, 'create'])->name('website-reviews.create');
+Route::post('website-reviews', [WebsiteReviewController::class, 'store'])->name('website-reviews.store');
+Route::get('/website-reviews/{id}/edit', [WebsiteReviewController::class, 'edit'])->name('website-reviews.edit');
+Route::get('/website-reviews/{id}', [WebsiteReviewController::class, 'show'])->name('website-reviews.show');
+Route::put('/website-reviews/{id}', [WebsiteReviewController::class, 'update'])->name('website-reviews.update');
+Route::delete('/website-reviews/{id}', [WebsiteReviewController::class, 'destroy'])->name('website-reviews.destroy');
 
 /*
 |--------------------------------------------------------------------------

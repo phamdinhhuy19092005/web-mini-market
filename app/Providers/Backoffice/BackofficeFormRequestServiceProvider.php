@@ -63,6 +63,7 @@ use App\Http\Requests\Backoffice\Interfaces\StoreShippingRateRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreShippingZoneRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreSubCategoryRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreUserRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreWebsiteReviewRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeValueRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAutoDiscountRequestInterface;
@@ -79,6 +80,7 @@ use App\Http\Requests\Backoffice\Interfaces\UpdateShippingRateRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateShippingZoneRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateSubCategoryRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateUserRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateWebReviewRequestInterface;
 use App\Http\Requests\Backoffice\StoreAttributeRequest;
 use App\Http\Requests\Backoffice\StoreAttributeValueRequest;
 use App\Http\Requests\Backoffice\StoreAutoDiscountRequest;
@@ -95,6 +97,7 @@ use App\Http\Requests\Backoffice\StoreShippingRateRequest;
 use App\Http\Requests\Backoffice\StoreShippingZoneRequest;
 use App\Http\Requests\Backoffice\StoreSubCategoryRequest;
 use App\Http\Requests\Backoffice\StoreUserRequest;
+use App\Http\Requests\Backoffice\StoreWebsiteReviewRequest;
 use App\Http\Requests\Backoffice\UpdateAttributeRequest;
 use App\Http\Requests\Backoffice\UpdateAttributeValueRequest;
 use App\Http\Requests\Backoffice\UpdateAutoDiscountRequest;
@@ -111,6 +114,7 @@ use App\Http\Requests\Backoffice\UpdateShippingRateRequest;
 use App\Http\Requests\Backoffice\UpdateShippingZoneRequest;
 use App\Http\Requests\Backoffice\UpdateSubCategoryRequest;
 use App\Http\Requests\Backoffice\UpdateUserRequest;
+use App\Http\Requests\Backoffice\UpdateWebsiteReviewRequest;
 
 class BackofficeFormRequestServiceProvider extends ServiceProvider
 {
@@ -300,6 +304,14 @@ class BackofficeFormRequestServiceProvider extends ServiceProvider
         */
         StoreAutoDiscountRequestInterface::class => StoreAutoDiscountRequest::class,
         UpdateAutoDiscountRequestInterface::class => UpdateAutoDiscountRequest::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Website Reviews
+        |--------------------------------------------------------------------------
+        */
+        StoreWebsiteReviewRequestInterface::class => StoreWebsiteReviewRequest::class,
+        UpdateWebReviewRequestInterface::class => UpdateWebsiteReviewRequest::class,
 
     ];
 }

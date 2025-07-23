@@ -46,6 +46,7 @@ use App\Repositories\Interfaces\ShippingZoneRepositoryInterface;
 use App\Repositories\Interfaces\SubCategoryRepositoryInterface;
 use App\Repositories\Interfaces\SubscriberRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\Interfaces\WebsiteReviewRepositoryInterface;
 use App\Repositories\InventoryRepository;
 use App\Repositories\PageRepository;
 use App\Repositories\PaymentOptionRepository;
@@ -59,6 +60,7 @@ use App\Repositories\ShippingZoneRepository;
 use App\Repositories\SubCategoryRepository;
 use App\Repositories\SubscriberRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\WebsiteReviewRepository;
 
 class BackofficeRepositoryServiceProvider extends ServiceProvider
 {
@@ -245,5 +247,12 @@ class BackofficeRepositoryServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         AutoDiscountRepositoryInterface::class        => AutoDiscountRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Website Reviews
+        |--------------------------------------------------------------------------
+        */
+        WebsiteReviewRepositoryInterface::class        => WebsiteReviewRepository::class,
     ];
 }

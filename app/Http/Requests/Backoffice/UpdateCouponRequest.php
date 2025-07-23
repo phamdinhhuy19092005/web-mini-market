@@ -18,6 +18,7 @@ class UpdateCouponRequest extends BaseFormRequest implements UpdateCouponRequest
             'discount_type' => ['required', 'integer', Rule::in(DiscountTypeEnum::values())],
             'discount_value' => ['required', 'numeric', 'min:0'],
             'usage_limit' => ['nullable', 'integer', 'min:0'],
+            'terms' => ['nullable', 'string'],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             'status' => ['required', Rule::in(ActivationStatus::all())],

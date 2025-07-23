@@ -6,7 +6,6 @@
     $breadcrumbs = [
         [
             'label' => __('Mã giảm giá'),
-            'route' => route('bo.web.coupons.index')
         ],
         [
             'label' => __('Mã giảm giá nhập tay'),
@@ -99,6 +98,21 @@
                                     @error('end_date')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <label for="content">Nội dung</label>
+                                    <x-backoffice.content-editor
+                                        id="terms"
+                                        name="terms"
+                                        :value="old('terms')"
+                                        :cols="30"
+                                        :rows="10"
+                                        placeholder="Nhập điều khoản mã..."
+                                        disk="public"
+                                        class=""
+                                        :config="[]"
+                                    />
                                 </div>
                             </div>
                             <div class="row">

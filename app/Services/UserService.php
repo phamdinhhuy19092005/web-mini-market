@@ -86,7 +86,7 @@ class UserService extends BaseService
         return $this->userRepository->findOrFail($id);
     }
 
- public function update(int $id, array $attributes = []): Model
+    public function update(int $id, array $attributes = []): Model
     {
         return DB::transaction(function () use ($id, $attributes) {
             $this->userRepository->update($id, $attributes);

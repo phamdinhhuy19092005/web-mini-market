@@ -24,6 +24,7 @@ class UpdateAutoDiscountRequest extends BaseFormRequest implements UpdateAutoDis
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             'description' => ['nullable', 'string', 'max:1000'],
+            'terms' => ['nullable', 'string'],
             'status' => ['required', Rule::in(ActivationStatus::all())],
         ];
     }

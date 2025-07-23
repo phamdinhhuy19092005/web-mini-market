@@ -9,22 +9,13 @@ window.renderStatusColumn = function(data) {
     const classMap = {
         'Active': 'k-badge--success',
         'Inactive': 'k-badge--danger',
-        'Pending': 'k-badge--warning'
+        'Pending': 'k-badge--warning',
+        'Declined': 'k-badge--danger',
+        'Approved': 'k-badge--success',
     };
     const badgeClass = classMap[data] || 'k-badge--secondary';
     return `<span class="k-badge k-badge--inline k-badge--pill ${badgeClass}">${data}</span>`;
 };
-
-// window.renderActions = function (data) {
-//     let html = '';
-//     if (data.update) {
-//         html += `<a href="${data.update}" class="btn btn-sm btn-warning mr-1" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>`;
-//     }
-//     if (data.delete) {
-//         html += `<button class="btn btn-sm btn-danger" onclick="handleDelete('${data.delete}')" title="Xóa"><i class="fa fa-trash"></i></button>`;
-//     }
-//     return html || '<span class="text-muted">No actions</span>';
-// };
 
 window.handleDelete = function (url) {
     if (confirm("Bạn có chắc chắn muốn xóa?")) {

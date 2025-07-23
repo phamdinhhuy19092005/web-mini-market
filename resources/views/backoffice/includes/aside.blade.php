@@ -278,6 +278,12 @@
                                 <span class="k-menu__link-text">Người đăng ký</span>
                             </a>
                         </li>
+                        <li class="k-menu__item {{ request()->routeIs('bo.web.website-reviews.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
+                            <a href="{{ route('bo.web.website-reviews.index') }}" class="k-menu__link">
+                                <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
+                                <span class="k-menu__link-text">Đánh giá website</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>
