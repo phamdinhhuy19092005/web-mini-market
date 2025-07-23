@@ -15,6 +15,7 @@ class CouponResource extends BaseResource
                 'discount_type_name' => $this->discount_type_name,
                 'discount_value' => $this->discount_value,
                 'usage_limit' => $this->usage_limit ?? 'Không giới hạn',
+                'terms' => $this->terms,
                 'used' => $this->used_coupons_count ?? 0,
                 'start_date' => $this->start_date ?? 'Không thời hạn',
                 'end_date' => $this->end_date ?? 'Không thời hạn',

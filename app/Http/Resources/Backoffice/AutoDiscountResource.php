@@ -20,6 +20,7 @@ class AutoDiscountResource extends BaseResource
                 'used' => $this->used_coupons_count ?? 0,
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
+                'terms' => $this->terms,
                 'status' => $this->status,
                 'status_name' => $this->status_name,
                 'created_at' => $this->created_at,
