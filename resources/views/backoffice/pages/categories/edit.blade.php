@@ -50,19 +50,6 @@ $breadcrumbs = [
                     <form class="k-form k-form--label-right" method="POST" action="{{ route('bo.web.categories.update', $category->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <ul class="mb-0">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                        @endif
-
                         <div class="k-portlet__body">
                             <div class="row">
                                 <div class="col-lg-6">

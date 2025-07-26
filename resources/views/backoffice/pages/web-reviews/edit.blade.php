@@ -92,7 +92,7 @@
                                     <label class="mr-3">{{ __('Kích hoạt (tán thành)') }}</label>
                                     <span class="k-switch">
                                         <label>
-                                            <input type="checkbox" name="status" value="1">
+                                            <input type="checkbox" name="status" value="1" {{ old('status', $web_review->status) ? 'checked' : '' }}>
                                             <span></span>
                                         </label>
                                     </span>

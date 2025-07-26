@@ -27,6 +27,7 @@ class AttributeValueService extends BaseService
                     $sub->where('name', 'like', "%$query%");
                 });
             })
+            ->orderBy('id', 'desc')
             ->paginate($perPage);
     }
 

@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers\Backoffice;
 
-use App\Contracts\Responses\Backoffice\StorePostResponseContract;
 use App\Contracts\Responses\Backoffice\StoreWebsiteReviewResponseContract;
-use App\Contracts\Responses\Backoffice\UpdatePostResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateWebsiteReviewResponseContract;
 use App\Http\Requests\Backoffice\Interfaces\StoreWebsiteReviewRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateWebReviewRequestInterface;
-use App\Models\PostCategory;
 use App\Services\WebsiteReviewService;
 use Illuminate\Http\Request;
 
@@ -28,7 +25,7 @@ class WebsiteReviewController extends BaseController
 
     public function create()
     {
-        return view('backoffice.pages.web-reviews.create', compact('postCategories'));
+        return view('backoffice.pages.web-reviews.create');
     }
 
     public function store(StoreWebsiteReviewRequestInterface $request)

@@ -28,6 +28,7 @@ class User extends Authenticatable
         'access_channel_type',
         'google_id',
         'provider',
+        'phone_number',
     ];
 
     protected $hidden = [
@@ -53,6 +54,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Coupon::class, 'used_coupons')->withPivot('order_id')->withTimestamps();
     }
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
 
     public function getAccessChannelTypeNameAttribute(): string
     {

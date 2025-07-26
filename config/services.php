@@ -39,6 +39,10 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
-
-
+    'vnpay' => [
+        'tmn_code' => env('VNPAY_TMN_CODE', 'your_tmn_code'),
+        'hash_secret' => env('VNPAY_HASH_SECRET', 'your_hash_secret'),
+        'url' => env('VNPAY_URL', 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html'),
+        'return_url' => env('VNPAY_RETURN_URL', 'your_return_url'),
+    ],
 ];

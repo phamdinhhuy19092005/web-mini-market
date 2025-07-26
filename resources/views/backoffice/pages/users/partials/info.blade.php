@@ -147,16 +147,6 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <label for="genders" class="form-label">{{ __('Giới tính') }} <span class="text-danger">*</span></label>
-                            <select class="form-control k_selectpicker" id="genders" name="genders" data-live-search="true" required>
-                                <option value="0" {{ old('genders', $user->genders) == 0 ? 'selected' : '' }}>{{ __('Nam') }}</option>
-                                <option value="1" {{ old('genders', $user->genders) == 1 ? 'selected' : '' }}>{{ __('Nữ') }}</option>
-                            </select>
-                            @error('genders')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

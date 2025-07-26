@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class AdministrativeRegion extends Model
 {
-    protected $table = 'administrative_regions';
-
     protected $fillable = [
         'name',
         'name_en',

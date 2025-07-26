@@ -1,14 +1,14 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Currencies');
+    $title = __('Tiền tệ');
 
     $breadcrumbs = [
         [
-            'label' => __('Areas'),
+            'label' => __('Khu vực'),
         ],
         [
-            'label' => __('Currencies'),
+            'label' => __('Tiền tệ'),
         ],
     ];
 @endphp
@@ -26,7 +26,7 @@
                 <div class="k-portlet k-portlet--mobile">
                     <div class="k-portlet__head k-portlet__head--lg">
                         <div class="k-portlet__head-label">
-                            <h3 class="k-portlet__head-title">List Currency</h3>
+                            <h3 class="k-portlet__head-title">Danh sách tiền tệ </h3>
                         </div>
                     </div>
                     <div class="k-portlet__body k-portlet__body--fit p-4">
@@ -37,13 +37,13 @@
                             <thead>
                                 <tr>
                                     <th data-property="id">{{ __('ID') }}</th>
-                                    <th data-property="name">{{ __('Name') }}</th>
-                                    <th data-property="type_name">{{ __('Type') }}</th>
-                                    <th data-property="used_countries">{{ __('Used country') }}</th>
+                                    <th data-property="name">{{ __('Tên') }}</th>
+                                    <th data-property="type_name">{{ __('Loại') }}</th>
+                                    <th data-property="used_countries" data-render-callback="renderStatusColumn">{{ __('Quốc gia đã sử dụng') }}</th>
                                     <th data-property="code">{{ __('Code') }}</th>
-                                    <th data-property="symbol">{{ __('Symbol') }}</th>
-                                    <th data-property="decimals">{{ __('Decimals') }}</th>
-                                    <th data-property="status">{{ __('Status') }}</th>
+                                    <th data-property="symbol">{{ __('Biểu tượng') }}</th>
+                                    <th data-property="decimals">{{ __('Số thập phân') }}</th>
+                                    <th data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -54,6 +54,6 @@
         </div>
     </div>
 
-    @component('backoffice.partials.datatable')
-    @endcomponent
 @endsection
+@component('backoffice.partials.datatable')
+@endcomponent

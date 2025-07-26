@@ -43,7 +43,6 @@
                                     <th data-property="native" scope="col">{{ __('Tên bản địa') }}</th>
                                     <th data-property="region" scope="col">{{ __('Khu vực') }}</th>
                                     <th data-property="subregion" scope="col">{{ __('Tiểu vùng') }}</th>
-                                    <th class="datatable-action" data-orderable="false" scope="col" aria-label="Hành động">{{ __('Hành động') }}</th>
                                 </tr>
                             </thead>
                         </table>

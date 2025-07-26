@@ -26,6 +26,7 @@ class SubCategoryService extends BaseService
                     ->orWhere('status', 'like', "%$query%")
                     ->orWhere('slug', 'like', "%$query%");
             })
+            ->orderBy('id', 'desc')
             ->paginate($perPage);
     }
 

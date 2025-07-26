@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 
 use Illuminate\Database\Seeder;
+use WardsSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,6 +34,14 @@ class DatabaseSeeder extends Seeder
             DistrictSeeder::class,
             CarrierSeeder::class,
             SubCategorySeeder::class,     
+
+            FaqTopicSeeder::class,       
+            FaqQuestionSeeder::class,
+            PageSeeder::class,
+            TermsCategorySeeder::class,
+            TermsPostSeeder::class,
+
+            WardsSeeder::class,
         ]);
 
 

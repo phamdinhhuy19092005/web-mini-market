@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
 
 class FaqTopic extends Model
 {
-    protected $table = 'faq_topics';
+    use Activatable;
 
     protected $fillable = [
         'name',

@@ -1,17 +1,17 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Edit Post');
+    $title = __('Chỉnh sửa mã giảm giá tự động');
 
     $breadcrumbs = [
         [
-            'label' => __('Utilities'),
+            'label' => __('Mã giảm giá'),
         ],
         [
-            'label' => __('Blogs'),
+            'label' => __('Mã giảm giá tự động'),
         ],
         [
-            'label' => __('Edit Post'),
+            'label' => __('Chỉnh sửa mã giảm giá tự động'),
         ],
     ];
 @endphp
@@ -28,7 +28,7 @@
                 <div class="k-portlet">
                     <div class="k-portlet__head">
                         <div class="k-portlet__head-label">
-                            <h3 class="k-portlet__head-title">Edit Post</h3>
+                            <h3 class="k-portlet__head-title">Chỉnh sửa mã giảm giá tự động</h3>
                         </div>
                     </div>
 
