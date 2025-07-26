@@ -26,20 +26,6 @@
                 <form class="k-form k-form--label-right" method="POST" action="{{ route('bo.web.post-categories.update', $postCategory->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-
-                    @if ($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                    @endif
-
                     <div class="k-portlet__body">
                         <div class="row">
                             <div class="col-lg-6">
@@ -78,9 +64,9 @@
 
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label class="form-label">{{ __('Ảnh hiển thị') }} <span class="text-danger">*</span></label>
+                                    <label class="form-label">{{ __('Ảnh hiển thị') }}</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control image-url" name="image[path]" placeholder="{{ __('Tải ảnh lên hoặc nhập URL') }}" value="{{ old('image.path', $postCategory->image) }}">
+                                        <input type="text" class="form-control image-url" name="image[path]" placeholder="{{ __('Tải ảnh lên hoặc nhập URL') }}" value="{{ old('image.path', $postCategory->image ) }}">
                                         <div class="input-group-append">
                                             <label class="btn btn-outline-primary m-0" for="image-file">
                                                 <i class="flaticon2-image-file mr-2"></i>{{ __('Tải lên') }}
@@ -89,8 +75,7 @@
                                         </div>
                                     </div>
                                     <div class="mt-2">
-                                        <img class="img-fluid image-preview" style="max-width: 150px; display: {{ old('image.path', $postCategory->image) ? 'block' : 'none' }};" src="{{ old('image.path', $postCategory->image) ?? '' }}" alt="Image preview">
-                                        <button type="button" class="btn btn-sm btn-outline-danger delete-image mt-2" style="display: {{ old('image.path', $postCategory->image) ? 'inline-block' : 'none' }};">{{ __('Xóa ảnh') }}</button>
+                                        <img class="img-fluid image-preview" style="max-width: 150px; display: none;" src="" alt="Image preview">
                                     </div>
                                     @error('image.*')
                                         <span class="text-danger">{{ $message }}</span>
@@ -153,5 +138,9 @@
         </div>
     </div>
 </div>
-@include('backoffice.pages.post-categories.pagejs.post-category');
+
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
+@endpush

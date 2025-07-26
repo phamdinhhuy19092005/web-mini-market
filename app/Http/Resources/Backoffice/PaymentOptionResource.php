@@ -11,7 +11,7 @@ class PaymentOptionResource extends BaseResource
             'name' => $this->name,
             'logo' => $this->logo,
             'type' => $this->type,
-            'payment_provider_id' => $this->payment_provider_id,
+            'payment_provider_id' => $this->payment_provider_id ?? ' ',
             'currency_code' => $this->currency_code,
             'order' => $this->order,
             'status_name' => $this->status_name,

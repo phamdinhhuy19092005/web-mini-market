@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\DiscountConditionTypeEnum;
 use App\Enum\DiscountTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\Activatable;
@@ -28,5 +29,10 @@ class AutoDiscount extends Model
     {
         return DiscountTypeEnum::tryFrom($this->discount_type)?->label() ?? '';
     }
+
+    public function getDiscountConditionTypeNameAttribute(): string
+    {
+        return DiscountConditionTypeEnum::tryFrom($this->condition_type)?->label() ?? '';
+    }   
 
 }

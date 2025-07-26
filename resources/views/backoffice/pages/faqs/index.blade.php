@@ -45,8 +45,8 @@
                                     <th data-property="question">Câu hỏi</th>
                                     <th data-property="answer">Câu trả lời</th>
                                     <th data-property="order">Thứ tự</th>
-                                    <th data-property="faq_topic_id">Chủ đề</th>
-                                    <th data-property="status">Trạng thái</th>
+                                    <th class="none" data-render-callback="renderCallbackCategoryGroups" data-property="faq_topic_name">Chủ đề</th>
+                                    <th data-property="status_name" data-render-callback="renderStatusColumn">Trạng thái</th>
                                     <th class="datatable-action" data-property="actions">Thao tác</th>
                                 </tr>
                             </thead>

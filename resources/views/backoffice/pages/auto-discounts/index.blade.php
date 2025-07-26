@@ -42,7 +42,7 @@
                                 <th data-property="end_date" scope="col">{{ __('Ngày kết thúc') }}</th>
                                 <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
                                 <th class="none" data-property="title" scope="col">{{ __('Tiêu đề') }}</th>
-                                <th class="none" data-property="condition_type" scope="col">{{ __('Loại điều kiện') }}</th>
+                                <th class="none" data-property="discount_condition_type_name" scope="col">{{ __('Loại điều kiện') }}</th>
                                 <th class="none" data-property="condition_value" scope="col">{{ __('Giá trị điều kiện') }}</th>
                                 <th class="none" data-property="created_at" scope="col">{{ __('Ngày tạo ') }}</th>
                                 <th class="none" data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>

@@ -32,9 +32,9 @@ class FaqTopicController extends BaseController
 
     public function store(StoreFaqTopicRequestInterface $request)
     {
-        $post = $this->faqTopicService->create($request->validated());
+        $faqTopic = $this->faqTopicService->create($request->validated());
 
-        return $this->responses(StoreFaqTopicResponseContract::class, $post);
+        return $this->responses(StoreFaqTopicResponseContract::class, $faqTopic);
     }
 
     public function show($id)
@@ -46,16 +46,16 @@ class FaqTopicController extends BaseController
 
     public function edit($id)
     {
-        $post = $this->faqTopicService->show($id);
+        $faqTopic = $this->faqTopicService->show($id);
 
-        return view('backoffice.pages.faq-topics.edit', compact('post'));
+        return view('backoffice.pages.faq-topics.edit', compact('faqTopic'));
     }
 
     public function update(UpdateFaqTopicRequestInterface $request, $id)
     {
-        $post = $this->faqTopicService->update($id, $request->validated());
+        $faqTopic = $this->faqTopicService->update($id, $request->validated());
 
-        return $this->responses(UpdateFaqTopicResponseContract::class, $post);
+        return $this->responses(UpdateFaqTopicResponseContract::class, $faqTopic);
     }
 
     public function destroy($id)

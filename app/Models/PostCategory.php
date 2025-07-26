@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
 
 // Category -> Model
 
 class PostCategory extends Model
 {
-    protected $table = 'post_categories';
+    use Activatable;
+    
     protected $fillable = [
         'name',
         'slug',

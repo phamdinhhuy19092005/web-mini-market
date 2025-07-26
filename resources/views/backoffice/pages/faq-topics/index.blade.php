@@ -44,8 +44,8 @@
                                     <th data-property="id">{{ __('ID') }}</th>
                                     <th data-property="name">{{ __('Tên') }}</th>
                                     <th data-property="order">{{ __('Thứ tự hiển thị') }}</th>
-                                    <th data-property="status">{{ __('Trạng thái') }}</th>
-                                    <th class="datatable-action" data-property="actions">{{ __('Hành động') }}</th>
+                                    <th data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
+                                    <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>

@@ -24,6 +24,7 @@ class PageService extends BaseService
                 $q->where('id', $query)
                 ->orWhere('name', 'like', "%$query%");
             })
+            ->orderBy('id', 'desc')
             ->paginate($perPage);
     }
 

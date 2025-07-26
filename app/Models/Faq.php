@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\FaqTopic; // Thêm dòng này nếu có model FaqTopic
+use App\Models\Traits\Activatable;
 
 class Faq extends Model
 {
-    protected $table = 'faqs';
+    use Activatable;
 
     protected $fillable = [
         'question',
@@ -17,7 +18,7 @@ class Faq extends Model
         'faq_topic_id',
     ];
 
-    public function topic()
+    public function faq_topic()
     {
         return $this->belongsTo(FaqTopic::class, 'faq_topic_id');
     }

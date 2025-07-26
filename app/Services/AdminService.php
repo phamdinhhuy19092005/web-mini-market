@@ -16,12 +16,6 @@ class AdminService extends BaseService
         $this->adminRepository = $adminRepository;
     }
 
-    /**
-     * Search admins by query string (id, name, or email).
-     *
-     * @param array $data
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
     public function searchByAdmin(array $data = [])
     {
         $query = data_get($data, 'query');
@@ -32,15 +26,10 @@ class AdminService extends BaseService
                 $q->where('id', $query)
                     ->orWhere('name', 'like', "%$query%");
             })
+            ->orderBy('id', 'desc')
             ->paginate($perPage);
     }
 
-    /**
-     * Create a new admin.
-     *
-     * @param array $attributes
-     * @return \Illuminate\Database\Eloquent\Model
-     */
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {

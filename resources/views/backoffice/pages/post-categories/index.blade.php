@@ -43,11 +43,10 @@
                                     <th data-orderable="false" data-property="slug">Slug</th>
                                     <th data-orderable="false" data-render-callback="renderImageColumn" data-property="image">Hình ảnh</th>
                                     <th data-orderable="false" data-property="order">Thứ tự</th>
-                                    <th data-orderable="false" data-property="status">Trạng thái</th>
-                                    <th data-orderable="false" data-property="display_on_frontend">Hiển thị trên Frontend</th>
+                                    <th data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
                                     <th data-orderable="false" data-property="created_at">Ngày tạo</th>
                                     <th data-orderable="false" data-property="updated_at">Ngày cập nhật</th>
-                                    <th class="datatable-action" data-property="actions">Hành động</th>
+                                    <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -58,15 +57,6 @@
         </div>
     </div>
 @endsection
-
-@push('js_pages')
-<script>
-    function renderImageColumn(data, type, full, meta) {
-        if (!data) return '';
-        return `<img src="${data}" alt="Hình ảnh" style="height: 60px; width:66px">`;
-    }
-</script>
-@endpush
 
 @component('backoffice.partials.datatable')
 @endcomponent

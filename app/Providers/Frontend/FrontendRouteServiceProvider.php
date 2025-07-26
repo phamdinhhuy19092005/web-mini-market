@@ -9,12 +9,13 @@ class FrontendRouteServiceProvider extends ServiceProvider
 {
     protected $namespace = 'App\Http\Controllers\Frontend';
 
-    public function map() {
+    public function map()
+    {
         $this->mapWebRoutes();
         $this->mapApiRoutes();
     }
 
-    public function mapWebRoutes()
+    protected function mapWebRoutes()
     {
         Route::middleware('web')
             ->namespace($this->namespace)
@@ -22,9 +23,14 @@ class FrontendRouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/frontend/web.php'));
     }
 
-
-    public function mapApiRoutes()
+    protected function mapApiRoutes()
     {
-
+        Route::prefix('fe/api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->as('fe.api.')
+            ->group(base_path('routes/frontend/api.php'), function () {
+                dd(Route::getRoutes()->getRoutesByName());
+            });
     }
 }

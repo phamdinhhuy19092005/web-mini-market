@@ -1,58 +1,5 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // ===== Xử lý Upload File Ảnh =====
-    const fileInput = document.querySelector('.image-file');
-    const urlInput = document.querySelector('.image-url');
-    const previewImg = document.querySelector('.image-preview');
-
-    if (!fileInput || !urlInput || !previewImg) {
-        console.error('Một hoặc nhiều selector không tìm thấy. Vui lòng kiểm tra HTML.');
-        return;
-    }
-
-    fileInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
-                previewImg.style.display = 'block';
-                urlInput.value = file.name;
-            };
-            reader.onerror = function(e) {
-                console.error('FileReader error:', e);
-                alert('Không thể đọc file ảnh. Vui lòng thử lại.');
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // ===== Xử lý nhập URL ảnh =====
-    urlInput.addEventListener('input', function () {
-        const url = this.value.trim();
-        if (url) {
-            previewImg.src = url;
-            previewImg.style.display = 'block';
-            previewImg.onerror = function () {
-                previewImg.src = '';
-                previewImg.style.display = 'none';
-                previewImg.onerror = null;
-            };
-        } else {
-            previewImg.src = '';
-            previewImg.style.display = 'none';
-            fileInput.value = '';
-        }
-    });
-
-    urlInput.addEventListener('change', function () {
-        if (!this.value) {
-            previewImg.src = '';
-            previewImg.style.display = 'none';
-            fileInput.value = '';
-        }
-    });
-
     // ===== Xử lý nút tạo mã tự động =====
     document.querySelectorAll('button[data-generate]').forEach(button => {
         button.addEventListener('click', function () {

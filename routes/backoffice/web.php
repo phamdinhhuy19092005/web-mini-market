@@ -12,14 +12,17 @@ use App\Http\Controllers\Backoffice\CountryController;
 use App\Http\Controllers\Backoffice\CouponController;
 use App\Http\Controllers\Backoffice\CurrencyController;
 use App\Http\Controllers\Backoffice\DashboardController;
+use App\Http\Controllers\Backoffice\DepositTransactionController;
 use App\Http\Controllers\Backoffice\EmailController;
 use App\Http\Controllers\Backoffice\FaqController;
 use App\Http\Controllers\Backoffice\FaqTopicController;
 use App\Http\Controllers\Backoffice\FileManagerController;
 use App\Http\Controllers\Backoffice\InventoryController;
 use App\Http\Controllers\Backoffice\MenuGroupController;
+use App\Http\Controllers\Backoffice\OrderController;
 // use App\Http\Controllers\Backoffice\MenuSubGroupController;
 use App\Http\Controllers\Backoffice\PageController;
+use App\Http\Controllers\Backoffice\PaymentController;
 use App\Http\Controllers\Backoffice\PaymentOptionController;
 use App\Http\Controllers\Backoffice\PaymentProviderController;
 use App\Http\Controllers\Backoffice\PostCategoryController;
@@ -461,6 +464,15 @@ Route::get('/website-reviews/{id}', [WebsiteReviewController::class, 'show'])->n
 Route::put('/website-reviews/{id}', [WebsiteReviewController::class, 'update'])->name('website-reviews.update');
 Route::delete('/website-reviews/{id}', [WebsiteReviewController::class, 'destroy'])->name('website-reviews.destroy');
 
+
+/*
+|--------------------------------------------------------------------------
+| Orders
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+
 /*
 |--------------------------------------------------------------------------
 | Test
@@ -473,3 +485,38 @@ Route::get('/admin/emails/send', [EmailController::class, 'showForm'])->name('ad
 Route::post('/admin/emails/send', [EmailController::class, 'send'])->name('admin.emails.send');
 
 Route::post('/subscribers/send-mail', [SubscriberController::class, 'sendMail'])->name('subscribers.sendmail');
+
+
+Route::get('/payment', [PaymentController::class, 'createPayment'])->name('payment.create');
+Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
+Route::post('/payment/ipn', [PaymentController::class, 'paymentIpn'])->name('payment.ipn')->withoutMiddleware(['web', 'auth:admin']);
+
+Route::resource('deposit-transactions', DepositTransactionController::class)->names('deposit-transactions');
+
+Route::get('order', [OrderController::class, 'create']);
+
+Route::get('/test-signature', function () {
+    $vnp_HashSecret = config('services.vnpay.hash_secret');
+    $input = [
+        "vnp_Amount" => "1000000",
+        "vnp_BankCode" => "NCB",
+        "vnp_OrderInfo" => "Thanh toan don hang test",
+        "vnp_TxnRef" => "123456789",
+        "vnp_ResponseCode" => "00",
+        "vnp_PayDate" => "20250725082200"
+    ];
+
+    ksort($input);
+    $query = "";
+    foreach ($input as $key => $value) {
+        $query .= $key . "=" . $value . "&";
+    }
+    $query = rtrim($query, "&");
+    $secureHash = hash_hmac('sha512', $query, $vnp_HashSecret);
+
+    return response()->json([
+        'data' => $input,
+        'secureHash' => $secureHash,
+        'query' => $query,
+    ]);
+});

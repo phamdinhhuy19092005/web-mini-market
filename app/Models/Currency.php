@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
 
 class Currency extends Model
 {
-    protected $table = 'currencies';
+    use Activatable;
 
     protected $fillable = [
         'type',
@@ -20,6 +21,5 @@ class Currency extends Model
 
     protected $casts = [
         'used_countries' => 'array',
-        // 'status' => 'boolean',
     ];
 }
