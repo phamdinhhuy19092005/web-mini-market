@@ -20,6 +20,7 @@ class UserController extends Controller
 
 public function update(Request $request, $id)
 {
+     $start = microtime(true);
     try {
         $user = User::findOrFail($id);
         $user->name = $request->input('name');
@@ -29,10 +30,13 @@ public function update(Request $request, $id)
         $user->phone_number = $request->input('phone_number');
         $user->save();
 
+        $duration = round((microtime(true) - $start) * 1000, 2);
+        \Log::info("⚡️ Cập nhật user mất {$duration} ms");
+
         return response()->json([
-            'message' => 'Cập nhật thành công!',
-            'user' => $user
-        ]);
+        'message' => 'Cập nhật thành công!',
+        'user' => $user->only(['id', 'name', 'email', 'genders', 'birthday', 'phone_number', 'avatar', 'access_channel_type'])
+    ]);
     } catch (\Exception $e) {
         return response()->json([
             'message' => 'Lỗi khi cập nhật người dùng',

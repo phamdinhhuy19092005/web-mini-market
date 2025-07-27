@@ -25,18 +25,18 @@ use App\Http\Controllers\Frontend\Api\ShippingRateController;
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
-    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-
-    // Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    // Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
-
-    Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
-    Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
-
-    Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');
-    Route::post('/website-reviews', [WebsiteReviewController::class, 'store'])->name('website-reviews.store');
 });
+Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+
+// Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+// Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+
+Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
+
+Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');
+Route::post('/website-reviews', [WebsiteReviewController::class, 'store'])->name('website-reviews.store');
 
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
