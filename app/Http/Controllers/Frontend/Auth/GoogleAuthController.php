@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Http\Controllers\Frontend\Auth;
 
 use App\Http\Controllers\Frontend\BaseController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\HasApiTokens;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
 
@@ -19,7 +19,7 @@ class GoogleAuthController extends BaseController
     {
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
-            // Tìm user theo Google ID
+
             $user = User::where('google_id', $googleUser->getId())->first();
 
             if (!$user) {
@@ -27,7 +27,7 @@ class GoogleAuthController extends BaseController
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
-                    'avatar' => $googleUser->getAvatar(), 
+                    'avatar' => $googleUser->getAvatar(),
                     'password' => bcrypt(Str::random(16)),
                     'status' => 1,
                     'email_verified_at' => now(),
@@ -36,17 +36,20 @@ class GoogleAuthController extends BaseController
                     'provider' => 'google',
                 ]);
             } else {
-                // Cập nhật login time và provider nếu chưa có
-            $user->update([
-                'last_logged_in_at' => now(),
-                'provider' => $user->provider ?? 'google', // ✅ thêm dòng này
-            ]);
+                $user->update([
+                    'last_logged_in_at' => now(),
+                    'provider' => $user->provider ?? 'google',
+                ]);
             }
 
             Auth::login($user);
 
+            $token = $user->createToken('google_login_token')->plainTextToken;
+
             $frontendUrl = config('app.frontend_url', 'http://localhost:3001');
+
             return redirect()->away($frontendUrl . '/login-gg-success?' . http_build_query([
+                'token' => $token,
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
@@ -56,7 +59,6 @@ class GoogleAuthController extends BaseController
                 'genders' => $user->genders,
                 'provider' => $user->provider,
             ]));
-
 
         } catch (\Exception $e) {
             return redirect('/login')->withErrors(['login' => 'Đăng nhập Google thất bại.']);

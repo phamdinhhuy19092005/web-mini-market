@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class TermsPostSeeder extends Seeder
 {
@@ -101,25 +100,27 @@ HTML
             $categoryId = DB::table('post_categories')->where('slug', $post['category_slug'])->value('id');
 
             if ($categoryId) {
-                DB::table('posts')->insert([
-                    'name' => $post['title'],
-                    'slug' => $post['slug'],
-                    'code' => $post['slug'],
-                    'post_category_id' => $categoryId,
-                    'description' => 'Bài viết chi tiết về ' . strtolower($post['title']),
-                    'content' => $post['content'],
-                    'image' => null,
-                    'post_at' => now(),
-                    'order' => $index + 1,
-                    'display_on_frontend' => 1,
-                    'meta_title' => $post['title'] . ' | Uchi Mart',
-                    'meta_description' => 'Tìm hiểu ' . strtolower($post['title']) . ' tại Uchi Mart',
-                    'status' => 1,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                    'view_count' => 0,
-                    'author' => 'Uchi Mart',
-                ]);
+                DB::table('posts')->updateOrInsert(
+                    ['slug' => $post['slug']], // Điều kiện để kiểm tra trùng
+                    [
+                        'name' => $post['title'],
+                        'code' => $post['slug'],
+                        'post_category_id' => $categoryId,
+                        'description' => 'Bài viết chi tiết về ' . strtolower($post['title']),
+                        'content' => $post['content'],
+                        'image' => null,
+                        'post_at' => now(),
+                        'order' => $index + 1,
+                        'display_on_frontend' => 1,
+                        'meta_title' => $post['title'] . ' | Uchi Mart',
+                        'meta_description' => 'Tìm hiểu ' . strtolower($post['title']) . ' tại Uchi Mart',
+                        'status' => 1,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                        'view_count' => 0,
+                        'author' => 'Uchi Mart',
+                    ]
+                );
             }
         }
     }

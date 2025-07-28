@@ -125,10 +125,10 @@ class InventoryService extends BaseService
     {
         if (isset($newImage['file']) && $newImage['file'] instanceof \Illuminate\Http\UploadedFile) {
             if ($oldImagePath) {
-                (new ImageHelper('iventory'))->delete($oldImagePath);
+                (new ImageHelper('inventory'))->delete($oldImagePath);
             }
 
-            return (new ImageHelper('iventory'))->upload($newImage['file']);
+            return (new ImageHelper('inventory'))->upload($newImage['file']);
         }
 
         if (isset($newImage['path'])) {

@@ -33,9 +33,8 @@ class ProductController extends BaseController
         $brands = Brand::all(); 
         $categories = Category::with('subCategories')->get();
         $categoryGroups = CategoryGroup::all();
-        $subCategories = SubCategory::all();
         $ProductTypeEnumLabels = ProductTypeEnum::labels();
-        return view('backoffice.pages.products.create', compact('brands', 'categories','categoryGroups', 'subCategories', 'ProductTypeEnumLabels'));
+        return view('backoffice.pages.products.create', compact('brands', 'categories','categoryGroups', 'ProductTypeEnumLabels'));
     }
 
     public function store(StoreProductRequestInterface $request)
@@ -49,22 +48,13 @@ class ProductController extends BaseController
     {
         $brands = Brand::all(); 
         $categories = Category::all();
+        $subCategorys = SubCategory::all();
         $ProductTypeEnumLabels = ProductTypeEnum::labels();
-        $product = $this->productService->show($id);
+        $product = $this->productService->show($id)->load('subcategories'); 
+        
         $product->media = json_decode($product->media, true) ?? [];
 
-        return view('backoffice.pages.products.edit', compact('brands', 'categories', 'ProductTypeEnumLabels' ,'product'));
-    }
-
-    public function edit($id)
-    {
-        $brands = Brand::all(); 
-        $categories = Category::all();
-        $ProductTypeEnumLabels = ProductTypeEnum::labels();
-        $product = $this->productService->show($id);
-        $product->media = json_decode($product->media, true) ?? [];
-
-        return view('backoffice.pages.products.edit', compact('brands', 'categories', 'ProductTypeEnumLabels' ,'product'));
+        return view('backoffice.pages.products.edit', compact('brands', 'categories', 'subCategorys', 'ProductTypeEnumLabels' ,'product'));
     }
 
     public function update(UpdateProductRequestInterface $request, $id)

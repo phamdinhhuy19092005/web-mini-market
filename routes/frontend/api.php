@@ -14,6 +14,7 @@ use App\Http\Controllers\Frontend\Api\FaqController;
 use App\Http\Controllers\Frontend\Api\BrandController;
 use App\Http\Controllers\Frontend\Api\AttributeController;
 use App\Http\Controllers\Frontend\Api\AttributeValueController;
+use App\Http\Controllers\Frontend\Api\AutoDiscountController;
 use App\Http\Controllers\Frontend\Api\InventoryController;
 use App\Http\Controllers\Frontend\Api\PaymentController;
 use App\Http\Controllers\Frontend\Api\OrderController;
@@ -21,11 +22,14 @@ use App\Http\Controllers\Frontend\Api\CouponController;
 use App\Http\Controllers\Frontend\Api\WebsiteReviewController;
 use App\Http\Controllers\Frontend\Api\ShippingZoneController;
 use App\Http\Controllers\Frontend\Api\ShippingRateController;
-
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 Route::middleware('auth:sanctum')->group(function () {
-
-    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
     Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
 
     // Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
@@ -38,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/website-reviews', [WebsiteReviewController::class, 'store'])->name('website-reviews.store');
 });
 
+ Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
@@ -86,3 +91,6 @@ Route::get('/inventories/{id}', [InventoryController::class, 'show'])->name('inv
 
 Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
 Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.show');
+
+Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
+Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
