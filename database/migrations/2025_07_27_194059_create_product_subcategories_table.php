@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('sub_category_id')->constrained('sub_categories')->onDelete('cascade');
 
             $table->timestamps();
-            $table->unique(['product_id', 'subcategory_id']);
+            $table->unique(['product_id', 'sub_category_id']);
         });
     }
 

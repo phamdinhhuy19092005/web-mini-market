@@ -36,6 +36,8 @@ class UpdateProductRequest extends BaseFormRequest implements UpdateProductReque
 
             'category_ids' => ['required', 'array'],
             'category_ids.*' => ['exists:categories,id'],
+            'subcategory_ids' => ['nullable', 'array'],
+            'subcategory_ids.*' => ['exists:sub_categories,id'],
         ];
     }
 

@@ -6,32 +6,9 @@
             </div>
         </div>
         <div class="k-portlet__body">
-            <div class="form-group">
-                <label>Chọn thuộc tính</label>
-                @if(isset($attributes) && $attributes->isNotEmpty())
-                    @foreach ($attributes as $attribute)
-                        <div class="mb-3">
-                            <label>{{ $attribute->name }}</label>
-                            <select name="attribute_values[{{ $attribute->id }}]" class="form-control k_selectpicker">
-                                <option value="">Chọn giá trị</option>
-                                @foreach ($attribute->attributeValues as $value)
-                                    <option value="{{ $value->id }}"
-                                            {{ in_array($value->id, old('attribute_values.' . $attribute->id, $inventory->attributeValues->pluck('id')->toArray())) ? 'selected' : '' }}>
-                                        {{ $value->value }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    @endforeach
-                @else
-                    <p class="text-muted mb-0">Không có thuộc tính nào khả dụng.</p>
-                @endif
-            </div>
-
             <!-- Hiển thị attribute_values đã chọn -->
             @php
-                $grouped = $inventory->attributeValues
-                    ->groupBy(fn($value) => optional($value->attribute)->name);
+                $grouped = $inventory->attributeValues->groupBy(fn($value) => optional($value->attribute)->name);
             @endphp
 
             @if ($grouped->isNotEmpty())
@@ -79,27 +56,24 @@
                             <div class="d-flex align-items-start">
                                 <div class="flex-grow-1">
                                     <div class="input-group">
-                                        <input type="text"
-                                               class="form-control image-url"
-                                               name="image[path]"
-                                               placeholder="{{ __('Tải ảnh lên hoặc nhập URL') }}"
-                                               value="{{ old('image.path', $inventory->image ?? $product->primary_image) }}">
+                                        <input type="text" class="form-control image-url" name="image[path]" placeholder="{{ __('Tải ảnh lên hoặc nhập URL') }}"
+                                            value="{{ old('image.path', $inventory->image) }}">
                                         <div class="input-group-append">
                                             <label class="btn btn-outline-primary m-0" for="image-file">
                                                 <i class="flaticon2-image-file mr-2"></i>{{ __('Tải lên') }}
                                                 <input type="file"
-                                                       id="image-file"
-                                                       name="image[file]"
-                                                       class="d-none image-file"
-                                                       accept="image/*">
+                                                    id="image-file"
+                                                    name="image[file]"
+                                                    class="d-none image-file"
+                                                    accept="image/*">
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="ml-3">
                                     <img class="img-thumbnail image-preview" style="width: 100px; height: 100px; object-fit: cover; display: {{ old('image.path', $inventory->image ?? $product->primary_image) ? 'block' : 'none' }};"
-                                         src="{{ old('image.path', $inventory->image ?? $product->primary_image) }}"
-                                         alt="Image preview">
+                                        src="{{ old('image.path', $inventory->image ?? $product->primary_image) }}"
+                                        alt="Image preview">
                                 </div>
                             </div>
                             @error('image.*')
@@ -307,6 +281,7 @@
 </div>
 
 @push('scripts')
+<script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
 <script>
     $(document).ready(function () {
         // Khởi tạo selectpicker

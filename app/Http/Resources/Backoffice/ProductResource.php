@@ -47,7 +47,7 @@ class ProductResource extends BaseResource
     {
         return array_filter([
             'actions' => array_filter([
-                'update' => route('bo.web.products.edit', $this->id),
+                'update' => route('bo.web.products.show', $this->id),
                 'delete' => route('bo.web.products.destroy', $this->id),
             ]),
         ]);

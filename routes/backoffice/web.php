@@ -473,6 +473,19 @@ Route::delete('/website-reviews/{id}', [WebsiteReviewController::class, 'destroy
 
 Route::post('/orders/create', [OrderController::class, 'create'])->name('orders.create');
 
+
+/*
+|--------------------------------------------------------------------------
+| Carts
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/carts', [OrderController::class, 'index'])->name('carts.create');
+Route::get('/carts/create', [WebsiteReviewController::class, 'create'])->name('carts.create');
+Route::post('carts', [WebsiteReviewController::class, 'store'])->name('carts.store');
+Route::get('/carts/{id}', [WebsiteReviewController::class, 'show'])->name('carts.show');
+Route::put('/carts/{id}', [WebsiteReviewController::class, 'update'])->name('carts.update');
+Route::delete('/carts/{id}', [WebsiteReviewController::class, 'destroy'])->name('carts.destroy');
 /*
 |--------------------------------------------------------------------------
 | Test
@@ -493,30 +506,5 @@ Route::post('/payment/ipn', [PaymentController::class, 'paymentIpn'])->name('pay
 
 Route::resource('deposit-transactions', DepositTransactionController::class)->names('deposit-transactions');
 
-Route::get('order', [OrderController::class, 'create']);
 
-Route::get('/test-signature', function () {
-    $vnp_HashSecret = config('services.vnpay.hash_secret');
-    $input = [
-        "vnp_Amount" => "1000000",
-        "vnp_BankCode" => "NCB",
-        "vnp_OrderInfo" => "Thanh toan don hang test",
-        "vnp_TxnRef" => "123456789",
-        "vnp_ResponseCode" => "00",
-        "vnp_PayDate" => "20250725082200"
-    ];
 
-    ksort($input);
-    $query = "";
-    foreach ($input as $key => $value) {
-        $query .= $key . "=" . $value . "&";
-    }
-    $query = rtrim($query, "&");
-    $secureHash = hash_hmac('sha512', $query, $vnp_HashSecret);
-
-    return response()->json([
-        'data' => $input,
-        'secureHash' => $secureHash,
-        'query' => $query,
-    ]);
-});
