@@ -18,4 +18,7 @@ class PageController extends BaseApiController
         
         return $this->responses(ListPageResponseContract::class, $pages);
     }
+
+
+    
 }

@@ -14,7 +14,7 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
-        return response()->json(['user' => $user->only(['id', 'name', 'email', 'genders', 'birthday', 'phone_number', 'avatar', 'access_channel_type'])]);
+        return response()->json($user);
     }
 
 
