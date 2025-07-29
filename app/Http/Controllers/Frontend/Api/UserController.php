@@ -11,6 +11,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
+
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
@@ -34,17 +35,24 @@ public function update(Request $request, $id)
         \Log::info("⚡️ Cập nhật user mất {$duration} ms");
 
         return response()->json([
-        'message' => 'Cập nhật thành công!',
-        'user' => $user->only(['id', 'name', 'email', 'genders', 'birthday', 'phone_number', 'avatar', 'access_channel_type'])
-    ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Lỗi khi cập nhật người dùng',
-            'error' => $e->getMessage()
-        ], 500);
+            'user' => $user->only([
+                'id',
+                'name',
+                'email',
+                'genders',
+                'birthday',
+                'phone_number',
+                'avatar',
+                'access_channel_type',
+                'provider',
+                'created_at',
+            ])
+        ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Lỗi khi cập nhật người dùng',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-}
-
-
-
 }

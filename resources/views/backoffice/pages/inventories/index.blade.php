@@ -29,21 +29,19 @@
                 </div>
 
                 <div class="k-portlet__body k-portlet__body--fit p-4">
-                    <table id="table_inventories_index" class="table table-striped table-bordered datatable" data-request-url="{{ route('bo.api.inventories.index') }}" data-searching="true">
+                    <table id="table_inventories_index" data-group-column="2" class="table table-bordered datatable" data-request-url="{{ route('bo.api.inventories.index') }}" data-searching="true">
                         <thead>
                             <tr>
                                 <th class="all" data-property="id">ID</th>
                                 <th class="all" data-property="image" data-render-callback="renderImageColumn" data-width="100">{{ __('Hình ảnh') }}</th>
-                                <th class="all" data-property="sku">{{ __('SKU Kho') }}</th>
+                                <th class="all" data-property="product.code">{{ __('SKU Sản phẩm') }}</th>
                                 <th class="all" data-property="init_sold_count">{{ __('Đã bán ảo') }}</th>
                                 <th class="all" data-property="sold_count">{{ __('Đã bán thật') }}</th>
                                 <th class="all" data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
                                 <th class="all" data-property="purchase_price">{{ __('Giá mua') }}</th>
                                 <th class="all" data-property="sale_price">{{ __('Giá bán') }}</th>
                                 <th class="all" data-property="offer_price" data-render-callback="renderCallbackOfferPrice">{{ __('Giá khuyến mãi') }}</th>
-
                                 <th class="none" data-property="title">{{ __('Tiêu đề') }}</th>
-                                <th class="none" data-property="product.code">{{ __('SKU Sản phẩm') }}</th>
                                 <th class="none" data-property="stock_quantity">{{ __('Số lượng') }}</th>
                                 <th class="none" data-property="created_by.name">{{ __('Người tạo') }}</th>
                                 <th class="none" data-property="updated_by.name">{{ __('Người cập nhật') }}</th>
@@ -52,7 +50,6 @@
                                 <th class="datatable-action" data-property="actions" data-render-callback="renderActions">{{ __('Hành động') }}</th>
                             </tr>
                         </thead>
-
                         <tbody></tbody>
                     </table>
                 </div>

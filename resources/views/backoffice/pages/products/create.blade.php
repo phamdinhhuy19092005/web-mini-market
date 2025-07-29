@@ -248,11 +248,19 @@
                                     <!-- Subcategory Field -->
                                     <div class="form-group">
                                         <label for="subcategory_ids">Danh mục con <span class="text-danger">*</span></label>
-                                        <select name="subcategory_ids[]" id="subcategory_ids" class="form-control k_selectpicker"  data-live-search="true" multiple data-actions-box="true" required data-none-selected-text="-- Chọn danh mục con --">
+                                        
+                                        @php
+                                            $selectedSubcategoryIds = collect(old('subcategory_ids', isset($product) ? $product->subcategories->pluck('id')->toArray() : []));
+                                        @endphp
+
+                                        <select name="subcategory_ids[]" id="subcategory_ids" class="form-control k_selectpicker"
+                                            data-live-search="true" multiple data-actions-box="true" required data-none-selected-text="-- Chọn danh mục con --">
                                             @foreach($categories as $category)
                                                 <optgroup label="{{ $category->name }}">
                                                     @foreach($category->subCategories ?? [] as $subCategory)
-                                                        <option value="{{ $subCategory->id }}" data-tokens="{{ $category->name }} {{ $subCategory->name }}" {{ in_array($subCategory->id, old('subcategory_ids', [])) ? 'selected' : '' }}>
+                                                        <option value="{{ $subCategory->id }}"
+                                                            data-tokens="{{ $category->name }} {{ $subCategory->name }}"
+                                                            {{ $selectedSubcategoryIds->contains($subCategory->id) ? 'selected' : '' }}>
                                                             {{ $subCategory->name }}
                                                         </option>
                                                     @endforeach

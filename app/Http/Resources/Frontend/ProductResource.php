@@ -21,6 +21,23 @@ class ProductResource extends BaseResource
             'brand' => $this->whenLoaded('brand', function () {
                 return new BrandResource($this->brand); 
             }),
+            'subcategories' => $this->subcategories->map(function ($subcategory) {
+                return [
+                    'id' => $subcategory->id,
+                    'name' => $subcategory->name,
+                    'slug' => $subcategory->slug,
+                    'category' => [
+                        'id' => $subcategory->category?->id,
+                        'name' => $subcategory->category?->name,
+                        'slug' => $subcategory->category?->slug,
+                        'category_group' => [
+                            'id' => $subcategory->category?->categoryGroup?->id,
+                            'name' => $subcategory->category?->categoryGroup?->name,
+                            'slug' => $subcategory->category?->categoryGroup?->slug,
+                        ],
+                    ],
+                ];
+            }),
             'inventories' => $this->whenLoaded('inventories', function () {
                 return InventoryResource::collection($this->inventories);
             }),

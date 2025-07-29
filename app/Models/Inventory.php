@@ -29,6 +29,7 @@ class Inventory extends Model
         'purchase_price',
         'sale_price',
         'offer_price',
+        'weight',
         'offer_start',
         'offer_end',
         'init_sold_count',

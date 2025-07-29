@@ -46,9 +46,9 @@ class Product extends Model
         return $this->belongsToMany(Category::class, 'category_products');
     }
 
-    public function subcategories(): BelongsToMany
+    public function subcategories()
     {
-        return $this->belongsToMany(SubCategory::class, 'product_subcategories', 'product_id', 'subcategory_id');
+        return $this->belongsToMany(SubCategory::class, 'product_subcategories');
     }
 
     public function inventories(): HasMany
