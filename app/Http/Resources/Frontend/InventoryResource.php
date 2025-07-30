@@ -10,9 +10,10 @@ class InventoryResource extends BaseResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'product_id' => $this->product_id,
             'product' => [
-                'code' => $this->product ? $this->product->code : null,
+                'id' => $this->product_id,
+                'code' => $this->product?->code,
+                'name' => $this->product?->name,
             ],
             'condition' => $this->condition,
             'condition_note' => $this->condition_note,

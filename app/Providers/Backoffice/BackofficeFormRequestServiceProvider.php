@@ -2,6 +2,7 @@
 
 namespace App\Providers\Backoffice;
 
+use App\Http\Requests\Backoffice\Interfaces\StoreAddressRequestInterface;
 use Illuminate\Support\ServiceProvider;
 
 // Admins
@@ -64,6 +65,7 @@ use App\Http\Requests\Backoffice\Interfaces\StoreShippingZoneRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreSubCategoryRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreUserRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreWebsiteReviewRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateAddressRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeValueRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAutoDiscountRequestInterface;
@@ -81,6 +83,7 @@ use App\Http\Requests\Backoffice\Interfaces\UpdateShippingZoneRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateSubCategoryRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateUserRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateWebReviewRequestInterface;
+use App\Http\Requests\Backoffice\StoreAddressRequest;
 use App\Http\Requests\Backoffice\StoreAttributeRequest;
 use App\Http\Requests\Backoffice\StoreAttributeValueRequest;
 use App\Http\Requests\Backoffice\StoreAutoDiscountRequest;
@@ -98,6 +101,7 @@ use App\Http\Requests\Backoffice\StoreShippingZoneRequest;
 use App\Http\Requests\Backoffice\StoreSubCategoryRequest;
 use App\Http\Requests\Backoffice\StoreUserRequest;
 use App\Http\Requests\Backoffice\StoreWebsiteReviewRequest;
+use App\Http\Requests\Backoffice\UpdateAddressRequest;
 use App\Http\Requests\Backoffice\UpdateAttributeRequest;
 use App\Http\Requests\Backoffice\UpdateAttributeValueRequest;
 use App\Http\Requests\Backoffice\UpdateAutoDiscountRequest;
@@ -312,6 +316,14 @@ class BackofficeFormRequestServiceProvider extends ServiceProvider
         */
         StoreWebsiteReviewRequestInterface::class => StoreWebsiteReviewRequest::class,
         UpdateWebReviewRequestInterface::class => UpdateWebsiteReviewRequest::class,
+
+         /*
+        |--------------------------------------------------------------------------
+        | Addresses
+        |--------------------------------------------------------------------------
+        */
+        StoreAddressRequestInterface::class => StoreAddressRequest::class,
+        UpdateAddressRequestInterface::class => UpdateAddressRequest::class,
 
     ];
 }

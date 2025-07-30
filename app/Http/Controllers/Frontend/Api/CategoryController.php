@@ -11,7 +11,7 @@ class CategoryController extends BaseController
 {
     public function index(): JsonResponse
     {
-        $categories = Category::all();
+        $categories = Category::with('subcategoriesWithProducts')->get();
         return $this->jsonResponse(true, CategoryResource::collection($categories));
     }
 

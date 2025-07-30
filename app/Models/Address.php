@@ -27,9 +27,9 @@ class Address extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function ward()
+    public function province()
     {
-        return $this->belongsTo(Ward::class, 'ward_code', 'code');
+        return $this->belongsTo(Province::class, 'province_code', 'code');
     }
 
     public function district()
@@ -37,15 +37,18 @@ class Address extends Model
         return $this->belongsTo(District::class, 'district_code', 'code');
     }
 
-    public function province()
+    public function ward()
     {
-        return $this->belongsTo(Province::class, 'province_code', 'code');
+        return $this->belongsTo(Ward::class, 'ward_code', 'code');
     }
+
 
     public function addressable()
     {
         return $this->morphTo();
     }
+
+    
 }
 
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backoffice\Api\AddressController;
 use App\Http\Controllers\Backoffice\Api\AdminController;
 use App\Http\Controllers\Backoffice\Api\AttributeController;
 use App\Http\Controllers\Backoffice\Api\AttributeValueController;
@@ -65,4 +66,5 @@ Route::prefix('v1')->group(function () {
     Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
     Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
     Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');
+    Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
 });

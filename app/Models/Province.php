@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Province extends Model
 {
-    protected $table = 'provinces'; 
-
     protected $fillable = [
         'code',
         'name',
@@ -25,9 +23,13 @@ class Province extends Model
         return $this->belongsTo(AdministrativeUnit::class);
     }
 
-  
     public function administrativeRegion()
     {
         return $this->belongsTo(AdministrativeRegion::class);
+    }
+
+    public function districts()
+    {
+        return $this->hasMany(District::class, 'province_code', 'code');
     }
 }

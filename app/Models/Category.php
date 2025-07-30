@@ -44,5 +44,10 @@ class Category extends Model
     {
         return $this->hasMany(SubCategory::class);
     }
+
+    public function subcategoriesWithProducts()
+    {
+        return $this->hasMany(SubCategory::class)->whereHas('products');
+    }
 }
 

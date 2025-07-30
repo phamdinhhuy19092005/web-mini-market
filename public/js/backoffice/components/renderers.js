@@ -12,6 +12,8 @@ window.renderStatusColumn = function(data) {
         'Pending': 'k-badge--warning',
         'Declined': 'k-badge--danger',
         'Approved': 'k-badge--success',
+        'Default': 'k-badge--success',
+        'Normal': 'k-badge--danger',
     };
     const badgeClass = classMap[data] || 'k-badge--secondary';
     return `<span class="k-badge k-badge--inline k-badge--pill ${badgeClass}">${data}</span>`;

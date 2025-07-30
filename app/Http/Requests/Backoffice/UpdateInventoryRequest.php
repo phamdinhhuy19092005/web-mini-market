@@ -38,6 +38,7 @@ class UpdateInventoryRequest extends BaseFormRequest implements UpdateInventoryR
             'status' => ['required', Rule::in(ActivationStatus::all())],
             'image.path' => ['nullable', 'string', 'max:255'],
             'image.file' => ['nullable', 'image', 'max:2048'],
+            'description' => ['nullable', 'string'],
         ];
     }
 

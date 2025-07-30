@@ -14,4 +14,14 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'backoffice/payment/ipn',
     ];
+
+    public function handle($request, \Closure $next)
+    {
+        dd([
+            'request_data' => $request->all(), // Dữ liệu POST, bao gồm _token
+            'session_csrf_token' => $request->session()->token(), // Token CSRF từ session
+            'header_token' => $request->header('X-CSRF-TOKEN'), // Token từ header (nếu có)
+        ]);
+        return parent::handle($request, $next);
+    }
 }

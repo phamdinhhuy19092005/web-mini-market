@@ -11,7 +11,7 @@ class ProductController extends BaseController
 {
     public function index(): JsonResponse
     {
-        $products = Product::with(['brand', 'inventories'])->get();
+        $products = Product::with(['brand', 'inventories', 'subcategories.category.categoryGroup'])->get();
 
         return response()->json([
             'success' => true,
@@ -21,7 +21,11 @@ class ProductController extends BaseController
 
     public function show($id): JsonResponse
     {   
-        $product = Product::with(['brand', 'inventories'])->find($id);
+        $product = Product::with([
+            'brand',
+            'inventories',
+            'subcategories.category.categoryGroup' 
+        ])->find($id);
 
         if (!$product) {
             return response()->json([
@@ -35,5 +39,4 @@ class ProductController extends BaseController
             'data' => new ProductResource($product)
         ]);
     }
-
 }

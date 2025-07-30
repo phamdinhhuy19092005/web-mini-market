@@ -2,6 +2,7 @@
 
 namespace App\Providers\Backoffice;
 
+use App\Repositories\AddressRepository;
 use Illuminate\Support\ServiceProvider;
 
 // Interfaces
@@ -32,6 +33,7 @@ use App\Repositories\CountryRepository;
 use App\Repositories\CouponRepository;
 use App\Repositories\CurrencyRepository;
 use App\Repositories\FaqRepository;
+use App\Repositories\Interfaces\AddressRepositoryInterface;
 use App\Repositories\Interfaces\AttributeRepositoryInterface;
 use App\Repositories\Interfaces\AttributeValueRepositoryInterface;
 use App\Repositories\Interfaces\AutoDiscountRepositoryInterface;
@@ -254,5 +256,12 @@ class BackofficeRepositoryServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         WebsiteReviewRepositoryInterface::class        => WebsiteReviewRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Addresses
+        |--------------------------------------------------------------------------
+        */
+        AddressRepositoryInterface::class        => AddressRepository::class,
     ];
 }

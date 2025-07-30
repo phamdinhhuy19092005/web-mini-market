@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Frontend\Api\AddressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\Api\UserController;
 use App\Http\Controllers\Frontend\Api\ProductController;
@@ -42,10 +43,11 @@ Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name
 Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');
 Route::post('/website-reviews', [WebsiteReviewController::class, 'store'])->name('website-reviews.store');
 
- Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
 
 Route::get('/category-groups', [CategoryGroupController::class, 'index'])->name('category-groups.index');
 Route::get('/category-groups/{id}', [CategoryGroupController::class, 'show'])->name('category-groups.show');
@@ -94,3 +96,9 @@ Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.sh
 
 Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
 Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
+
+Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
+Route::get('/addresses/{id}', [AddressController::class, 'show'])->name('addresses.show');
+Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
+Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
+

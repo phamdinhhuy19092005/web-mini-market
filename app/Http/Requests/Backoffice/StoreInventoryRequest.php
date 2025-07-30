@@ -40,6 +40,7 @@ class StoreInventoryRequest extends BaseFormRequest implements StoreInventoryReq
             'image.path' => ['nullable', 'string', 'max:255'],
             'image.file' => ['nullable', 'image', 'max:2048'],
             'attribute_values.*' => ['nullable', 'exists:attribute_values,id'],
+            'description' => ['nullable', 'string'],
         ];
     }
 

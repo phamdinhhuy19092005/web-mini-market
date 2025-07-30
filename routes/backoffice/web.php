@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backoffice\AddressController;
 use App\Http\Controllers\Backoffice\AdminController;
 use App\Http\Controllers\Backoffice\AttributeController;
 use App\Http\Controllers\Backoffice\AttributeValueController;
@@ -480,12 +481,27 @@ Route::post('/orders/create', [OrderController::class, 'create'])->name('orders.
 |--------------------------------------------------------------------------
 */
 
-Route::post('/carts', [OrderController::class, 'index'])->name('carts.create');
-Route::get('/carts/create', [WebsiteReviewController::class, 'create'])->name('carts.create');
-Route::post('carts', [WebsiteReviewController::class, 'store'])->name('carts.store');
-Route::get('/carts/{id}', [WebsiteReviewController::class, 'show'])->name('carts.show');
-Route::put('/carts/{id}', [WebsiteReviewController::class, 'update'])->name('carts.update');
-Route::delete('/carts/{id}', [WebsiteReviewController::class, 'destroy'])->name('carts.destroy');
+// Route::post('/carts', [OrderController::class, 'index'])->name('carts.create');
+// Route::get('/carts/create', [WebsiteReviewController::class, 'create'])->name('carts.create');
+// Route::post('carts', [WebsiteReviewController::class, 'store'])->name('carts.store');
+// Route::get('/carts/{id}', [WebsiteReviewController::class, 'show'])->name('carts.show');
+// Route::put('/carts/{id}', [WebsiteReviewController::class, 'update'])->name('carts.update');
+// Route::delete('/carts/{id}', [WebsiteReviewController::class, 'destroy'])->name('carts.destroy');
+
+
+/*
+|--------------------------------------------------------------------------
+| Adresseses
+|--------------------------------------------------------------------------
+*/ 
+
+Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
+Route::get('/addresses/create', [AddressController::class, 'create'])->name('addresses.create');
+Route::post('addresses', [AddressController::class, 'store'])->name('addresses.store');
+Route::get('/addresses/{id}', [AddressController::class, 'show'])->name('addresses.show');
+Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
+Route::delete('/addresses/{id}', [AddressController::class, 'destroy'])->name('addresses.destroy');
+
 /*
 |--------------------------------------------------------------------------
 | Test

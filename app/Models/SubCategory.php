@@ -14,6 +14,8 @@ class SubCategory extends Model
     use Activatable;
 
     protected $table = 'sub_categories';
+    protected $with = ['category.categoryGroup'];
+    
     protected $fillable = [
         'name',
         'slug',

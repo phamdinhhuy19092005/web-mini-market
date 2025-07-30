@@ -2,6 +2,7 @@
 
 namespace App\Providers\Backoffice;
 
+use App\Contracts\Responses\Backoffice\ListAddressResponseContract;
 use Illuminate\Support\ServiceProvider;
 
 // Contracts
@@ -32,6 +33,7 @@ use App\Contracts\Responses\Backoffice\ListSubCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\ListSubscriberResponseContract;
 use App\Contracts\Responses\Backoffice\ListUserResponseContract;
 use App\Contracts\Responses\Backoffice\ListWebsiteReviewResponseContract;
+use App\Contracts\Responses\Backoffice\StoreAddressResponseContract;
 use App\Contracts\Responses\Backoffice\StoreAdminResponseContract;
 use App\Contracts\Responses\Backoffice\StoreAttributeResponseContract;
 use App\Contracts\Responses\Backoffice\StoreAttributeValueResponseContract;
@@ -56,6 +58,7 @@ use App\Contracts\Responses\Backoffice\StoreShippingZoneResponseContract;
 use App\Contracts\Responses\Backoffice\StoreSubCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\StoreUserResponseContract;
 use App\Contracts\Responses\Backoffice\StoreWebsiteReviewResponseContract;
+use App\Contracts\Responses\Backoffice\UpdateAddressResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateAdminResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateAttributeResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateAttributeValueResponseContract;
@@ -80,6 +83,7 @@ use App\Contracts\Responses\Backoffice\UpdateShippingZoneResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateSubCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateUserResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateWebsiteReviewResponseContract;
+use App\Http\Responses\Backoffice\ListAddressResponse;
 // Responses
 use App\Http\Responses\Backoffice\ListAdminResponse;
 use App\Http\Responses\Backoffice\ListAttributeResponse;
@@ -108,6 +112,7 @@ use App\Http\Responses\Backoffice\ListSubCategoryResponse;
 use App\Http\Responses\Backoffice\ListSubscriberResponse;
 use App\Http\Responses\Backoffice\ListUserResponse;
 use App\Http\Responses\Backoffice\ListWebsiteReviewResponse;
+use App\Http\Responses\Backoffice\StoreAddressResponses;
 use App\Http\Responses\Backoffice\StoreAdminResponses;
 use App\Http\Responses\Backoffice\StoreAttributeResponses;
 use App\Http\Responses\Backoffice\StoreAttributeValueResponses;
@@ -132,6 +137,7 @@ use App\Http\Responses\Backoffice\StoreShippingZoneResponses;
 use App\Http\Responses\Backoffice\StoreSubCategoryResponses;
 use App\Http\Responses\Backoffice\StoreUserResponses;
 use App\Http\Responses\Backoffice\StoreWebsiteReviewResponses;
+use App\Http\Responses\Backoffice\UpdateAddressResponses;
 use App\Http\Responses\Backoffice\UpdateAdminResponses;
 use App\Http\Responses\Backoffice\UpdateAttributeResponses;
 use App\Http\Responses\Backoffice\UpdateAttributeValueResponses;
@@ -397,5 +403,14 @@ class BackofficeResponseServiceProvider extends ServiceProvider
         StoreWebsiteReviewResponseContract::class         => StoreWebsiteReviewResponses::class,
         UpdateWebsiteReviewResponseContract::class        => UpdateWebsiteReviewResponses::class,
         ListWebsiteReviewResponseContract::class          => ListWebsiteReviewResponse::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Addresses
+        |--------------------------------------------------------------------------
+        */
+        StoreAddressResponseContract::class         => StoreAddressResponses::class,
+        UpdateAddressResponseContract::class        => UpdateAddressResponses::class,
+        ListAddressResponseContract::class          => ListAddressResponse::class,
     ];
 }

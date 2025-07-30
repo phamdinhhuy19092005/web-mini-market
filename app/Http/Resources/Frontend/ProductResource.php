@@ -4,7 +4,8 @@ namespace App\Http\Resources\Frontend;
 
 use App\Http\Resources\Backoffice\BaseResource;
 use App\Http\Resources\Frontend\BrandResource;
-use App\Http\Resources\Frontend\InventoryResource; 
+use App\Http\Resources\Frontend\InventoryResource;
+use App\Http\Resources\Frontend\SubCategoryResource;
 
 class ProductResource extends BaseResource
 {
@@ -15,32 +16,12 @@ class ProductResource extends BaseResource
             'name' => $this->name,
             'slug' => $this->slug,
             'code' => $this->code,
-            'description' => $this->description,
+            // 'description' => $this->description,
             'primary_image' => $this->primary_image,
             'media' => json_decode($this->media, true) ?? [],
-            'brand' => $this->whenLoaded('brand', function () {
-                return new BrandResource($this->brand); 
-            }),
-            'subcategories' => $this->subcategories->map(function ($subcategory) {
-                return [
-                    'id' => $subcategory->id,
-                    'name' => $subcategory->name,
-                    'slug' => $subcategory->slug,
-                    'category' => [
-                        'id' => $subcategory->category?->id,
-                        'name' => $subcategory->category?->name,
-                        'slug' => $subcategory->category?->slug,
-                        'category_group' => [
-                            'id' => $subcategory->category?->categoryGroup?->id,
-                            'name' => $subcategory->category?->categoryGroup?->name,
-                            'slug' => $subcategory->category?->categoryGroup?->slug,
-                        ],
-                    ],
-                ];
-            }),
-            'inventories' => $this->whenLoaded('inventories', function () {
-                return InventoryResource::collection($this->inventories);
-            }),
+            'brand' => new BrandResource($this->whenLoaded('brand')),
+            'subcategories' => SubCategoryResource::collection($this->whenLoaded('subcategories')),
+            'inventories' => InventoryResource::collection($this->whenLoaded('inventories')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
