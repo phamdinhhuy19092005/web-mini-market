@@ -30,6 +30,12 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
     Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+
+
+    Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
+    Route::get('/addresses/{id}', [AddressController::class, 'show'])->name('addresses.show');
+    Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
+    Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
 });
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
@@ -97,8 +103,5 @@ Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.sh
 Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
 Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
 
-Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
-Route::get('/addresses/{id}', [AddressController::class, 'show'])->name('addresses.show');
-Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
-Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
+
 

@@ -38,6 +38,7 @@ class AddressController extends BaseController
     public function store(StoreAddressRequestInterface $request): JsonResponse
     {
         $address = $this->addressService->create($request->validated());
+        // dd($request->all());
 
         return $this->responses(StoreAddressResponseContract::class, $address);
     }
