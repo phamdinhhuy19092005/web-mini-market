@@ -40,10 +40,10 @@ class AddressController extends BaseController
         $address = $this->addressService->create($request->validated());
         // dd($request->all());
 
-        return $this->responses(StoreAddressResponseContract::class, $address);
+        return $this->jsonResponse(true, new AddressResource($address), 'Tạo địa chỉ thành công');
     }
 
-    public function update(UpdateAddressRequestInterface $request, $id): JsonResponse
+    public function update(UpdateAddressRequestInterface $request, $id)
     {
         $address = $this->addressService->update($id, $request->validated());
 

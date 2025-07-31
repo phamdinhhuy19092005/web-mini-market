@@ -6,12 +6,21 @@ use App\Http\Controllers\Frontend\BaseController;
 use App\Http\Resources\Frontend\DistrictResource;
 use App\Models\District;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class DistrictController extends BaseController
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $districts = District::all();
+        $query = District::query();
+
+        // Nếu có truyền province_code thì lọc theo nó
+        if ($request->has('province_code')) {
+            $query->where('province_code', $request->province_code);
+        }
+
+        $districts = $query->get();
+
         return $this->jsonResponse(true, DistrictResource::collection($districts));
     }
 

@@ -9,9 +9,9 @@ class WardResource extends BaseResource
     public function toArray($request): array
     {
         return [
-            'code' => $this->code,
+            'code' => (string) $this->code,
             'full_name' => $this->full_name,
-            'district_code' => $this->district_code,
+            'district_code' => (string) $this->district_code,
         ];
     }
 }

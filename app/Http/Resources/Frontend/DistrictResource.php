@@ -10,9 +10,9 @@ class DistrictResource  extends BaseResource
     {
         return [
             'id' => $this->id,
-            'code' => $this->code,
+            'code' => (string) $this->code,
             'full_name' => $this->full_name,
-            'province_code' => $this->province_code,
+            'province_code' => (string) $this->province_code,
         ];
     }
 }

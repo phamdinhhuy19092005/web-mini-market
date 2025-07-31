@@ -10,7 +10,7 @@ class ProvinceResource  extends BaseResource
     {
         return [
             'id' => $this->id,
-            'code' => $this->code,
+            'code' => (string) $this->code,
             'full_name' => $this->full_name,
         ];
     }
