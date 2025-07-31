@@ -21,10 +21,18 @@ class AddressController extends BaseController
         $this->addressService = $addressService;
     }
     public function index(): JsonResponse
-    {
-        $addresses = Address::all();
-        return $this->jsonResponse(true, AddressResource::collection($addresses));
+{
+    $user = auth()->user(); // Lấy user từ token
+
+    if (!$user) {
+        return $this->jsonResponse(false, null, 'Bạn chưa đăng nhập', 401);
     }
+
+    $addresses = Address::where('user_id', $user->id)->get();
+
+    return $this->jsonResponse(true, AddressResource::collection($addresses));
+}
+
 
     public function show($id): JsonResponse
     {

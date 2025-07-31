@@ -36,6 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
+    Route::get('/addresses/user/{userId}', [AddressController::class, 'getByUser'])
+    ->name('addresses.user');
     Route::get('/addresses/{id}', [AddressController::class, 'show'])->name('addresses.show');
     Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
     Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
