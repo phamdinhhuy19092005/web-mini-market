@@ -26,6 +26,7 @@ use App\Repositories\AttributeValueRepository;
 use App\Repositories\AutoDiscountRepository;
 use App\Repositories\BannerRepository;
 use App\Repositories\BrandRepository;
+use App\Repositories\CartRepository;
 use App\Repositories\CategoryGroupRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\FaqTopicRepository;
@@ -38,6 +39,7 @@ use App\Repositories\Interfaces\AttributeRepositoryInterface;
 use App\Repositories\Interfaces\AttributeValueRepositoryInterface;
 use App\Repositories\Interfaces\AutoDiscountRepositoryInterface;
 use App\Repositories\Interfaces\BrandRepositoryInterface;
+use App\Repositories\Interfaces\CartRepositoryInterface;
 use App\Repositories\Interfaces\CouponRepositoryInterface;
 use App\Repositories\Interfaces\InventoryRepositoryInterface;
 use App\Repositories\Interfaces\PaymentOptionRepositoryInterface;
@@ -263,5 +265,12 @@ class BackofficeRepositoryServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         AddressRepositoryInterface::class        => AddressRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Carts
+        |--------------------------------------------------------------------------
+        */
+        CartRepositoryInterface::class        => CartRepository::class,
     ];
 }

@@ -27,6 +27,7 @@
                         <span class="k-menu__link-text">Danh sách khách hàng</span>
                     </a>
                 </li>
+
                 <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.category-groups.*', 'bo.web.categories.*', 'bo.web.sub-categories.*', 'bo.web.attributes.*', 'bo.web.attribute-values.*', 'bo.web.products.*', 'bo.web.brands.*', 'bo.web.inventories.*') ? 'k-menu__item--open k-menu__item--active' : '' }}" aria-haspopup="true" data-kmenu-submenu-toggle="hover">
                     <a href="javascript:;" class="k-menu__link k-menu__toggle">
                         <i class="k-menu__link-icon flaticon2-copy"></i>
@@ -123,7 +124,7 @@
                                                 <span class="k-menu__link-text">Mã giảm giá nhập tay</span>
                                             </a>
                                         </li>
-                                        <li class="k-menu__item {{ request()->routeIs('bo.web.auto-discounts.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true"> 
+                                        <li class="k-menu__item {{ request()->routeIs('bo.web.auto-discounts.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
                                             <a href="{{ route('bo.web.auto-discounts.index') }}" class="k-menu__link">
                                                 <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
                                                 <span class="k-menu__link-text">Giảm giá tự động</span>
@@ -136,6 +137,33 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.orders.*', 'bo.web.carts.*') ? 'k-menu__item--open k-menu__item--active' : '' }}" aria-haspopup="true" data-kmenu-submenu-toggle="hover">
+                    <a href="javascript:;" class="k-menu__link k-menu__toggle">
+                        <i class="k-menu__link-icon fa fa-cart-plus"></i>
+                        <span class="k-menu__link-text">Quản lý mua hàng</span>
+                        <i class="k-menu__ver-arrow la la-angle-right"></i>
+                    </a>
+                    <div class="k-menu__submenu">
+                        <span class="k-menu__arrow"></span>
+                        <ul class="k-menu__subnav">
+                            {{-- <li class="k-menu__item {{ request()->routeIs('bo.web.orders.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
+                                <a href="{{ route('bo.web.orders.index') }}" class="k-menu__link">
+                                    <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
+                                    <span class="k-menu__link-text">Đơn hàng</span>
+                                </a>
+                            </li> --}}
+
+                            <li class="k-menu__item {{ request()->routeIs('bo.web.carts.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
+                                <a href="{{ route('bo.web.carts.index') }}" class="k-menu__link">
+                                    <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
+                                    <span class="k-menu__link-text">Danh sách giỏ hàng</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.banners.*', 'bo.web.menu-groups.*') ? 'k-menu__item--open k-menu__item--active' : '' }}" aria-haspopup="true" data-kmenu-submenu-toggle="hover">
                     <a href="javascript:;" class="k-menu__link k-menu__toggle">
                         <i class="k-menu__link-icon flaticon2-contract"></i>
@@ -283,8 +311,8 @@
                                     <span class="k-menu__link-text">Đánh giá website</span>
                                 </a>
                             </li>
-                            <li class="k-menu__item {{ request()->routeIs('bo.web.subscribers.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
-                                <a href="{{ route('bo.web.subscribers.index') }}" class="k-menu__link">
+                            <li class="k-menu__item {{ request()->routeIs('bo.web.addresses.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
+                                <a href="{{ route('bo.web.addresses.index') }}" class="k-menu__link">
                                     <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
                                     <span class="k-menu__link-text">Địa chỉ</span>
                                 </a>

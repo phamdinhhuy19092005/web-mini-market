@@ -20,9 +20,12 @@ use App\Http\Controllers\Frontend\Api\InventoryController;
 use App\Http\Controllers\Frontend\Api\PaymentController;
 use App\Http\Controllers\Frontend\Api\OrderController;
 use App\Http\Controllers\Frontend\Api\CouponController;
+use App\Http\Controllers\Frontend\Api\DistrictController;
+use App\Http\Controllers\Frontend\Api\ProvinceController;
 use App\Http\Controllers\Frontend\Api\WebsiteReviewController;
 use App\Http\Controllers\Frontend\Api\ShippingZoneController;
 use App\Http\Controllers\Frontend\Api\ShippingRateController;
+use App\Http\Controllers\Frontend\Api\WardController;
 use Illuminate\Http\Request;
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -101,4 +104,14 @@ Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.i
 Route::get('/addresses/{id}', [AddressController::class, 'show'])->name('addresses.show');
 Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
 Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
+
+Route::get('/provinces', [ProvinceController::class, 'index'])->name('provinces.index');
+Route::get('/provinces/{id}', [ProvinceController::class, 'show'])->name('provinces.show');
+
+Route::get('/districts', [DistrictController::class, 'index'])->name('districts.index');
+Route::get('/districts/{id}', [DistrictController::class, 'show'])->name('districts.show');
+ 
+Route::get('/wards', [WardController::class, 'index'])->name('wards.index');
+Route::get('/wards/{id}', [WardController::class, 'show'])->name('wards.show');
+
 

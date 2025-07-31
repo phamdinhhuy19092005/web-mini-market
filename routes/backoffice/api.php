@@ -7,6 +7,7 @@ use App\Http\Controllers\Backoffice\Api\AttributeValueController;
 use App\Http\Controllers\Backoffice\Api\AutoDiscountController;
 use App\Http\Controllers\Backoffice\Api\BannerController;
 use App\Http\Controllers\Backoffice\Api\BrandController;
+use App\Http\Controllers\Backoffice\Api\CartController;
 use App\Http\Controllers\Backoffice\Api\CategoryController;
 use App\Http\Controllers\Backoffice\Api\CategoryGroupController;
 use App\Http\Controllers\Backoffice\Api\CountryController;
@@ -67,4 +68,5 @@ Route::prefix('v1')->group(function () {
     Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
     Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');
     Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
+     Route::get('/carts', [CartController::class, 'index'])->name('carts.index');
 });

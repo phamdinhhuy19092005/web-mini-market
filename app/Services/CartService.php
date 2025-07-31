@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Classes\ImageHelper;
 use App\Repositories\Interfaces\CartRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +22,7 @@ class CartService extends BaseService
         return $this->CartRepository->model()::query()
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                    ->orWhere('name', 'like', "%$query%");
+                    ->orWhere('uuid', 'like', "%$query%");
             })
             ->orderBy('id', 'desc')
             ->paginate($perPage);
@@ -32,17 +31,21 @@ class CartService extends BaseService
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
-            $imageHelper = new ImageHelper('banner');
+            $items = data_get($attributes, 'items', []);
+            $cartAttributes = collect($attributes)->except('items')->toArray();
 
-            if (isset($attributes['desktop_image'])) {
-                $attributes['desktop_image'] = $imageHelper->upload($attributes['desktop_image']);
+            $cart = $this->CartRepository->create($cartAttributes);
+
+            foreach ($items as $item) {
+                $cart->items()->create([
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price'], 
+                    'status' => $item['status'] ?? \App\Enum\CartItemStatusEnum::PENDING,
+                ]);
             }
 
-            if (isset($attributes['mobile_image'])) {
-                $attributes['mobile_image'] = $imageHelper->upload($attributes['mobile_image']);
-            }
-
-            return $this->CartRepository->create($attributes);
+            return $cart;
         });
     }
 
@@ -53,15 +56,13 @@ class CartService extends BaseService
 
     public function show($id)
     {
-        return $this->find($id);
+        return $this->CartRepository->findOrFail($id);
     }
 
     public function update($id, array $attributes = [])
     {
         return DB::transaction(function () use ($id, $attributes) {
             $model = $this->CartRepository->findOrFail($id);
-            $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : $model->status;
-
             return $this->CartRepository->update($id, $attributes);
         });
     }
@@ -69,16 +70,6 @@ class CartService extends BaseService
     public function delete($id)
     {
         return DB::transaction(function () use ($id) {
-            $model = $this->CartRepository->findOrFail($id);
-
-            if ($model->desktop_image) {
-                (new ImageHelper('banner'))->delete($model->desktop_image);
-            }
-
-            if ($model->mobile_image) {
-                (new ImageHelper('banner'))->delete($model->mobile_image);
-            }
-
             return $this->CartRepository->delete($id);
         });
     }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Backoffice\AttributeValueController;
 use App\Http\Controllers\Backoffice\AutoDiscountController;
 use App\Http\Controllers\Backoffice\BannerController;
 use App\Http\Controllers\Backoffice\BrandController;
+use App\Http\Controllers\Backoffice\CartController;
 use App\Http\Controllers\Backoffice\CategoryController;
 use App\Http\Controllers\Backoffice\CategoryGroupController;
 use App\Http\Controllers\Backoffice\CountryController;
@@ -481,12 +482,12 @@ Route::post('/orders/create', [OrderController::class, 'create'])->name('orders.
 |--------------------------------------------------------------------------
 */
 
-// Route::post('/carts', [OrderController::class, 'index'])->name('carts.create');
-// Route::get('/carts/create', [WebsiteReviewController::class, 'create'])->name('carts.create');
-// Route::post('carts', [WebsiteReviewController::class, 'store'])->name('carts.store');
-// Route::get('/carts/{id}', [WebsiteReviewController::class, 'show'])->name('carts.show');
-// Route::put('/carts/{id}', [WebsiteReviewController::class, 'update'])->name('carts.update');
-// Route::delete('/carts/{id}', [WebsiteReviewController::class, 'destroy'])->name('carts.destroy');
+Route::get('/carts', [CartController::class, 'index'])->name('carts.index');
+Route::get('/carts/create', [CartController::class, 'create'])->name('carts.create');
+Route::post('carts', [CartController::class, 'store'])->name('carts.store');
+Route::get('/carts/{id}', [CartController::class, 'show'])->name('carts.show');
+Route::put('/carts/{id}', [CartController::class, 'update'])->name('carts.update');
+Route::delete('/carts/{id}', [CartController::class, 'destroy'])->name('carts.destroy');
 
 
 /*

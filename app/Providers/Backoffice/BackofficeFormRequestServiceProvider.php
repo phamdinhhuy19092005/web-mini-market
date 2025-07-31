@@ -29,6 +29,7 @@ use App\Http\Requests\Backoffice\UpdateCategoryRequest;
 // Banners
 use App\Http\Requests\Backoffice\Interfaces\StoreBannerRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreBrandRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreCartRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreCouponRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreFaqRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreFaqTopicRequestInterface;
@@ -70,6 +71,7 @@ use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAttributeValueRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateAutoDiscountRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateBrandRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateCartRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateCouponRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateFaqRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateFaqTopicRequestInterface;
@@ -88,6 +90,7 @@ use App\Http\Requests\Backoffice\StoreAttributeRequest;
 use App\Http\Requests\Backoffice\StoreAttributeValueRequest;
 use App\Http\Requests\Backoffice\StoreAutoDiscountRequest;
 use App\Http\Requests\Backoffice\StoreBrandRequest;
+use App\Http\Requests\Backoffice\StoreCartRequest;
 use App\Http\Requests\Backoffice\StoreCouponRequest;
 use App\Http\Requests\Backoffice\StoreFaqRequest;
 use App\Http\Requests\Backoffice\StoreFaqTopicRequest;
@@ -106,6 +109,7 @@ use App\Http\Requests\Backoffice\UpdateAttributeRequest;
 use App\Http\Requests\Backoffice\UpdateAttributeValueRequest;
 use App\Http\Requests\Backoffice\UpdateAutoDiscountRequest;
 use App\Http\Requests\Backoffice\UpdateBrandRequest;
+use App\Http\Requests\Backoffice\UpdateCartRequest;
 use App\Http\Requests\Backoffice\UpdateCouponRequest;
 use App\Http\Requests\Backoffice\UpdateFaqRequest;
 use App\Http\Requests\Backoffice\UpdateFaqTopicRequest;
@@ -317,13 +321,21 @@ class BackofficeFormRequestServiceProvider extends ServiceProvider
         StoreWebsiteReviewRequestInterface::class => StoreWebsiteReviewRequest::class,
         UpdateWebReviewRequestInterface::class => UpdateWebsiteReviewRequest::class,
 
-         /*
+        /*
         |--------------------------------------------------------------------------
         | Addresses
         |--------------------------------------------------------------------------
         */
         StoreAddressRequestInterface::class => StoreAddressRequest::class,
         UpdateAddressRequestInterface::class => UpdateAddressRequest::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Carts
+        |--------------------------------------------------------------------------
+        */
+        StoreCartRequestInterface::class => StoreCartRequest::class,
+        UpdateCartRequestInterface::class => UpdateCartRequest::class,
 
     ];
 }
