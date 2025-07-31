@@ -30,7 +30,7 @@ class AddressResource extends BaseResource
                     'name' => optional($this->ward)->name,
                 ],
 
-                'is_default' => $this->is_default ? 'Default' : 'Normal',
+                'is_default' => $this->is_default ? true : false,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
         ];

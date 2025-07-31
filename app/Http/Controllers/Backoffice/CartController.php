@@ -2,58 +2,59 @@
 
 namespace App\Http\Controllers\Backoffice;
 
-use App\Contracts\Responses\Backoffice\StoreBannerResponseContract;
-use App\Contracts\Responses\Backoffice\UpdateBannerResponseContract;
-use App\Http\Requests\Backoffice\Interfaces\StoreBannerRequestInterface;
+use App\Contracts\Responses\Backoffice\StoreCartResponseContract;
+use App\Contracts\Responses\Backoffice\UpdateCartResponseContract;
 use App\Http\Requests\Backoffice\Interfaces\StoreCartRequestInterface;
-use App\Http\Requests\Backoffice\Interfaces\UpdateBannerRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateCartRequestInterface;
+use App\Models\Inventory;
+use App\Models\User;
 use App\Services\CartService;
-use Illuminate\Http\Request;
 
 class CartController extends BaseController
 {
-    protected $BannerService;
+    protected $CartService;
 
-    public function __construct(CartService $BannerService)
+    public function __construct(CartService $CartService)
     {
-        $this->BannerService = $BannerService;
+        $this->CartService = $CartService;
     }
 
-    public function index(Request $request)
+    public function index()
     {
         return view('backoffice.pages.carts.index');
     }
 
     public function create()
     {
-        return view('backoffice.pages.carts.create');
+        $users = User::all();
+        $inventories = Inventory::with('product')->get();
+        return view('backoffice.pages.carts.create', compact('users', 'inventories'));
     }
 
     public function store(StoreCartRequestInterface $request)
     {
-        $banners = $this->BannerService->create($request->validated());
+        $cart = $this->CartService->create($request->validated());
 
-        return $this->responses(StoreBannerResponseContract::class, $banners);
+        return $this->responses(StoreCartResponseContract::class, $cart);
     }
 
     public function show($id)
     {
-        $banner = $this->BannerService->show($id);
+        $cart = $this->CartService->show($id);
 
-        return view('backoffice.pages.carts.edit', compact('banner'));
+        return view('backoffice.pages.carts.edit', compact('cart'));
     }
 
     public function update(UpdateCartRequestInterface $request, $id)
     {
-        $banner = $this->BannerService->update($id, $request->validated());
+        $cart = $this->CartService->update($id, $request->validated());
 
-        return $this->responses(UpdateBannerResponseContract::class, $banner);
+        return $this->responses(UpdateCartResponseContract::class, $cart);
     }
 
     public function destroy($id)
     {
-        $this->BannerService->delete($id);
+        $this->CartService->delete($id);
 
         return redirect()->route('bo.web.carts.index');
     }
