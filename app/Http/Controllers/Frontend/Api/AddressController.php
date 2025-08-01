@@ -44,17 +44,62 @@ class AddressController extends BaseController
     }
 
     public function store(StoreAddressRequestInterface $request): JsonResponse
-    {
-        $address = $this->addressService->create($request->validated());
-        // dd($request->all());
+{
+    $data = $request->validated();
+    $user = auth()->user();
 
-        return $this->jsonResponse(true, new AddressResource($address), 'Tạo địa chỉ thành công');
+    // Nếu chọn làm mặc định => bỏ mặc định của các địa chỉ khác
+    if (!empty($data['is_default']) && $data['is_default']) {
+        Address::where('user_id', $user->id)
+            ->update(['is_default' => 0]);
     }
+
+    // Gán user_id từ token
+    $data['user_id'] = $user->id;
+
+    $address = $this->addressService->create($data);
+
+    return $this->jsonResponse(true, new AddressResource($address), 'Tạo địa chỉ thành công');
+}
+
 
     public function update(UpdateAddressRequestInterface $request, $id)
-    {
-        $address = $this->addressService->update($id, $request->validated());
+{
+    $data = $request->validated();
+    $user = auth()->user();
 
-        return $this->responses(UpdateAddressResponseContract::class, $address);
+    if (!empty($data['is_default']) && $data['is_default']) {
+        Address::where('user_id', $user->id)
+            ->where('id', '!=', $id)
+            ->update(['is_default' => 0]);
     }
+
+    $address = $this->addressService->update($id, $data);
+
+    return $this->responses(UpdateAddressResponseContract::class, $address);
+}
+
+
+public function setDefault($id): JsonResponse
+{
+    $user = auth()->user();
+    if (!$user) {
+        return $this->jsonResponse(false, null, 'Bạn chưa đăng nhập', 401);
+    }
+
+    $address = Address::where('id', $id)->where('user_id', $user->id)->first();
+    if (!$address) {
+        return $this->jsonResponse(false, null, 'Địa chỉ không tồn tại', 404);
+    }
+
+    // Bỏ mặc định các địa chỉ khác
+    Address::where('user_id', $user->id)->update(['is_default' => 0]);
+
+    // Set mặc định cho địa chỉ này
+    $address->is_default = 1;
+    $address->save();
+
+    return $this->jsonResponse(true, new AddressResource($address), 'Cập nhật mặc định thành công');
+}
+
 }
