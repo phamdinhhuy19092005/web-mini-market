@@ -28,7 +28,8 @@ use App\Http\Controllers\Frontend\Api\ShippingRateController;
 use App\Http\Controllers\Frontend\Api\WardController;
 use Illuminate\Http\Request;
 
-Route::middleware('auth:sanctum')->group(function () {
+
+Route::middleware('auth:sanctum', 'force.json')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -42,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
     Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
     Route::post('/addresses/{id}/default', [AddressController::class, 'setDefault']);
-
+    
 });
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');

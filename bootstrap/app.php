@@ -27,6 +27,14 @@ return Application::configure(basePath: dirname(__DIR__))
         // Thêm HandleCors vào nhóm middleware "web" và "api"
         $middleware->appendToGroup('api', HandleCors::class);
         $middleware->appendToGroup('web', HandleCors::class);
+
+        // Alias middleware
+    $middleware->alias([
+        'force.json' => \App\Http\Middleware\ForceJsonResponse::class,
+    ]);
+
+    // Thêm force.json vào nhóm api
+    $middleware->appendToGroup('api', 'force.json');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
