@@ -12,7 +12,8 @@ use App\Models\Address;
 use App\Services\AddressService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
+use App\Models\District;
+use App\Models\Ward;
 
 class AddressController extends BaseController
 {
@@ -34,6 +35,40 @@ class AddressController extends BaseController
     return $this->jsonResponse(true, AddressResource::collection($addresses));
 }
 
+
+public function getWardsByDistrict($districtCode)
+{
+    $wards = Ward::where('district_code', str_pad($districtCode, 3, '0', STR_PAD_LEFT))
+    ->select('code', 'full_name', 'district_code') // bỏ 'id'
+    ->get();
+
+
+    if ($wards->isEmpty()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Không tìm thấy phường/xã cho district_code: ' . $districtCode
+        ], 404);
+    }
+
+    return response()->json([
+        'success' => true,
+        'data' => $wards
+    ]);
+}
+
+
+
+    public function getDistrictsByProvince($provinceCode)
+{
+    $districts = District::where('province_code', $provinceCode)
+        ->select('id', 'code', 'full_name', 'province_code')
+        ->get();
+
+    return response()->json([
+        'success' => true,
+        'data' => $districts
+    ]);
+}
 
     public function show($id): JsonResponse
     {

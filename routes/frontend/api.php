@@ -119,7 +119,12 @@ Route::get('/provinces/{id}', [ProvinceController::class, 'show'])->name('provin
 Route::get('/districts', [DistrictController::class, 'index'])->name('districts.index');
 Route::get('/districts/{id}', [DistrictController::class, 'show'])->name('districts.show');
  
+
+Route::get('/wards/{districtCode}', [AddressController::class, 'getWardsByDistrict']);
 Route::get('/wards', [WardController::class, 'index'])->name('wards.index');
 Route::get('/wards/{id}', [WardController::class, 'show'])->name('wards.show');
+
+
+Route::get('/districts/{provinceCode}', [AddressController::class, 'getDistrictsByProvince']);
 
 
