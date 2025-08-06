@@ -72,20 +72,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // === Auto-generate slug ===
-    const titleInput = document.querySelector('#name');
+    const nameInput = document.querySelector('#name');
+    const titleInput = document.querySelector('#title');
     const slugInput = document.querySelector('#slug');
-    const slugify = (str) =>
-        str.toLowerCase()
-            .trim()
-            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-            .replace(/[^a-z0-9\s-]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-');
 
-    if (titleInput && slugInput) {
-        titleInput.addEventListener('input', () => {
-            slugInput.value = slugify(titleInput.value);
-        });
+    const slugify = (text) => {
+        return text
+            .toLowerCase()
+            .normalize('NFD')                     
+            .replace(/[\u0300-\u036f]/g, '')     
+            .replace(/[^a-z0-9\s-]/g, '')         
+            .trim()
+            .replace(/\s+/g, '-')                 
+            .replace(/-+/g, '-');               
+    };
+
+    const updateSlug = () => {
+        const value = titleInput?.value || nameInput?.value || '';
+        slugInput.value = slugify(value);
+    };
+
+    if (nameInput) {
+        nameInput.addEventListener('input', updateSlug);
+    }
+
+    if (titleInput) {
+        titleInput.addEventListener('input', updateSlug);
     }
 });
 

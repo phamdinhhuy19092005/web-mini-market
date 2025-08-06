@@ -10,12 +10,14 @@ class PostResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'name' => $this->name,
             'slug' => $this->slug,
             'content' => $this->content,
             'image' => $this->image,
-            'post_category_id' => $this->post_category_id,
-            'post_category_name' => optional($this->postCategory)->name,
+            'post_category' => [
+                'id' => $this->post_category_id,
+                'name' => optional($this->postCategory)->name,
+            ],
         ];
     }
 }

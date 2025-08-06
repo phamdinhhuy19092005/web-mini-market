@@ -47,6 +47,8 @@ class PaymentProviderService extends BaseService
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
+            $attributes['params'] = json_encode($attributes['params']);
+            
             return $this->paymentProviderRepository->create($attributes);
         });
     }

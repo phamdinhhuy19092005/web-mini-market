@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Backoffice\Api;
 
 use App\Contracts\Responses\Backoffice\ListAddressResponseContract;
+use App\Models\Address;
 use App\Models\District;
 use App\Models\Ward;
 use App\Services\AddressService;
 use Illuminate\Http\Request;
-
+use Illuminate\Http\JsonResponse;
 class AddressController extends BaseApiController
 {
     public function __construct(protected AddressService $addressService)
@@ -32,4 +33,25 @@ class AddressController extends BaseApiController
         $wards = Ward::where('district_code', $district_code)->get();
         return response()->json($wards);
     }
+
+    public function destroy($id): JsonResponse
+    {
+        $address = Address::find($id);
+
+        if (!$address) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Địa chỉ không tồn tại'
+            ], 404);
+        }
+
+        $address->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Xoá địa chỉ thành công'
+        ]);
+    }
+
+
 }

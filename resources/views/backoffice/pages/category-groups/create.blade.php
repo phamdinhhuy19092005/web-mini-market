@@ -25,19 +25,6 @@
 
                 <form class="k-form k-form--label-right" method="POST" action="{{ route('bo.web.category-groups.store') }}" enctype="multipart/form-data">
                     @csrf
-                    @if ($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                    @endif
-
                     <div class="k-portlet__body">
                         <div class="row">
                             <div class="col-lg-6">
@@ -73,7 +60,17 @@
 
                                 <div class="form-group">
                                     <label class="form-label">{{ __('Mô tả') }}</label>
-                                    <textarea name="description" class="form-control" rows="4">{{ old('description') }}</textarea>
+                                    <x-backoffice.content-editor
+                                            id="product_description"
+                                            name="description"
+                                            :value="old('description')"
+                                            :cols="30"
+                                            :rows="10"
+                                            placeholder="Nhập mô tả..."
+                                            disk="public"
+                                            class=""
+                                            :config="[]"
+                                        />
                                     @error('description')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror

@@ -39,19 +39,14 @@ class StorePostRequest extends BaseFormRequest implements StorePostRequestInterf
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'status' => filter_var($this->status, FILTER_VALIDATE_BOOLEAN)
-                ? ActivationStatus::ACTIVE
-                : ActivationStatus::INACTIVE,
-
-            'display_on_frontend' => filter_var($this->display_on_frontend, FILTER_VALIDATE_BOOLEAN)
-                ? ActivationFE::ACTIVE
-                : ActivationFE::INACTIVE,
+            'status' => filter_var($this->status, FILTER_VALIDATE_BOOLEAN) ? ActivationStatus::ACTIVE : ActivationStatus::INACTIVE,
+            'display_on_frontend' => filter_var($this->display_on_frontend, FILTER_VALIDATE_BOOLEAN) ? ActivationFE::ACTIVE : ActivationFE::INACTIVE,
         ]);
     }
 
 
     public function imageFile()
     {
-        return null;
+        return $this->file('image');
     }
 }

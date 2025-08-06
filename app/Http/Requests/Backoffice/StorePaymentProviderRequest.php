@@ -11,13 +11,13 @@ class StorePaymentProviderRequest extends BaseFormRequest implements StorePaymen
 {
     public function rules(): array
     {
-        // dd($this->all());
+        dd($this->all());
         return [
             'name' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string'],
             'payment_type' => ['required', 'integer', Rule::in(array_keys(PaymentTypeEnum::labels()))],
             'status' => ['required', Rule::in(ActivationStatus::all())],
-    
+            'params' => ['required', 'array'],
         ];
     }
 

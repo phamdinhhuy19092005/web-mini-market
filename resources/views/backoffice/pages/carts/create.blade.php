@@ -82,8 +82,9 @@
                             <div class="col-md-6 form-group">
                                 <label for="order_id">{{ __('Mã đơn hàng liên kết (nếu có)') }}</label>
                                 <input type="number" name="order_id" id="order_id" class="form-control" 
-                                       value="{{ oldologio0('order_id') }}" min="0">
+                                    value="{{ old('order_id') }}" min="0">
                             </div>
+
                             <div class="col-md-6 form-group">
                                 <label for="retry_times">{{ __('Số lần retry') }}</label>
                                 <input type="number" name="retry_times" id="retry_times" class="form-control" 

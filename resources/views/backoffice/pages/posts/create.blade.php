@@ -88,8 +88,7 @@
                                 <!-- Author Field -->
                                 <div class="col-md-6 form-group">
                                     <label for="author">Tác giả</label>
-                                    <input type="text" class="form-control" id="author" name="author"
-                                           placeholder="Nhập tên tác giả" value="admin">
+                                    <input type="text" class="form-control" id="author" name="author" placeholder="Nhập tên tác giả" value="{{ auth('admin')->user()->name ?? 'admin' }}">
                                 </div>
 
                                 <!-- Code Field -->
@@ -118,7 +117,7 @@
                                 <div class="col-md-6 form-group">
                                     <label for="post_category_id">Danh mục <span class="text-danger">*</span></label>
                                     <select name="post_category_id" id="post_category_id"
-                                            class="form-select selectpicker" data-live-search="true" required>
+                                            class="form-control selectpicker" data-live-search="true" required>
                                         <option value="">-- Chọn danh mục --</option>
                                         @foreach($postCategories as $postCategory)
                                             <option value="{{ $postCategory->id }}"
@@ -216,5 +215,8 @@
         </div>
     </div>
     <!-- End::Content Body -->
-@include('backoffice.pages.posts.pagejs.post');
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
+@endpush

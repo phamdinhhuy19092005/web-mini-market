@@ -35,15 +35,15 @@
                         @endcan
                     </div>
                     <div class="k-portlet__body k-portlet__body--fit p-4">
-                        <table id="table_category_groups_index" data-searching="true" data-request-url="{{ route('bo.api.category-groups.index') }}" class="datatable table table-striped table-bordered table-hover table-checkable" style="font-size: 12px">
+                        <table id="table_category_groups_index" data-searching="true" data-request-url="{{ route('bo.api.category-groups.index') }}" class="datatable table table-striped table-bordered table-hover table-checkable" >
                             <thead>
                                 <tr>
                                     <th data-property="id" scope="col">{{ __('ID') }}</th>
                                     <th data-property="image" data-orderable="false" data-render-callback="renderImageColumn" scope="col">{{ __('Hình ảnh') }}</th>
                                     <th data-property="name" scope="col">{{ __('Tên') }}</th>
-                                    <th data-property="slug" scope="col">{{ __('Slug') }}</th>
+                                    <th class="none" data-property="slug" scope="col">{{ __('Slug') }}</th>
                                     <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
-                                    <th data-orderable="false" style="width: 60%" data-property="categories" data-render-callback="renderCallbackCategories">{{ __('Danh mục') }}</th>
+                                    <th data-orderable="false" style="width: 45%" data-property="categories" data-render-callback="renderCallbackCategories">{{ __('Danh mục') }}</th>
                                     <th class="none" data-property="created_at">{{ __('Ngày tạo') }}</th>
                                     <th class="none" data-property="updated_at">{{ __('Ngày cập nhật') }}</th>
                                     <th data-property="actions" class="datatable-action" data-render-callback="renderActions">{{ __('Hành động') }}</th>

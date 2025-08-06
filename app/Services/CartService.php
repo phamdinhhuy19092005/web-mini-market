@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enum\CartItemStatusEnum;
 use App\Repositories\Interfaces\CartRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -41,7 +42,7 @@ class CartService extends BaseService
                     'product_id' => $item['product_id'],
                     'quantity' => $item['quantity'],
                     'price' => $item['price'], 
-                    'status' => $item['status'] ?? \App\Enum\CartItemStatusEnum::PENDING,
+                    'status' => $item['status'] ?? CartItemStatusEnum::PENDING,
                 ]);
             }
 

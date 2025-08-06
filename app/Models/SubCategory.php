@@ -21,7 +21,9 @@ class SubCategory extends Model
         'slug',
         'category_id', 
         'seo_title', 
+        'description',
         'seo_description', 
+        'image',
         'status'
     ];
 

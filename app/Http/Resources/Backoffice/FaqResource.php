@@ -26,7 +26,7 @@ class FaqResource extends BaseResource
     {
         return array_filter([
             'actions' => array_filter([
-                'update' => route('bo.web.faq-topics.edit', $this->id),
+                'update' => route('bo.web.faqs.edit', $this->id),
             ]),
         ]);
     }

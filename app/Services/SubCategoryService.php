@@ -30,9 +30,29 @@ class SubCategoryService extends BaseService
             ->paginate($perPage);
     }
 
+    protected function handleImageUpdate($oldImagePath, $newImage = null)
+    {
+        if (isset($newImage['file']) && $newImage['file'] instanceof \Illuminate\Http\UploadedFile) {
+            if ($oldImagePath) {
+                (new ImageHelper('sub_category'))->delete($oldImagePath);
+            }
+
+            return (new ImageHelper('sub_category'))->upload($newImage['file']);
+        }
+
+        if (isset($newImage['path'])) {
+            return $newImage['path'];
+        }
+
+        return $oldImagePath;
+    }
+
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
+            $imageHelper = new ImageHelper('sub_category');
+            $attributes['image'] = $imageHelper->upload($attributes['image']);
+
             return $this->subCategoryRepository->create($attributes);
         });
     }
@@ -52,6 +72,7 @@ class SubCategoryService extends BaseService
         return DB::transaction(function () use ($id, $attributes) {
             $model = $this->subCategoryRepository->findOrFail($id);
 
+            $attributes['image'] = $this->handleImageUpdate($model->image, $attributes['image'] ?? null);
             $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : $model->status;
 
             return $this->subCategoryRepository->update($id, $attributes);

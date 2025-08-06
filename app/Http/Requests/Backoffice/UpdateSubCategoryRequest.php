@@ -11,12 +11,15 @@ class UpdateSubCategoryRequest extends BaseFormRequest implements UpdateSubCateg
     public function rules(): array
     {
 
-        // dd($this->all());
         $id = $this->route('id');
 
         return [
             'name' => ['required', 'string', 'max:255'],
             'slug' => [ 'required', 'string', 'max:255', Rule::unique('sub_categories', 'slug')->ignore($id)],
+
+            'image' => ['required', 'array'],
+            'image.file' => ['nullable', 'file', 'mimes:jpeg,png,gif,webp', 'max:5200'],
+            'image.path' => ['nullable', 'string'],
 
             'category_id' => ['required', 'exists:categories,id'],
 
@@ -36,7 +39,7 @@ class UpdateSubCategoryRequest extends BaseFormRequest implements UpdateSubCateg
 
     public function imageFile()
     {
-        return $this->null;
+        return $this->file('image');
     }
 }
 

@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <form class="k-form k-form--label-right" method="POST" action="{{ route('bo.web.payment-providers.update', $payment_provider->id) }}" enctype="multipart/form-data">
+        <form id="form_payment-providers" class="k-form k-form--label-right" method="POST" action="{{ route('bo.web.payment-providers.update', $payment_provider->id) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
                 <div class="k-portlet__body">

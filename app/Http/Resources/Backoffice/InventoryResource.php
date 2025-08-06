@@ -23,7 +23,7 @@ class InventoryResource extends BaseResource
                 'status' => $this->status,
                 'status_name' => $this->status_name,
                 'key_features' => $this->key_features,
-                'purchase_price' => $this->purchase_price ? number_format($this->purchase_price, 0, '.', ',') . '₫' : 'N/A',
+                'purchase_price' => $this->purchase_price ? number_format($this->purchase_price, 0, '.', ',') . '₫' : '',
                 'sale_price' => $this->sale_price ? number_format($this->sale_price, 0, '.', ',') . '₫' : 'N/A',
                 'offer_price' => $this->offer_price,
                 'stock_quantity' => $this->stock_quantity,

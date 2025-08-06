@@ -34,6 +34,7 @@ use App\Http\Requests\Backoffice\Interfaces\StoreCouponRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreFaqRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreFaqTopicRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreInventoryRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreOrderRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateBannerRequestInterface;
 use App\Http\Requests\Backoffice\StoreBannerRequest;
 use App\Http\Requests\Backoffice\UpdateBannerRequest;
@@ -61,6 +62,7 @@ use App\Http\Requests\Backoffice\Interfaces\StorePageRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StorePaymentOptionRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StorePaymentProviderRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreProductRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\StoreShippingOptionRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreShippingRateRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreShippingZoneRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\StoreSubCategoryRequestInterface;
@@ -76,10 +78,12 @@ use App\Http\Requests\Backoffice\Interfaces\UpdateCouponRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateFaqRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateFaqTopicRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateInventoryRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateOrderRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdatePageRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdatePaymentOptionRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdatePaymentProviderRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateProductRequestInterface;
+use App\Http\Requests\Backoffice\Interfaces\UpdateShippingOptionRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateShippingRateRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateShippingZoneRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateSubCategoryRequestInterface;
@@ -95,10 +99,12 @@ use App\Http\Requests\Backoffice\StoreCouponRequest;
 use App\Http\Requests\Backoffice\StoreFaqRequest;
 use App\Http\Requests\Backoffice\StoreFaqTopicRequest;
 use App\Http\Requests\Backoffice\StoreInventoryRequest;
+use App\Http\Requests\Backoffice\StoreOrderRequest;
 use App\Http\Requests\Backoffice\StorePageRequest;
 use App\Http\Requests\Backoffice\StorePaymentOptionRequest;
 use App\Http\Requests\Backoffice\StorePaymentProviderRequest;
 use App\Http\Requests\Backoffice\StoreProductRequest;
+use App\Http\Requests\Backoffice\StoreShippingOptionRequest;
 use App\Http\Requests\Backoffice\StoreShippingRateRequest;
 use App\Http\Requests\Backoffice\StoreShippingZoneRequest;
 use App\Http\Requests\Backoffice\StoreSubCategoryRequest;
@@ -114,10 +120,12 @@ use App\Http\Requests\Backoffice\UpdateCouponRequest;
 use App\Http\Requests\Backoffice\UpdateFaqRequest;
 use App\Http\Requests\Backoffice\UpdateFaqTopicRequest;
 use App\Http\Requests\Backoffice\UpdateInventoryRequest;
+use App\Http\Requests\Backoffice\UpdateOrderRequest;
 use App\Http\Requests\Backoffice\UpdatePageRequest;
 use App\Http\Requests\Backoffice\UpdatePaymentOptionRequest;
 use App\Http\Requests\Backoffice\UpdatePaymentProviderRequest;
 use App\Http\Requests\Backoffice\UpdateProductRequest;
+use App\Http\Requests\Backoffice\UpdateShippingOptionRequest;
 use App\Http\Requests\Backoffice\UpdateShippingRateRequest;
 use App\Http\Requests\Backoffice\UpdateShippingZoneRequest;
 use App\Http\Requests\Backoffice\UpdateSubCategoryRequest;
@@ -243,6 +251,14 @@ class BackofficeFormRequestServiceProvider extends ServiceProvider
 
         /*
         |--------------------------------------------------------------------------
+        | Shipping Options
+        |--------------------------------------------------------------------------
+        */
+        StoreShippingOptionRequestInterface::class          => StoreShippingOptionRequest::class,
+        UpdateShippingOptionRequestInterface::class         => UpdateShippingOptionRequest::class,
+
+        /*
+        |--------------------------------------------------------------------------
         | Products
         |--------------------------------------------------------------------------
         */
@@ -336,6 +352,14 @@ class BackofficeFormRequestServiceProvider extends ServiceProvider
         */
         StoreCartRequestInterface::class => StoreCartRequest::class,
         UpdateCartRequestInterface::class => UpdateCartRequest::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Orders
+        |--------------------------------------------------------------------------
+        */
+        StoreOrderRequestInterface::class => StoreOrderRequest::class,
+        UpdateOrderRequestInterface::class => UpdateOrderRequest::class,
 
     ];
 }

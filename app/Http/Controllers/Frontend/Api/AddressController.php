@@ -24,7 +24,7 @@ class AddressController extends BaseController
     }
     public function index(): JsonResponse
 {
-    $user = auth()->user(); // Lấy user từ token
+    $user = auth()->user(); 
 
     if (!$user) {
         return $this->jsonResponse(false, null, 'Bạn chưa đăng nhập', 401);

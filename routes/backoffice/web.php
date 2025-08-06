@@ -31,6 +31,7 @@ use App\Http\Controllers\Backoffice\PostCategoryController;
 use App\Http\Controllers\Backoffice\PostController;
 use App\Http\Controllers\Backoffice\ProductController;
 use App\Http\Controllers\Backoffice\RoleController;
+use App\Http\Controllers\Backoffice\ShippingOptionController;
 use App\Http\Controllers\Backoffice\ShippingRateController;
 use App\Http\Controllers\Backoffice\ShippingZoneController;
 use App\Http\Controllers\Backoffice\SubCategoryController;
@@ -299,12 +300,27 @@ Route::get('/shipping-rates/{id}/edit', [ShippingRateController::class, 'edit'])
 Route::put('/shipping-rates/{id}', [ShippingRateController::class, 'update'])->name('shipping-rates.update');
 Route::delete('/shipping-rates/{id}', [ShippingRateController::class, 'destroy'])->name('shipping-rates.destroy');
 
+/*
+|--------------------------------------------------------------------------
+| Shipping Options
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/shipping-options', [ShippingOptionController::class, 'index'])->name('shipping-options.index');
+Route::get('/shipping-options/create', [ShippingOptionController::class, 'create'])->name('shipping-options.create');
+Route::post('/shipping-options', [ShippingOptionController::class, 'store'])->name('shipping-options.store');
+Route::get('/shipping-options/{id}', [ShippingOptionController::class, 'show'])->name('shipping-options.show');
+Route::get('/shipping-options/{id}/edit', [ShippingOptionController::class, 'edit'])->name('shipping-options.edit');
+Route::put('/shipping-options/{id}', [ShippingOptionController::class, 'update'])->name('shipping-options.update');
+Route::delete('/shipping-options/{id}', [ShippingOptionController::class, 'destroy'])->name('shipping-options.destroy');
+
 
 /*
 |--------------------------------------------------------------------------
 | Subscribers
 |--------------------------------------------------------------------------
 */
+
 Route::get('/subscribers', [SubscriberController::class, 'index'])->name('subscribers.index');
 
 /*
@@ -473,8 +489,13 @@ Route::delete('/website-reviews/{id}', [WebsiteReviewController::class, 'destroy
 |--------------------------------------------------------------------------
 */
 
-Route::post('/orders/create', [OrderController::class, 'create'])->name('orders.create');
-
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
+Route::get('/orders/{id}/edit', [OrderController::class, 'edit'])->name('orders.edit');
+Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update');
+Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
 /*
 |--------------------------------------------------------------------------
@@ -494,14 +515,13 @@ Route::delete('/carts/{id}', [CartController::class, 'destroy'])->name('carts.de
 |--------------------------------------------------------------------------
 | Adresseses
 |--------------------------------------------------------------------------
-*/ 
+*/
 
 Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
 Route::get('/addresses/create', [AddressController::class, 'create'])->name('addresses.create');
 Route::post('addresses', [AddressController::class, 'store'])->name('addresses.store');
 Route::get('/addresses/{id}', [AddressController::class, 'show'])->name('addresses.show');
 Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
-Route::delete('/addresses/{id}', [AddressController::class, 'destroy'])->name('addresses.destroy');
 
 /*
 |--------------------------------------------------------------------------

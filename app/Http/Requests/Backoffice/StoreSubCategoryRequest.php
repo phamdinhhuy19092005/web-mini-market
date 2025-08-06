@@ -10,10 +10,14 @@ class StoreSubCategoryRequest extends BaseFormRequest implements StoreSubCategor
 {
     public function rules(): array
     {
-        // dd($this->all());
+        dd($this->all());
         return [
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'unique:sub_categories,slug'],
+
+            'image' => ['required', 'array'],
+            'image.file' => ['nullable', 'file', 'mimes:jpeg,png,gif,webp', 'max:5200'],
+            'image.path' => ['nullable', 'string'],
 
             'category_id' => ['required', 'exists:categories,id'],
 
@@ -33,7 +37,7 @@ class StoreSubCategoryRequest extends BaseFormRequest implements StoreSubCategor
 
     public function imageFile()
     {
-        return $this->null;
+        return $this->file('image');
     }
 }
 

@@ -126,7 +126,7 @@
                                 <div class="col-md-6 form-group">
                                     <label for="post_category_id">Danh mục <span class="text-danger">*</span></label>
                                     <select name="post_category_id" id="post_category_id"
-                                            class="form-select selectpicker" data-live-search="true" required>
+                                            class="form-control selectpicker" data-live-search="true" required>
                                         <option value="">-- Chọn danh mục --</option>
                                         @foreach($postCategories as $postCategory)
                                             <option value="{{ $postCategory->id }}"

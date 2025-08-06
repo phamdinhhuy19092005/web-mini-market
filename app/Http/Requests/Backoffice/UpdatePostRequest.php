@@ -11,7 +11,7 @@ class UpdatePostRequest extends BaseFormRequest implements UpdatePostRequestInte
 {
     public function rules(): array
     {
-        // dd($this->all());
+        // dd($this->all());   
         return [
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255'],
@@ -52,6 +52,6 @@ class UpdatePostRequest extends BaseFormRequest implements UpdatePostRequestInte
 
     public function imageFile()
     {
-        return null;
+        return $this->file('image');
     }
 }

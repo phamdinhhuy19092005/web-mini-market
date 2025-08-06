@@ -67,7 +67,17 @@
 
                                     <div class="form-group">
                                         <label class="form-label">{{ __('Mô tả') }}</label>
-                                        <textarea name="description" class="form-control" rows="4">{{ old('description', $categoryGroup->description) }}</textarea>
+                                        <x-backoffice.content-editor
+                                                id="product_description"
+                                                name="description"
+                                                :value="old('description', $categoryGroup->description)"
+                                                :cols="30"
+                                                :rows="10"
+                                                placeholder="Nhập mô tả..."
+                                                disk="public"
+                                                class=""
+                                                :config="[]"
+                                            />
                                         @error('description')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror

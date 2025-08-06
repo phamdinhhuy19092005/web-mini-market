@@ -51,9 +51,10 @@ class AttributeController extends BaseController
     public function edit($id)
     {
         $ProductAttributeTypeEnum = ProductAttributeTypeEnum::labels();
+        $categoryGroups = CategoryGroup::all();
         $Categories = Category::all();
         $attribute = $this->attributeService->show($id);
-        return view('backoffice.pages.attributes.edit', compact('attribute', 'ProductAttributeTypeEnum', 'Categories'));
+        return view('backoffice.pages.attributes.edit', compact('attribute', 'ProductAttributeTypeEnum','categoryGroups', 'Categories'));
     }
 
     public function update(UpdateAttributeRequestInterface $request, $id)

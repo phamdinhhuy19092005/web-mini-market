@@ -1,14 +1,14 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Page List');
+    $title = __('Danh sách trang');
 
     $breadcrumbs = [
         [
-            'label' => __('Utilities'),
+            'label' => __('Tiện ích'),
         ],
         [
-            'label' => __('Page List'),
+            'label' => __('Danh sách trang'),
         ],
     ];
 @endphp
@@ -26,11 +26,12 @@
                 <div class="k-portlet k-portlet--mobile">
                     <div class="k-portlet__head k-portlet__head--lg">
                         <div class="k-portlet__head-label">
-                            <h3 class="k-portlet__head-title">List Post</h3>
+                            <h3 class="k-portlet__head-title">Danh sách trang</h3>
                         </div>
                         <div class="k-portlet__head-toolbar">
                             <a href="{{ route('bo.web.pages.create') }}" class="btn btn-primary btn-bold btn-upper btn-font-sm">
-                                <i class="flaticon2-add-1"></i> Create page
+                                <i class="flaticon2-add-1"></i> 
+                                Tạo trang
                             </a>
                         </div>
                     </div>
@@ -39,17 +40,14 @@
                             <thead>
                                 <tr>
                                     <th data-property="id">{{ __('ID') }}</th>
-                                    <th data-property="name">{{ __('Name') }}</th>
+                                    <th data-property="name">{{ __('Tên') }}</th>
                                     <th data-property="slug">{{ __('Slug') }}</th>
-                                    <th data-property="title">{{ __('Title') }}</th>
-                                    <th data-property="order">{{ __('Order') }}</th>
-                                    <th data-property="display_in">{{ __('Display in') }}</th>
-                                    <th data-property="display_on_frontend">{{ __('Show FE') }}</th>
-                                    <th data-property="status">{{ __('Status') }}</th>
-                                    <th data-property="author">{{ __('Author') }}</th>
-                                    <th data-orderable="false" data-property="created_at">{{ __('Created at') }}</th>
-                                    <th data-orderable="false" data-property="created_at">{{ __('Updated at') }}</th>
-                                    <th class="datatable-action" data-property="actions">{{ __('Action') }}</th>
+                                    <th data-property="title">{{ __('Tiêu đề') }}</th>
+                                    <th data-property="order">{{ __('Thứ tự') }}</th>
+                                    <th data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
+                                    <th data-orderable="false" data-property="created_at">{{ __('Ngày tạo') }}</th>
+                                    <th data-orderable="false" data-property="created_at">{{ __('Ngày cập nhật') }}</th>
+                                    <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>

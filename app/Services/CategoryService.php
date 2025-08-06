@@ -82,8 +82,6 @@ class CategoryService extends BaseService
             $model = $this->categoryRepository->findOrFail($id);
 
             $attributes['image'] = $this->handleImageUpdate($model->image, $attributes['image'] ?? null);
-
-            // Update status if provided
             $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : $model->status;
 
             return $this->categoryRepository->update($id, $attributes);

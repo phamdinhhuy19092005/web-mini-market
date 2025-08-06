@@ -85,9 +85,9 @@ $breadcrumbs = [
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="form-label">{{ __('Mô tả') }}</label>
-                                        <textarea name="description" class="form-control" rows="4">{{ old('description', $category->description) }}</textarea>
-                                        @error('description')
+                                        <label class="form-label">{{ __('[SEO] Mô tả') }}</label>
+                                        <input type="text" name="seo_description" class="form-control" placeholder="{{ __('Nhập [SEO] Mô tả') }}" autocomplete="off" value="{{ old('seo_description', $category->seo_description) }}">
+                                        @error('seo_description')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -121,14 +121,6 @@ $breadcrumbs = [
                                         @enderror
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="form-label">{{ __('[SEO] Mô tả') }}</label>
-                                        <input type="text" name="seo_description" class="form-control" placeholder="{{ __('Nhập [SEO] Mô tả') }}" autocomplete="off" value="{{ old('seo_description', $category->seo_description) }}">
-                                        @error('seo_description')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
                                     <div class="form-group d-flex align-items-center">
                                         <label class="form-label">{{ __('Trạng thái') }}</label>
                                         <div class="k-switch ml-3">
@@ -143,6 +135,23 @@ $breadcrumbs = [
                                     </div>
                                 </div>
                             </div>
+                             <div class="form-group">
+                                        <label class="form-label">{{ __('Mô tả') }}</label>
+                                        <x-backoffice.content-editor
+                                                id="product_description"
+                                                name="description"
+                                                :value="old('description', $category->description)"
+                                                :cols="30"
+                                                :rows="10"
+                                                placeholder="Nhập mô tả..."
+                                                disk="public"
+                                                class=""
+                                                :config="[]"
+                                            />
+                                        @error('description')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                         </div>
 
                         <div class="k-portlet__foot">

@@ -21,6 +21,7 @@ use App\Contracts\Responses\Backoffice\ListCurrencyResponseContract;
 use App\Contracts\Responses\Backoffice\ListFaqResponseContract;
 use App\Contracts\Responses\Backoffice\ListFaqTopicResponseContract;
 use App\Contracts\Responses\Backoffice\ListInventoryResponseContract;
+use App\Contracts\Responses\Backoffice\ListOrderResponseContract;
 use App\Contracts\Responses\Backoffice\ListPageResponseContract;
 use App\Contracts\Responses\Backoffice\ListPaymentOptionResponseContract;
 use App\Contracts\Responses\Backoffice\ListPaymentProviderResponseContract;
@@ -28,6 +29,7 @@ use App\Contracts\Responses\Backoffice\ListPostCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\ListPostResponseContract;
 use App\Contracts\Responses\Backoffice\ListProductResponseContract;
 use App\Contracts\Responses\Backoffice\ListRoleResponseContract;
+use App\Contracts\Responses\Backoffice\ListShippingOptionResponseContract;
 use App\Contracts\Responses\Backoffice\ListShippingRateResponseContract;
 use App\Contracts\Responses\Backoffice\ListShippingZoneResponseContract;
 use App\Contracts\Responses\Backoffice\ListSubCategoryResponseContract;
@@ -48,6 +50,7 @@ use App\Contracts\Responses\Backoffice\StoreCouponResponseContract;
 use App\Contracts\Responses\Backoffice\StoreFaqResponseContract;
 use App\Contracts\Responses\Backoffice\StoreFaqTopicResponseContract;
 use App\Contracts\Responses\Backoffice\StoreInventoryResponseContract;
+use App\Contracts\Responses\Backoffice\StoreOrderResponseContract;
 use App\Contracts\Responses\Backoffice\StorePageResponseContract;
 use App\Contracts\Responses\Backoffice\StorePaymentOptionResponseContract;
 use App\Contracts\Responses\Backoffice\StorePaymentProviderResponseContract;
@@ -55,6 +58,7 @@ use App\Contracts\Responses\Backoffice\StorePostCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\StorePostResponseContract;
 use App\Contracts\Responses\Backoffice\StoreProductResponseContract;
 use App\Contracts\Responses\Backoffice\StoreRoleResponseContract;
+use App\Contracts\Responses\Backoffice\StoreShippingOptionResponseContract;
 use App\Contracts\Responses\Backoffice\StoreShippingRateResponseContract;
 use App\Contracts\Responses\Backoffice\StoreShippingZoneResponseContract;
 use App\Contracts\Responses\Backoffice\StoreSubCategoryResponseContract;
@@ -74,6 +78,7 @@ use App\Contracts\Responses\Backoffice\UpdateCouponResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateFaqResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateFaqTopicResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateInventoryResponseContract;
+use App\Contracts\Responses\Backoffice\UpdateOrderResponseContract;
 use App\Contracts\Responses\Backoffice\UpdatePageResponseContract;
 use App\Contracts\Responses\Backoffice\UpdatePaymentOptionResponseContract;
 use App\Contracts\Responses\Backoffice\UpdatePaymentProviderResponseContract;
@@ -81,6 +86,7 @@ use App\Contracts\Responses\Backoffice\UpdatePostCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\UpdatePostResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateProductResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateRoleResponseContract;
+use App\Contracts\Responses\Backoffice\UpdateShippingOptionResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateShippingRateResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateShippingZoneResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateSubCategoryResponseContract;
@@ -103,6 +109,7 @@ use App\Http\Responses\Backoffice\ListCurrencyResponse;
 use App\Http\Responses\Backoffice\ListFaqResponse;
 use App\Http\Responses\Backoffice\ListFaqTopicResponse;
 use App\Http\Responses\Backoffice\ListInventoryResponse;
+use App\Http\Responses\Backoffice\ListOrderResponse;
 use App\Http\Responses\Backoffice\ListPageResponse;
 use App\Http\Responses\Backoffice\ListPaymentOptionResponse;
 use App\Http\Responses\Backoffice\ListPaymentProviderResponse;
@@ -110,6 +117,7 @@ use App\Http\Responses\Backoffice\ListPostCategoryResponse;
 use App\Http\Responses\Backoffice\ListPostResponse;
 use App\Http\Responses\Backoffice\ListProductResponse;
 use App\Http\Responses\Backoffice\ListRoleResponse;
+use App\Http\Responses\Backoffice\ListShippingOptionResponse;
 use App\Http\Responses\Backoffice\ListShippingRateResponse;
 use App\Http\Responses\Backoffice\ListShippingZoneResponse;
 use App\Http\Responses\Backoffice\ListSubCategoryResponse;
@@ -130,6 +138,7 @@ use App\Http\Responses\Backoffice\StoreCouponResponses;
 use App\Http\Responses\Backoffice\StoreFaqResponses;
 use App\Http\Responses\Backoffice\StoreFaqTopicResponses;
 use App\Http\Responses\Backoffice\StoreInventoryResponses;
+use App\Http\Responses\Backoffice\StoreOrderResponses;
 use App\Http\Responses\Backoffice\StorePageResponses;
 use App\Http\Responses\Backoffice\StorePaymentOptionResponses;
 use App\Http\Responses\Backoffice\StorePaymentProviderResponses;
@@ -137,6 +146,7 @@ use App\Http\Responses\Backoffice\StorePostCategoryResponses;
 use App\Http\Responses\Backoffice\StorePostResponses;
 use App\Http\Responses\Backoffice\StoreProductResponses;
 use App\Http\Responses\Backoffice\StoreRoleResponses;
+use App\Http\Responses\Backoffice\StoreShippingOptionResponses;
 use App\Http\Responses\Backoffice\StoreShippingRateResponses;
 use App\Http\Responses\Backoffice\StoreShippingZoneResponses;
 use App\Http\Responses\Backoffice\StoreSubCategoryResponses;
@@ -156,6 +166,7 @@ use App\Http\Responses\Backoffice\UpdateCouponResponses;
 use App\Http\Responses\Backoffice\UpdateFaqResponses;
 use App\Http\Responses\Backoffice\UpdateFaqTopicResponses;
 use App\Http\Responses\Backoffice\UpdateInventoryResponses;
+use App\Http\Responses\Backoffice\UpdateOrderResponses;
 use App\Http\Responses\Backoffice\UpdatePageResponses;
 use App\Http\Responses\Backoffice\UpdatePaymentOptionResponses;
 use App\Http\Responses\Backoffice\UpdatePaymentProviderResponses;
@@ -163,6 +174,7 @@ use App\Http\Responses\Backoffice\UpdatePostCategoryResponses;
 use App\Http\Responses\Backoffice\UpdatePostResponses;
 use App\Http\Responses\Backoffice\UpdateProductResponses;
 use App\Http\Responses\Backoffice\UpdateRoleResponses;
+use App\Http\Responses\Backoffice\UpdateShippingOptionResponses;
 use App\Http\Responses\Backoffice\UpdateShippingRateResponses;
 use App\Http\Responses\Backoffice\UpdateShippingZoneResponses;
 use App\Http\Responses\Backoffice\UpdateSubCategoryResponses;
@@ -319,6 +331,15 @@ class BackofficeResponseServiceProvider extends ServiceProvider
         StoreShippingRateResponseContract::class         => StoreShippingRateResponses::class,
         UpdateShippingRateResponseContract::class        => UpdateShippingRateResponses::class,
         ListShippingRateResponseContract::class          => ListShippingRateResponse::class,
+        
+        /*
+        |--------------------------------------------------------------------------
+        | Shipping Options
+        |--------------------------------------------------------------------------
+        */
+        StoreShippingOptionResponseContract::class         => StoreShippingOptionResponses::class,
+        UpdateShippingOptionResponseContract::class        => UpdateShippingOptionResponses::class,
+        ListShippingOptionResponseContract::class          => ListShippingOptionResponse::class,
 
         /*
         |--------------------------------------------------------------------------
@@ -427,5 +448,14 @@ class BackofficeResponseServiceProvider extends ServiceProvider
         StoreCartResponseContract::class         => StoreCartResponses::class,
         UpdateCartResponseContract::class        => UpdateCartResponses::class,
         ListCartResponseContract::class          => ListCartResponse::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Orders
+        |--------------------------------------------------------------------------
+        */
+        StoreOrderResponseContract::class         => StoreOrderResponses::class,
+        UpdateOrderResponseContract::class        => UpdateOrderResponses::class,
+        ListOrderResponseContract::class          => ListOrderResponse::class,
     ];
 }
