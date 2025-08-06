@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -9,9 +11,10 @@ use App\Models\User;
 use Firebase\JWT\JWT;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\DB;
+
 class AuthController extends BaseController
 {
-   public function login(Request $request)
+    public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
@@ -37,24 +40,23 @@ class AuthController extends BaseController
         $token = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
-        'access_token' => $token,
-        'token_type' => 'bearer',
-        'expires_in' => 3600,
-        'user' => [
-            'id' => $user->id,
-            'email' => $user->email,
-            'name' => $user->name,
-            'avatar' => $user->avatar ?? null,
-            'phone_number' => $user->phone_number ?? null,
-            'birthday' => $user->birthday ?? null,
-            'genders' => $user->genders ?? null,
-            'access_channel_type' => $user->access_channel_type ?? null
-        ]
-    ]);
-
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => 3600,
+            'user' => [
+                'id' => $user->id,
+                'email' => $user->email,
+                'name' => $user->name,
+                'avatar' => $user->avatar ?? null,
+                'phone_number' => $user->phone_number ?? null,
+                'birthday' => $user->birthday ?? null,
+                'genders' => $user->genders ?? null,
+                'access_channel_type' => $user->access_channel_type ?? null
+            ]
+        ]);
     }
 
-      public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request)
     {
         try {
             DB::beginTransaction();
@@ -78,12 +80,86 @@ class AuthController extends BaseController
                 'message' => 'Register success',
                 'data'    => $user,
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'message' => 'Register failed',
                 'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function sendResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Email không tồn tại.'
+            ], 404);
+        }
+
+        try {
+            $token = Str::random(60);
+            $user->remember_token = $token;
+            $user->save();
+
+            $resetUrl = url("/reset-password?token={$token}&email={$user->email}");
+
+            Mail::raw("Click vào link để đặt lại mật khẩu: {$resetUrl}", function ($message) use ($user) {
+                $message->to($user->email)
+                    ->subject('Khôi phục mật khẩu');
+            });
+
+            return response()->json([
+                'message' => 'Email đặt lại mật khẩu đã được gửi.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gửi email thất bại.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email',
+            'token'    => 'required',
+            'password' => 'required|confirmed|min:6',
+        ]);
+
+        $user = User::where('email', $request->email)
+            ->where('remember_token', $request->token)
+            ->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Token hoặc email không hợp lệ.'
+            ], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $user->password = Hash::make($request->password);
+            $user->remember_token = null;
+            $user->save();
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Đặt lại mật khẩu thành công.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Đặt lại mật khẩu thất bại.',
+                'error' => $e->getMessage()
             ], 500);
         }
     }
