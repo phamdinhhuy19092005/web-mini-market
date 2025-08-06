@@ -33,20 +33,24 @@ class AuthController extends BaseController
         ];
 
         // Encode token
-        $token = JWT::encode($payload, env('JWT_SECRET'), 'HS256');
+        // $token = JWT::encode($payload, env('JWT_SECRET'), 'HS256');
+        $token = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
-    'user' => [
-        'id' => $user->id,
-        'email' => $user->email,
-        'name' => $user->name,
-        'avatar' => $user->avatar ?? null,
-        'phone_number' => $user->phone_number ?? null,
-        'birthday' => $user->birthday ?? null,
-        'genders' => $user->genders ?? null,
-        'token' => $token
-    ]
-]);
+        'access_token' => $token,
+        'token_type' => 'bearer',
+        'expires_in' => 3600,
+        'user' => [
+            'id' => $user->id,
+            'email' => $user->email,
+            'name' => $user->name,
+            'avatar' => $user->avatar ?? null,
+            'phone_number' => $user->phone_number ?? null,
+            'birthday' => $user->birthday ?? null,
+            'genders' => $user->genders ?? null,
+            'access_channel_type' => $user->access_channel_type ?? null
+        ]
+    ]);
 
     }
 
