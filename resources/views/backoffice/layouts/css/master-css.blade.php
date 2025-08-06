@@ -46,3 +46,10 @@
 
 <!--end::Layout Skins -->
 <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
+
+<style>
+        .datatable th,
+        .datatable td {
+            color: #000000 !important;
+        }
+    </style>

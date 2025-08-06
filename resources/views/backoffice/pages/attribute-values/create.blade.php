@@ -87,7 +87,7 @@
                     <div class="k-portlet__foot">
                         <div class="k-form__actions">
                             <button type="submit" class="btn btn-primary">{{ __('Lưu thuộc tính') }}</button>
-                            <a href="{{ route('bo.web.attributes.index') }}" class="btn btn-secondary">{{ __('Hủy') }}</a>
+                            <a href="{{ route('bo.web.attribute-values.index') }}" class="btn btn-secondary">{{ __('Hủy') }}</a>
                         </div>
                     </div>
                 </form>

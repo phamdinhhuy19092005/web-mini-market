@@ -35,7 +35,7 @@
                                 <th data-property="id" scope="col">{{ __('ID') }}</th>
                                 <th data-property="name" scope="col">{{ __('Tên') }}</th>
                                 <th data-property="slug" scope="col">{{ __('Đường dẫn') }}</th>
-                                <th data-property="image" scope="col">{{ __('Ảnh') }}</th>
+                                <th data-property="image" data-render-callback="renderImageColumn" scope="col">{{ __('Ảnh') }}</th>
                                 <th data-property="order" scope="col">{{ __('Thứ tự') }}</th>
                                 <th data-property="code" scope="col">{{ __('Mã') }}</th>
                                 <th class="none" data-property="author" scope="col">{{ __('Tác giả') }}</th>

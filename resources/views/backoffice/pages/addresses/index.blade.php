@@ -49,5 +49,8 @@
 </div>
 @endsection
 
+
 @component('backoffice.partials.datatable')
 @endcomponent
+
+

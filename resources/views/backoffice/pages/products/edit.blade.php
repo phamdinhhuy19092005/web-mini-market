@@ -29,9 +29,7 @@
                 <div class="col-md-7">
                     <div class="form-group">
                         <label for="name">Tên <span class="text-danger">*</span></label>
-                        <input type="text" name="name" id="name" class="form-control"
-                            placeholder="Nhập tên sản phẩm" autocomplete="off"
-                            value="{{ old('name', $product->name) }}" disabled>
+                        <input type="text" name="name" class="form-control" placeholder="Nhập tên sản phẩm" autocomplete="off" value="{{ old('name', $product->name) }}" disabled>
                         @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
         

@@ -11,19 +11,21 @@ class TermsCategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            'Bảo mật',
-            'Chính sách giao hàng',
-            'Chính sách thanh toán',
-            'Chính sách đổi trả',
-            'Hướng dẫn mua hàng',
-            'Điều khoản',
+            'Bài mới lên',
+            'Công thức nấu ăn',
+            'Món ngon',
+            'Review',
+            'Sinh Nhật Uchi Mart',
+            'Mẹo vặt',
+            'Trung Thu',
+            'Từ điển trái cây',
         ];
 
         foreach ($categories as $index => $name) {
             $slug = Str::slug($name);
 
             DB::table('post_categories')->updateOrInsert(
-                ['slug' => $slug], // Điều kiện kiểm tra trùng
+                ['slug' => $slug],
                 [
                     'name' => $name,
                     'image' => null,
@@ -33,8 +35,8 @@ class TermsCategorySeeder extends Seeder
                     'meta_title' => "$name | Uchi Mart",
                     'meta_description' => "Thông tin về $name tại Uchi Mart",
                     'status' => 1,
-                    'updated_at' => now(),
                     'created_at' => now(),
+                    'updated_at' => now(),
                 ]
             );
         }

@@ -50,6 +50,7 @@ window.renderCallbackCategoryGroups = function (data) {
     return `<span class="k-badge k-badge--brand k-badge--inline k-badge--outline k-badge--pill">${data}</span>`;
 }
 
+
 window.renderCallbackCategories = (data, type, full) => {
     const count = data?.length || 0;
 

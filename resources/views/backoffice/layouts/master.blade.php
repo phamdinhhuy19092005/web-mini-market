@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Latest updates and statistic charts">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>HuyPham | Dashboard</title>
+    <title>{{ auth('admin')->user()->name ?? 'admin' }} | Không phận sự cấm vào</title>
 
     <!-- Web Fonts -->
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
@@ -52,6 +52,10 @@
                 </main>
             </div>
         </div>
+    </div>
+
+    <div id="k_scrolltop" class="k-scrolltop">
+        <i class="la la-arrow-up"></i>
     </div>
 
     <!-- JavaScript -->

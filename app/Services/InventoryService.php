@@ -2,8 +2,10 @@
 namespace App\Services;
 
 use App\Classes\ImageHelper;
+use App\Models\Inventory;
 use App\Repositories\Interfaces\InventoryRepositoryInterface;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class InventoryService extends BaseService
 {
@@ -27,6 +29,29 @@ class InventoryService extends BaseService
             })
             ->orderByDesc('id')
             ->paginate($perPage);
+    }
+
+    public function getActiveInventoriesWithFinalPrice()
+    {
+        $now = Carbon::now();
+
+        return Inventory::select(
+            'id', 'title', 'sku', 'sale_price', 'offer_price',
+            'offer_start', 'offer_end', 'image', 'slug', 'stock_quantity'
+        )
+        ->where('status', 1)
+        ->get()
+        ->map(function ($inventory) use ($now) {
+            $inventory->final_price =
+                $inventory->offer_price &&
+                $inventory->offer_start &&
+                $inventory->offer_end &&
+                $now->between($inventory->offer_start, $inventory->offer_end)
+                    ? $inventory->offer_price
+                    : $inventory->sale_price;
+
+            return $inventory;
+        });
     }
 
     public function create(array $attributes = [])
@@ -70,6 +95,7 @@ class InventoryService extends BaseService
             return $inventory;
         });
     }
+    
 
     public function find($id)
     {

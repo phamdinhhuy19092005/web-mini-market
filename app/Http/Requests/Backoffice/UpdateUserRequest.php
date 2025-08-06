@@ -13,7 +13,7 @@ class UpdateUserRequest extends BaseFormRequest implements UpdateUserRequestInte
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email'],
-            'phone_number' => ['nullable','string','max:20',Rule::unique('users', 'phone_number')->ignore($this->route('user'))],
+            'phone_number' => ['nullable', 'string', 'max:20', Rule::unique('users', 'phone_number')->ignore($this->route('user')->id ?? $this->route('user')) ],
             'access_channel_type' => ['required', 'string'],
             'allow_login' => ['required', 'boolean'],
             'birthday' => ['nullable', 'date', 'before:tomorrow'],
@@ -21,12 +21,9 @@ class UpdateUserRequest extends BaseFormRequest implements UpdateUserRequestInte
         ];
     }
     
-    protected function prepareForValidation()
+    public function prepareForValidation()
     {
-        $birthday = \Carbon\Carbon::createFromFormat('d/m/Y', $this->birthday)->format('Y-m-d');
-        $this->merge([
-            'birthday' => $birthday
-        ]);
+        return null;
     }
     
 

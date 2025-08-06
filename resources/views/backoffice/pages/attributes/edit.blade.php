@@ -78,18 +78,17 @@
                             {{-- Danh mục --}}
                             <div class="col-md-6 form-group">
                                 <label for="category_ids">{{ __('Danh mục') }} <span class="text-danger">*</span></label>
-                                <select name="category_ids[]" id="category_ids" class="form-control k_selectpicker"
-                                        data-live-search="true"
-                                        data-none-selected-text="{{ __('-- Chọn danh mục --') }}"
-                                        data-actions-box="true"
-                                        data-size="5"
-                                        data-selected-text-format="count > 5"
-                                        multiple required>
-                                    @foreach($Categories as $category)
-                                        <option value="{{ $category->id }}"
-                                            {{ in_array($category->id, old('category_ids', $attribute->categories->pluck('id')->toArray())) ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
+                                <select name="category_ids[]" id="category_ids"  class="form-control k_selectpicker"  data-live-search="true" data-none-selected-text="{{ __('-- Chọn danh mục --') }}"  data-actions-box="true"  data-size="5"  data-selected-text-format="count > 5"  multiple  required>
+                                    @foreach($categoryGroups as $categoryGroup)
+                                        <optgroup label="{{ $categoryGroup->name }}">
+                                            @foreach($categoryGroup->categories as $category)
+                                                <option 
+                                                    value="{{ $category->id }}"
+                                                    {{ in_array($category->id, old('category_ids', $selectedCategoryIds ?? [])) ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
                                     @endforeach
                                 </select>
                                 @error('category_ids')

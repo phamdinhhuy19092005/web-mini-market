@@ -5,10 +5,13 @@ use App\Repositories\Interfaces\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Closure;
+use Illuminate\Support\Arr;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
     protected Model $model;
+    protected $scopeQueries = null;
 
     /**
      * Trả về tên lớp của model.
@@ -110,6 +113,19 @@ abstract class BaseRepository implements BaseRepositoryInterface
         $model = $this->findOrFail($id);
         return $model->delete();
     }
+    
+
+    /**
+     * Add Query Scope.
+     *
+     * @return $this
+     */
+    public function scopeQuery(Closure $scope)
+    {
+        $this->scopeQueries = array_merge($this->scopeQueries, Arr::wrap($scope));
+
+        return $this;
+    }
 
     /**
      * Phân trang các bản ghi.
@@ -121,4 +137,15 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         return $this->model->paginate($perPage);
     }
+
+    public function modelScopes(array $scopes)
+    {
+        foreach ($scopes as $scope) {
+            if (method_exists($this->model, $scope)) {
+                $this->model = $this->model->$scope();
+            }
+        }
+        return $this;
+    }
+
 }

@@ -5,13 +5,13 @@
 
     $breadcrumbs = [
         [
-            'label' => __('Utilities'),
+            'label' => __('Tiện tích'),
         ],
         [
-            'label' => __('Blogs'),
+            'label' => __('Danh sách trang'),
         ],
         [
-            'label' => __('Edit Page'),
+            'label' => __('Chỉnh sửa danh sách trang'),
         ],
     ];
 @endphp
@@ -28,7 +28,7 @@
                 <div class="k-portlet">
                     <div class="k-portlet__head">
                         <div class="k-portlet__head-label">
-                            <h3 class="k-portlet__head-title">Edit Page</h3>
+                            <h3 class="k-portlet__head-title">Chỉnh sủa trang</h3>
                         </div>
                     </div>
 
@@ -88,10 +88,20 @@
                                     value="{{ old('order',$page->order) }}">
                             </div>
 
-
                             <div class="form-group">
-                                <label for="content">Content</label>
-                                <textarea name="content" id="content" class="form-control" rows="5">{{ old('content',$page->content) }}</textarea>
+                                <label for="description">Mô tả</label>
+                                <x-backoffice.content-editor
+                                    id="product_description"
+                                    name="content"
+                                    :value="old('content', $page->content)"
+                                    :cols="30"
+                                    :rows="10"
+                                    placeholder="Nhập nội dung..."
+                                    disk="public"
+                                    class=""
+                                    :config="[]"
+                                />
+                                @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="form-group">
@@ -142,63 +152,9 @@
     </div>
     <!-- end:: Content Body -->
 
-    <!-- Include CKEditor 5 CDN -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
-    <style>
-        /* Make CKEditor content area resizable */
-        .ck-editor__editable_inline {
-            resize: vertical !important;
-            min-height: 200px !important;
-            max-height: 800px !important;
-            overflow: auto !important;
-        }
-    </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Initialize CKEditor 5 on the content textarea
-            ClassicEditor
-                .create(document.querySelector('#content'), {
-                    toolbar: [
-                        'heading', '|',
-                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
-                        'outdent', 'indent', '|',
-                        'blockQuote', 'insertTable', 'mediaEmbed', 'undo', 'redo'
-                    ]
-                })
-                .then(editor => {
-                    // Ensure the editor is resizable
-                    editor.ui.view.editable.element.style.resize = 'vertical';
-                    editor.ui.view.editable.element.style.minHeight = '200px';
-                    editor.ui.view.editable.element.style.maxHeight = '800px';
-                })
-                .catch(error => {
-                    console.error('Error initializing CKEditor:', error);
-                });
-
-            // Existing code for generating random code
-            document.querySelectorAll('[data-generate]').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const length = parseInt(button.getAttribute('data-generate-length')) || 5;
-                    const ref = button.getAttribute('data-generate-ref');
-                    const isUppercase = button.getAttribute('data-generate-uppercase') === 'true';
-
-                    const targetInput = document.querySelector(ref);
-                    if (!targetInput) return;
-
-                    const characters = isUppercase
-                        ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-                        : 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-                    let result = '';
-                    for (let i = 0; i < length; i++) {
-                        const randomIndex = Math.floor(Math.random() * characters.length);
-                        result += characters[randomIndex];
-                    }
-
-                    targetInput.value = result;
-                });
-            });
-        });
-    </script>
 @endsection
+
+
+@push('scripts')
+    <script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
+@endpush

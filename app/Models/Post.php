@@ -15,6 +15,7 @@ class Post extends Model
         'slug',
         'description',
         'order',
+        'image',
         'display_on_frontend',
         'meta_title',
         'meta_description',

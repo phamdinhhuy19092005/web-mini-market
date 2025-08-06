@@ -51,6 +51,7 @@ class PostService extends BaseService
         return DB::transaction(function () use ($attributes) {
             $imageHelper = new ImageHelper('post');
             $attributes['image'] = $imageHelper->upload($attributes['image']);
+            
             return $this->postRepository->create($attributes);
         });
     }

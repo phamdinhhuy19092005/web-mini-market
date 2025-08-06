@@ -14,7 +14,6 @@ class WardController extends BaseController
     {
         $query = Ward::query();
 
-        // Nếu có truyền district_code thì lọc theo nó
         if ($request->has('district_code')) {
             $query->where('district_code', $request->district_code);
         }

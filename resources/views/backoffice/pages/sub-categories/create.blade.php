@@ -77,18 +77,28 @@
                                     @enderror
                                 </div>
 
-                                {{-- Description --}}
-                                <div class="form-group">
-                                    <label class="form-label">{{ __('Mô tả') }}</label>
-                                    <textarea name="description" id="description" class="form-control" rows="4">{{ old('description') }}</textarea>
-                                    @error('description')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
                             </div>
 
                             {{-- Right Column --}}
-                            <div class="col-lg-6">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                    <label class="form-label">{{ __('Ảnh hiển thị') }}</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control image-url" name="image[path]" placeholder="{{ __('Tải ảnh lên hoặc nhập URL') }}" value="{{ old('image.path') }}">
+                                        <div class="input-group-append">
+                                            <label class="btn btn-outline-primary m-0" for="image-file">
+                                                <i class="flaticon2-image-file mr-2"></i>{{ __('Tải lên') }}
+                                                <input type="file" id="image-file" name="image[file]" class="d-none image-file" accept="image/*">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <img class="img-fluid image-preview" style="max-width: 150px; display: none;" src="" alt="Image preview">
+                                    </div>
+                                    @error('image.*')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 {{-- SEO Title --}}
                                 <div class="form-group">
                                     <label class="form-label">{{ __('[SEO] Tiêu đề') }}</label>
@@ -121,6 +131,23 @@
                                     @enderror
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">{{ __('Mô tả') }}</label>
+                            <x-backoffice.content-editor
+                                    id="product_description"
+                                    name="description"
+                                    :value="old('description')"
+                                    :cols="30"
+                                    :rows="10"
+                                    placeholder="Nhập mô tả..."
+                                    disk="public"
+                                    class=""
+                                    :config="[]"
+                                />
+                            @error('description')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 

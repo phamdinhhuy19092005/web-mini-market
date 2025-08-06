@@ -14,7 +14,6 @@ class DistrictController extends BaseController
     {
         $query = District::query();
 
-        // Nếu có truyền province_code thì lọc theo nó
         if ($request->has('province_code')) {
             $query->where('province_code', $request->province_code);
         }

@@ -85,4 +85,14 @@ class Inventory extends Model
     {
         return $this->morphTo('updated_by');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    public function scopeFeDisplay($query)
+    {
+        return $query->where('is_displayed', true);
+    }
 }
