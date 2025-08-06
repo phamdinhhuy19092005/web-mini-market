@@ -50,7 +50,7 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     
 });
 
-Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
 // Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 // Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
