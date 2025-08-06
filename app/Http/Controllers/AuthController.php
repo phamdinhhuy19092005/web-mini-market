@@ -36,10 +36,18 @@ class AuthController extends BaseController
         $token = JWT::encode($payload, env('JWT_SECRET'), 'HS256');
 
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'expires_in' => 3600
-        ]);
+    'user' => [
+        'id' => $user->id,
+        'email' => $user->email,
+        'name' => $user->name,
+        'avatar' => $user->avatar ?? null,
+        'phone_number' => $user->phone_number ?? null,
+        'birthday' => $user->birthday ?? null,
+        'genders' => $user->genders ?? null,
+        'token' => $token
+    ]
+]);
+
     }
 
       public function register(RegisterRequest $request)
