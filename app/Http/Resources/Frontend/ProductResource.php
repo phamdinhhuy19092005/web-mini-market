@@ -16,7 +16,7 @@ class ProductResource extends BaseResource
             'name' => $this->name,
             'slug' => $this->slug,
             'code' => $this->code,
-            // 'description' => $this->description,
+            'description' => $this->description,
             'primary_image' => $this->primary_image,
             'media' => json_decode($this->media, true) ?? [],
             'brand' => new BrandResource($this->whenLoaded('brand')),

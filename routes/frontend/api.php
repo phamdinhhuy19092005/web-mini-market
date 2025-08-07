@@ -27,6 +27,7 @@ use App\Http\Controllers\Frontend\Api\WebsiteReviewController;
 use App\Http\Controllers\Frontend\Api\ShippingZoneController;
 use App\Http\Controllers\Frontend\Api\ShippingRateController;
 use App\Http\Controllers\Frontend\Api\WardController;
+use App\Http\Controllers\Frontend\Api\CartController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 
@@ -43,13 +44,19 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
 
 
     Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
-    Route::get('/addresses/user/{userId}', [AddressController::class, 'getByUser'])
-    ->name('addresses.user');
+    Route::get('/addresses/user/{userId}', [AddressController::class, 'getByUser'])->name('addresses.user');
     Route::get('/addresses/{id}', [AddressController::class, 'show'])->name('addresses.show');
     Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
     Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
     Route::post('/addresses/{id}/default', [AddressController::class, 'setDefault']);
     
+
+    Route::get('/carts', [CartController::class, 'index'])->name('carts.index');
+    Route::get('/carts/{id}', [CartController::class, 'show'])->name('carts.show');
+    Route::post('/carts', [CartController::class, 'store'])->name('carts.store');
+    Route::put('/carts/{id}', [CartController::class, 'update'])->name('carts.update');
+    Route::delete('/carts/{id}', [CartController::class, 'destroy'])->name('carts.destroy');
+    Route::delete('/carts/{id}/items/{inventory_id}', [CartController::class, 'removeItem'])->name('carts.items.destroy');
 });
 
     Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');

@@ -88,7 +88,7 @@ class OrderService extends BaseService
                 'created_by_id' => $admin->id,
                 'updated_by_type' => get_class($admin),
                 'updated_by_id' => $admin->id,
-                'order_code' => uniqid('ORD_'),
+                'order_code' => strtoupper(uniqid(dechex(random_int(10, 99)))),
                 'uuid' => \Illuminate\Support\Str::uuid(),
                 'currency_code' => 'VND',
                 'total_item' => count($cartItems),

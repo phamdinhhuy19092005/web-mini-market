@@ -12,7 +12,7 @@ class StoreProductRequest extends BaseFormRequest implements StoreProductRequest
     public function rules(): array
     {
         // dd($this->all());
-        return [    
+        return [
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')->ignore($this->product)],
             'code' => ['nullable', 'string', 'max:100', 'unique:products,code'],
@@ -37,7 +37,7 @@ class StoreProductRequest extends BaseFormRequest implements StoreProductRequest
             'category_ids' => ['required', 'array'],
             'category_ids.*' => ['exists:categories,id'],
 
-            'subcategory_ids' => ['required', 'array'],
+            'subcategory_ids' => ['nullable', 'array'],
             'subcategory_ids.*' => ['exists:sub_categories,id'],
         ];
     }

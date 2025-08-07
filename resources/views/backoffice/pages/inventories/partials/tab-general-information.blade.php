@@ -119,14 +119,7 @@
                 <!-- Name -->
                 <div class="form-group">
                     <label for="title">Tiêu đề <span class="text-danger">*</span></label>
-                    <input type="text"
-                           name="title"
-                           id="title"
-                           class="form-control"
-                           placeholder="Nhập tên tiêu đề"
-                           autocomplete="off"
-                           value="{{ old('title', $inventory->title ?? '') }}"
-                           required>
+                    <input type="text" name="title" id="title" class="form-control"placeholder="Nhập tên tiêu đề" autocomplete="off" value="{{ old('title', $inventory->title ?? '') }}" required>
                     @error('name')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror

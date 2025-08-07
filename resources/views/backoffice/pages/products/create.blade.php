@@ -100,26 +100,26 @@
                                     <div class="form-group mb-4">
                                         <label for="primary-image-file" class="form-label">Hình ảnh chính</label>
                                         <div class="input-group">
-                                            <input type="text" 
-                                                class="form-control image-url" 
-                                                name="primary_image[path]" 
-                                                placeholder="Tải ảnh lên hoặc nhập URL" 
+                                            <input type="text"
+                                                class="form-control image-url"
+                                                name="primary_image[path]"
+                                                placeholder="Tải ảnh lên hoặc nhập URL"
                                                 value="{{ old('primary_image.path') }}">
                                             <div class="input-group-append">
                                                 <label class="btn btn-outline-primary m-0">
                                                     <i class="flaticon2-image-file mr-2"></i> Tải ảnh
-                                                    <input type="file" 
-                                                        id="primary-image-file" 
-                                                        name="primary_image[file]" 
-                                                        class="d-none image-file" 
+                                                    <input type="file"
+                                                        id="primary-image-file"
+                                                        name="primary_image[file]"
+                                                        class="d-none image-file"
                                                         accept="image/*">
                                                 </label>
                                             </div>
                                         </div>
                                         <div class="mt-2 image-preview-container">
-                                            <img class="img-fluid image-preview" 
-                                                style="max-width: 150px; display: none;" 
-                                                src="" 
+                                            <img class="img-fluid image-preview"
+                                                style="max-width: 150px; display: none;"
+                                                src=""
                                                 alt="Ảnh xem trước">
                                         </div>
                                         @error('primary_image.*')
@@ -134,16 +134,16 @@
                                             <div class="media-image-item form-group">
                                                 <div class="d-flex">
                                                     <div class="input-group">
-                                                        <input type="text" 
-                                                            class="form-control image-url" 
-                                                            name="media[path][]" 
+                                                        <input type="text"
+                                                            class="form-control image-url"
+                                                            name="media[path][]"
                                                             placeholder="Tải ảnh lên hoặc nhập URL">
                                                         <div class="input-group-append">
                                                             <label class="btn btn-outline-primary m-0">
                                                                 <i class="flaticon2-image-file mr-2"></i> Tải ảnh
-                                                                <input type="file" 
-                                                                    class="d-none image-file" 
-                                                                    name="media[file][]" 
+                                                                <input type="file"
+                                                                    class="d-none image-file"
+                                                                    name="media[file][]"
                                                                     accept="image/*">
                                                             </label>
                                                         </div>
@@ -151,9 +151,9 @@
                                                     <button type="button" class="btn btn-primary remove-media-image" style="margin-left: 10px">Xóa</button>
                                                 </div>
                                                 <div class="mt-2 d-flex align-items-center gap-2">
-                                                    <img class="img-fluid image-preview" 
-                                                        style="max-width: 150px; display: none;" 
-                                                        src="" 
+                                                    <img class="img-fluid image-preview"
+                                                        style="max-width: 150px; display: none;"
+                                                        src=""
                                                         alt="Ảnh xem trước">
                                                 </div>
                                             </div>
@@ -163,16 +163,16 @@
                                         <div class="media-image-item form-group">
                                             <div class="d-flex">
                                                 <div class="input-group">
-                                                    <input type="text" 
-                                                        class="form-control image-url" 
-                                                        name="media[path][]" 
+                                                    <input type="text"
+                                                        class="form-control image-url"
+                                                        name="media[path][]"
                                                         placeholder="Tải ảnh lên hoặc nhập URL">
                                                     <div class="input-group-append">
                                                         <label class="btn btn-outline-primary m-0">
                                                             <i class="flaticon2-image-file mr-2"></i> Tải ảnh
-                                                            <input type="file" 
-                                                                class="d-none image-file" 
-                                                                name="media[file][]" 
+                                                            <input type="file"
+                                                                class="d-none image-file"
+                                                                name="media[file][]"
                                                                 accept="image/*">
                                                         </label>
                                                     </div>
@@ -180,9 +180,9 @@
                                                 <button type="submit" class="btn btn-primary remove-media-image" style="margin-left: 10px"> Xóa </button>
                                             </div>
                                             <div class="mt-2 d-flex align-items-center gap-2">
-                                                <img class="img-fluid image-preview" 
-                                                    style="max-width: 150px; display: none;" 
-                                                    src="" 
+                                                <img class="img-fluid image-preview"
+                                                    style="max-width: 150px; display: none;"
+                                                    src=""
                                                     alt="Ảnh xem trước">
                                             </div>
                                         </div>
@@ -248,13 +248,13 @@
                                     <!-- Subcategory Field -->
                                     <div class="form-group">
                                         <label for="subcategory_ids">Danh mục con <span class="text-danger">*</span></label>
-                                        
+
                                         @php
                                             $selectedSubcategoryIds = collect(old('subcategory_ids', isset($product) ? $product->subcategories->pluck('id')->toArray() : []));
                                         @endphp
 
                                         <select name="subcategory_ids[]" id="subcategory_ids" class="form-control k_selectpicker"
-                                            data-live-search="true" multiple data-actions-box="true" required data-none-selected-text="-- Chọn danh mục con --">
+                                            data-live-search="true" multiple data-actions-box="true" data-none-selected-text="-- Chọn danh mục con --">
                                             @foreach($categories as $category)
                                                 <optgroup label="{{ $category->name }}">
                                                     @foreach($category->subCategories ?? [] as $subCategory)

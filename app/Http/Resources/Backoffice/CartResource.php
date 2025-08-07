@@ -1,37 +1,33 @@
 <?php
 
-namespace App\Http\Resources\Backoffice;;
+namespace App\Http\Resources\Backoffice;
+
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class CartResource extends BaseResource
 {
     public function toArray($request): array
     {
-        return array_merge(
-            [
-                'id' => $this->id,
-                'title' => $this->title,
-                'code' => $this->code,
-                'discount_type' => $this->discount_type,
-                'discount_type_name' => $this->discount_type_name,
-                'discount_value' => $this->discount_value,
-                'usage_limit' => $this->usage_limit ?? 'Không giới hạn',
-                'terms' => $this->terms,
-                'used' => $this->used_coupons_count ?? 0,
-                'start_date' => $this->start_date ?? 'Không thời hạn',
-                'end_date' => $this->end_date ?? 'Không thời hạn',
-                'status' => $this->status,
-                'status_name' => $this->status_name,
-                'created_at' => $this->created_at,
-                'updated_at' => $this->updated_at,
-            ], $this->generateActionPermissions()
-        );
+        return array_merge([
+            'id' => $this->id,
+            'user_name' => optional($this->user)->name,
+            'total_item' => $this->total_item, 
+            'uuid' => $this->uuid,
+            'address_id' => $this->address_id,
+            'currency_code' => $this->currency_code,
+            'total_quantity' => $this->total_quantity,
+            'total_price' => $this->total_price ? number_format($this->total_price, 0, '.', ',') : '',
+            'order_id' => $this->order_id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ], $this->generateActionPermissions());
     }
 
-    public function generateActionPermissions() : array
+    public function generateActionPermissions(): array
     {
         return array_filter([
             'actions' => array_filter([
-                'update' => route('bo.web.carts.show', $this->id),
+                'show' => route('bo.web.carts.show', $this->id),
             ]),
         ]);
     }

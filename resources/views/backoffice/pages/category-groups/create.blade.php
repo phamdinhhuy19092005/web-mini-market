@@ -117,6 +117,25 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label class="form-label">{{ __('Ảnh banner') }}</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control image-url" name="banner[path]" placeholder="{{ __('Tải ảnh lên hoặc nhập URL') }}" value="{{ old('banner.path') }}">
+                                        <div class="input-group-append">
+                                            <label class="btn btn-outline-primary m-0" for="image-file-banner">
+                                                <i class="flaticon2-image-file mr-2"></i>{{ __('Tải lên') }}
+                                                <input type="file" id="image-file-banner" name="banner[file]" class="d-none image-file" accept="image/*">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <img class="img-fluid image-preview" style="max-width: 150px; display: none;" src="" alt="Cover preview">
+                                    </div>
+                                    @error('banner.*')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
                                     <label class="form-label">{{ __('[SEO] Tiêu đề') }}</label>
                                     <input type="text" name="seo_title" class="form-control" placeholder="{{ __('Nhập [SEO] Tiêu đề') }}" autocomplete="off" value="{{ old('seo_title') }}">
                                     @error('seo_title')

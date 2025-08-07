@@ -41,8 +41,10 @@ class CartController extends BaseController
     public function show($id)
     {
         $cart = $this->CartService->show($id);
+        $users = User::all();
+        $inventories = Inventory::with('product')->get();
 
-        return view('backoffice.pages.carts.edit', compact('cart'));
+        return view('backoffice.pages.carts.edit', compact('cart','users', 'inventories'));
     }
 
     public function update(UpdateCartRequestInterface $request, $id)

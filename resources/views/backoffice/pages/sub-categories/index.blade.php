@@ -44,7 +44,7 @@
                                     <th data-property="id" scope="col">{{ __('ID') }}</th>
                                     <th data-property="name" scope="col">{{ __('Tên') }}</th>
                                     <th data-property="slug" scope="col">{{ __('Slug') }}</th>
-                                    <th data-property="category_name" data-render-callback="renderCallbackCategory" scope="col">{{ __('Danh mục') }}</th>
+                                    <th data-property="category_name" data-render-callback="renderCallbackCategoryGroups" scope="col">{{ __('Danh mục') }}</th>
                                     <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
                                     <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                                 </tr>

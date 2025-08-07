@@ -105,19 +105,6 @@
                 </div>
             </div>
             <div class="k-portlet__body">
-                <!-- Meta JSON Editor -->
-                {{-- <div class="form-group">
-                    <label for="meta">{{ __('Meta') }}</label>
-                    <div id="json_editor_meta" style="height: 200px;"></div>
-                    <input type="hidden"
-                           name="meta"
-                           id="meta"
-                           value="{{ old('meta', json_encode($inventory->meta ?? [], JSON_UNESCAPED_UNICODE)) }}">
-                    @error('meta')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div> --}}
-
                 <!-- Display on Frontend -->
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">{{ __('Hiển thị FE') }}</label>

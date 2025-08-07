@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Firebase\JWT\JWT;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Cart;
+use App\Models\CartItem;
 use Illuminate\Support\Facades\DB;
 
 class AuthController extends BaseController
@@ -27,18 +29,41 @@ class AuthController extends BaseController
             return response()->json(['error' => 'Sai email hoặc mật khẩu'], 401);
         }
 
-        // Tạo payload
-        $payload = [
-            'sub' => $user->id,
-            'email' => $user->email,
-            'iat' => time(),
-            'exp' => time() + 3600,
-        ];
+        $cartUuid = $request->cookie('cart_uuid');
+        if ($cartUuid) {
+            $guestCart = Cart::with('items')->where('uuid', $cartUuid)->whereNull('user_id')->first();
 
-        // Encode token
-        // $token = JWT::encode($payload, env('JWT_SECRET'), 'HS256');
+            if ($guestCart) {
+                $userCart = Cart::firstOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'ip_address' => $request->ip(),
+                        'currency_code' => $guestCart->currency_code ?? 'VND',
+                    ]
+                );
+
+                foreach ($guestCart->items as $item) {
+                    $existingItem = CartItem::where('cart_id', $userCart->id)
+                        ->where('inventory_id', $item->inventory_id)
+                        ->first();
+
+                    if ($existingItem) {
+                        $existingItem->quantity += $item->quantity;
+                        $existingItem->save();
+                    } else {
+                        $item->cart_id = $userCart->id;
+                        $item->save();
+                    }
+                }
+
+                $guestCart->delete();
+            }
+        }
+
+        // Tạo access token
         $token = $user->createToken('authToken')->plainTextToken;
 
+        // Trả về response và xóa cookie cart_uuid
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -53,8 +78,9 @@ class AuthController extends BaseController
                 'genders' => $user->genders ?? null,
                 'access_channel_type' => $user->access_channel_type ?? null
             ]
-        ]);
+        ])->withCookie(cookie('cart_uuid', null, -1)); // Xóa cookie cart_uuid
     }
+
 
     public function register(RegisterRequest $request)
     {

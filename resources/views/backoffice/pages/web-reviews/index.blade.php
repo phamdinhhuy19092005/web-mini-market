@@ -35,6 +35,7 @@
                                 <th data-property="name" scope="col">{{ __('Tên') }}</th>
                                 <th data-property="email" scope="col">{{ __('Email') }}</th>
                                 <th data-property="phone_number" scope="col">{{ __('SĐT') }}</th>
+                                <th class="none" data-property="comment" scope="col">{{ __('Nội dung') }}</th>
                                 <th data-property="rating" scope="col">{{ __('Số sao') }}</th>
                                 <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
                                 <th data-property="created_at" scope="col">{{ __('Ngày đăng') }}</th>

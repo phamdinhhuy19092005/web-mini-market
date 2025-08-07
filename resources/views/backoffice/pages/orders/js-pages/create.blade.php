@@ -16,7 +16,6 @@
         ORDER_ADD_TO_CART.elements.btn_add.on('click', function() {
             const inventoryId = ORDER_ADD_TO_CART.elements.cart_item.val();
 
-            // Kiểm tra inventoryId hợp lệ
             if (!inventoryId || isNaN(inventoryId) || inventoryId === 'undefined') {
                 fstoast.error('Vui lòng chọn một sản phẩm hợp lệ.');
                 return;
@@ -32,22 +31,19 @@
                 return;
             }
 
-            // Kiểm tra các trường bắt buộc trong value
             if (!value.id || isNaN(value.id) || !value.title || !value.final_price || !value.stock_quantity) {
                 console.error('Thông tin sản phẩm không đầy đủ:', value);
                 fstoast.error('Thông tin sản phẩm không đầy đủ hoặc không hợp lệ.');
                 return;
             }
 
-            // Kiểm tra sản phẩm đã có trong giỏ
             if (ORDER_ADD_TO_CART.cart_items[inventoryId]) {
                 fstoast.warning("{{ __('Sản phẩm đã được thêm') }}");
                 return;
             }
 
-            // Tạo đối tượng accepted với các giá trị đã được xác thực
             const accepted = {
-                id: parseInt(value.id), // Đảm bảo id là số nguyên
+                id: parseInt(value.id),
                 image: value.image || '',
                 title: value.title,
                 final_price: parseFloat(value.final_price),
@@ -128,7 +124,7 @@
                     </th>
                 </tr>
             `;
-        }).filter(row => row !== ''); // Loại bỏ các hàng không hợp lệ
+        }).filter(row => row !== ''); 
 
         ORDER_ADD_TO_CART.elements.table.find('tbody').html(itemsDom);
     },

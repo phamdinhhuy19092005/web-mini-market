@@ -1,11 +1,10 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Chỉnh sửa Sản phẩm');
+    $title = __('Chi tiết đơn hàng');
     $breadcrumbs = [
-        ['label' => __('Kho sản phẩm')],
-        ['label' => __('Sản phẩm')],
-        ['label' => __('Chỉnh sửa Sản phẩm')],
+        ['label' => __('Quản lý đơn hàng')],
+        ['label' => __('Chi tiết đơn hàng')],
     ];
 @endphp
 
@@ -13,343 +12,276 @@
 @endcomponent
 
 @section('content_body')
-    <div class="k-portlet">
-        <div class="k-portlet__body">
-            <div class="row">
-                <div class="col-md-3">
-                    
-                        <div class="mt-2">
-                            <img class="img-fluid image-preview" style="max-width: 150px; display: {{ $product->primary_image ? 'block' : 'none' }};" src="{{ $product->primary_image ?? '' }}" alt="Image preview">
-                        </div>
-                        @error('image.*')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                   
-                </div>
-                <div class="col-md-7">
-                    <div class="form-group">
-                        <label for="name">Tên <span class="text-danger">*</span></label>
-                        <input type="text" name="name" id="name" class="form-control"
-                            placeholder="Nhập tên sản phẩm" autocomplete="off"
-                            value="{{ old('name', $product->name) }}" disabled>
-                        @error('name') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-        
-                    <div class="form-group">
-                        <label for="code">SKU sản phẩm <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <input id="code" type="text" name="code" class="form-control"
-                                placeholder="Nhập mã sản phẩm" disabled
-                                value="{{ old('code', $product->code) }}">
-                        </div>
-                        @error('code') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-                </div>
+   <div class="k-content__body	k-grid__item k-grid__item--fluid" id="k_content_body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="pt-2 pb-4 d-flex align-items-center">
+                <h3 class="m-0 b-0">#{{ $order->order_code }}</h3>
+                <span style="padding: 0 10px;">|</span>
+                <span class="badge {{ $orderStatusBadge }}">{{ $order->order_status_name }}</span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="btns d-flex justify-content-end">
+                @can('orders.manage')
+                <button type="submit" data-btn-change-order-status="update-to-delivery" class="btn btn-secondary ml-2" data-route="{{ route('bo.api.orders.delivery', $order->id) }}" {{ !$order->canDelivery() ? 'disabled' : '' }}>{{ __('VẬN CHUYỂN') }}</button>
+                <button type="submit" data-btn-change-order-status="update-to-complete" class="btn btn-success ml-2" data-route="{{ route('bo.api.orders.complete', $order->id) }}" {{ !$order->canComplete() ? 'disabled' : '' }}>{{ __('HOÀN THÀNH') }}</button>
+                <button type="submit" data-btn-change-order-status="update-to-refund" class="btn btn-warning ml-2" data-route="{{ route('bo.api.orders.refund', $order->id) }}" {{ !$order->canRefund() ? 'disabled' : '' }}>{{ __('HOÀN TIỀN') }}</button>
+                <button type="submit" data-btn-change-order-status="update-to-cancel" class="btn btn-danger ml-2" data-route="{{ route('bo.api.orders.cancel', $order->id) }}" {{ !$order->canCancel() ? 'disabled' : '' }}>{{ __('HỦY ĐƠN') }}</button>
+                @endcan
             </div>
         </div>
     </div>
-
-    <div class="k-content__body k-grid__item k-grid__item--fluid" id="k_content_body">
-        <div class="row">
-            <div class="col-md-12">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="k-portlet">
+                <div class="k-portlet__head">
+                    <div class="k-portlet__head-label">
+                        <h3 class="k-portlet__head-title">{{ __('Thông tin khách hàng') }}</h3>
                     </div>
-                @endif
+                </div>
+                <div class="k-portlet__body">
+                    <div class="form-group">
+                        <label for=""><b>{{ __('Tên khách hàng') }}</b></label>
+                        <a href="{{ route('bo.web.users.edit', $order->user_id) }}" target="_blank" class="d-block">
+                            <span>{{ $order->fullname }}</span>
+                        </a>
+                    </div>
 
-                <form action="{{ route('bo.web.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+                    <div class="form-group">
+                        <label for=""><b>{{ __('Địa chỉ giao hàng') }}</b></label>
+                        <div class="address-detail">
+                            <div>{{ $order->fullname ?? 'N/A' }} - {{ $order->phone ?? 'N/A' }} - {{ $order->email ?? 'N/A' }}</div>
+                            <div class="address-detail-content copy-text-click" data-copy-reference=".address-detail-content">{{ $order->full_address }}</div>
+                            <div>
+                                <a href="https://www.google.com/maps/search/{{ $order->full_address }}" target="_blank" class="d-inline-block btn btn-secondary btn-sm mt-2">{{ __('Xem google map') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-portlet">
+                <div class="k-portlet__head">
+                    <div class="k-portlet__head-label">
+                        <h3 class="k-portlet__head-title">
+                            <i class="la la-money mr-1" style="font-size: 23px; display: inline-block; transform: translateY(2px);"></i>
+                            <span>{{ $order->payment_status_name }}</span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="k-portlet__body">
+                    <div class="alert alert-outline-accent fade show p-3" role="alert">
+                        <div class="d-flex justify-content-between w-100">
+                            <div style="color: #3d4465;">Khách phải trả: <b>{{ format_price($order->grand_total) }}</b></div>
+                            <div style="color: #3d4465;">Đã thanh toán: 0</div>
+                            <div style="color: #3d4465;">Còn phải trả: <b class="text-danger">{{ format_price($order->grand_total) }}</b></div>
+                        </div>
+                    </div>
+
                     <div class="row">
-                        {{-- Left column --}}
-                        <div class="col-md-8">
-                            <div class="k-portlet">
-                                <div class="k-portlet__head">
-                                    <div class="k-portlet__head-label">
-                                        <h3 class="k-portlet__head-title">Thông tin chính</h3>
-                                    </div>
-                                </div>
-                                <div class="k-portlet__body">
-                                    {{-- Name --}}
-                                    <div class="form-group">
-                                        <label for="name">Tên <span class="text-danger">*</span></label>
-                                        <input type="text" name="name" id="name" class="form-control"
-                                            placeholder="Nhập tên sản phẩm" autocomplete="off"
-                                            value="{{ old('name', $product->name) }}" required>
-                                        @error('name') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
-
-                                    {{-- Slug --}}
-                                    <div class="form-group">
-                                        <label for="slug">Đường dẫn URL</label>
-                                        <input type="text"
-                                            name="slug"
-                                            id="slug"
-                                            class="form-control"
-                                            placeholder="Nhập đường dẫn URL"
-                                            autocomplete="off"
-                                            value="{{ old('slug', $product->slug) }}">
-                                        @error('slug')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
-                                    {{-- Code --}}
-                                    <div class="form-group">
-                                        <label for="code">SKU sản phẩm <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <input id="code" type="text" name="code" class="form-control" disabled value="{{ old('code', $product->code) }}">
-                                            <div class="input-group-append">
-                                                <button class="btn" type="button"
-                                                    style="background-color: #e83e8c; color: white; border-color: #e83e8c;"
-                                                    data-generate-ref="#code" data-generate-uppercase="true">
-                                                    <i class="fas fa-lock text-white"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        @error('code') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
-
-                                    <div class="form-group mb-4">
-                                        <label for="primary-image-file" class="form-label">Hình ảnh chính</label>
-                                        <div class="input-group">
-                                            <input type="text" 
-                                                class="form-control image-url" 
-                                                name="primary_image[path]" 
-                                                placeholder="Tải ảnh lên hoặc nhập URL" 
-                                                value="{{ old('primary_image.path', $product->primary_image) }}">
-                                            <div class="input-group-append">
-                                                <label class="btn btn-outline-primary m-0">
-                                                    <i class="flaticon2-image-file mr-2"></i> Tải ảnh
-                                                    <input type="file" 
-                                                        id="primary-image-file" 
-                                                        name="primary_image[file]" 
-                                                        class="d-none image-file" 
-                                                        accept="image/*">
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2 image-preview-container">
-                                            <img class="img-fluid image-preview" 
-                                                style="max-width: 150px; display: display: {{ $product->primary_image ? 'block' : 'none' }};;" 
-                                                src="{{ $product->primary_image ?? '' }}" 
-                                                alt="Ảnh xem trước">
-                                        </div>
-                                        @error('primary_image.*')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
-                                    <div id="media-gallery-wrapper" class="mb-4" style="width:500px;">
-                                        <!-- Template ảnh bộ sưu tập -->
-                                        <template id="media-image-template">
-                                            <div class="media-image-item form-group">
-                                                <div class="d-flex">
-                                                    <div class="input-group">
-                                                        <input type="text" 
-                                                            class="form-control image-url" 
-                                                            name="media[path][]" 
-                                                            placeholder="Tải ảnh lên hoặc nhập URL">
-                                                        <div class="input-group-append">
-                                                            <label class="btn btn-outline-primary m-0">
-                                                                <i class="flaticon2-image-file mr-2"></i> Tải ảnh
-                                                                <input type="file" 
-                                                                    class="d-none image-file" 
-                                                                    name="media[file][]" 
-                                                                    accept="image/*">
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <button type="button" class="btn btn-primary remove-media-image" style="margin-left: 10px">Xóa</button>
-                                                </div>
-                                                <div class="mt-2 d-flex align-items-center gap-2">
-                                                    <img class="img-fluid image-preview" 
-                                                        style="max-width: 150px; display: none;" 
-                                                        src="" 
-                                                        alt="Ảnh xem trước">
-                                                </div>
-                                            </div>
-                                        </template>
-
-                                        <label class="form-label">{{ __('Bộ sưu tập ảnh') }}</label>
-                                        
-                                        @php
-                                            $media = is_string($product->media) ? json_decode($product->media, true) : ($product->media ?? []);
-                                            $media = is_array($media) ? $media : [];
-                                        @endphp
-
-                                        @foreach ($media as $image)
-                                            <div class="media-image-item form-group">
-                                                <div class="d-flex">
-                                                    <div class="input-group">
-                                                        <input type="text" 
-                                                            class="form-control image-url" 
-                                                            name="media[path][]" 
-                                                            value="{{ $image }}"
-                                                            placeholder="Tải ảnh lên hoặc nhập URL">
-                                                        <div class="input-group-append">
-                                                            <label class="btn btn-outline-primary m-0">
-                                                                <i class="flaticon2-image-file mr-2"></i> Tải ảnh
-                                                                <input type="file" 
-                                                                    class="d-none image-file" 
-                                                                    name="media[file][]" 
-                                                                    accept="image/*">
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <button type="button" class="btn btn-primary remove-media-image" style="margin-left: 10px">Xóa</button>
-                                                </div>
-                                                <div class="mt-2 d-flex align-items-center gap-2">
-                                                    <img class="img-fluid image-preview" 
-                                                        style="max-width: 150px; display: block;" 
-                                                        src="{{ $image }}" 
-                                                        alt="Ảnh xem trước">
-                                                </div>
-                                            </div>
-                                        @endforeach
-
-                                    </div>
-                                    <!-- Nút Thêm ảnh -->
-                                    <div class="form-group">
-                                        <button type="button" id="add-media-image" class="btn btn-sm btn-secondary mt-2">
-                                            + Thêm ảnh
-                                        </button>
-                                    </div>
-
-                                    {{-- Description --}}
-                                    <div class="form-group">
-                                        <label for="description">Mô tả</label>
-                                        <x-backoffice.content-editor
-                                            id="product_description"
-                                            name="description"
-                                            :value="old('description', $product->description)"
-                                            :cols="30"
-                                            :rows="10"
-                                            placeholder="Nhập mô tả..."
-                                            disk="public"
-                                            class=""
-                                            :config="[]"
-                                        />
-                                        @error('description') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for=""><b>{{ __('Hình thức thanh toán') }}</b></label>
+                                <div>
+                                    <img class="p-1" style="border: 1px solid #ccc; border-radius: 7px;" src="{{ data_get($order->paymentOption, ['logo']) }}" alt="{{ data_get($order->paymentOption, ['name']) }}" width="40" height="40">
+                                    <span>{{ data_get($order->paymentOption, ['name']) }}</span>
                                 </div>
                             </div>
                         </div>
 
-                        {{-- Right column --}}
-                        <div class="col-md-4">
-                            <div class="k-portlet">
-                                <div class="k-portlet__head">
-                                    <div class="k-portlet__head-label">
-                                        <h3 class="k-portlet__head-title">Thông tin bổ sung</h3>
-                                    </div>
-                                </div>
-                                <div class="k-portlet__body">
-                                    {{-- Category --}}
-                                    <div class="form-group">
-                                        <label for="category_ids">Danh mục <span class="text-danger">*</span></label>
-                                        <select name="category_ids[]" id="category_ids" class="form-control k_selectpicker" data-live-search="true" data-none-selected-text="-- Chọn danh mục --" multiple required>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->id }}"
-                                                    {{ collect(old('category_ids', $product->categories->pluck('id')->toArray()))->contains($category->id) ? 'selected' : '' }}>
-                                                    {{ $category->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('category_ids') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
+                        @if (data_get($order->paymentOption, ['expanded_content']))
+                        <div class="col-md-6">
+                            <div class="form-group order-transfer-content">
+                                <label for=""><b>{{ __('Thông tin thanh toán') }}</b></label>
+                                @php
+                                $orderTransferContent = implode('', [
+                                    'UDBO',
+                                    data_get($order, 'id'),
+                                ]);
 
-                                    <div class="form-group">
-                                    <label for="subcategory_ids">Danh mục con <span class="text-danger">*</span></label>
-                                    
-                                    @php
-                                        $selectedSubcategoryIds = collect(old('subcategory_ids', isset($product) ? $product->subcategories->pluck('id')->toArray() : []));
-                                    @endphp
+                                $expandedContent = str_replace('${order_transfer_content}', $orderTransferContent, data_get($order->paymentOption, ['expanded_content']));
+                                @endphp
 
-                                    <select name="subcategory_ids[]" id="subcategory_ids" class="form-control k_selectpicker"
-                                        data-live-search="true" multiple data-actions-box="true" required data-none-selected-text="-- Chọn danh mục con --">
-                                        @foreach($categories as $category)
-                                            <optgroup label="{{ $category->name }}">
-                                                @foreach($category->subCategories ?? [] as $subCategory)
-                                                    <option value="{{ $subCategory->id }}"
-                                                        data-tokens="{{ $category->name }} {{ $subCategory->name }}"
-                                                        {{ $selectedSubcategoryIds->contains($subCategory->id) ? 'selected' : '' }}>
-                                                        {{ $subCategory->name }}
-                                                    </option>
-                                                @endforeach
-                                            </optgroup>
-                                        @endforeach
-                                    </select>
+                                <p class="p-0 m-0">{!! nl2br($expandedContent) !!}</p>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
 
-                                    @error('subcategory_ids')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    </div>
+            <div class="k-portlet">
+                <div class="k-portlet__head">
+                    <div class="k-portlet__head-label">
+                        <h3 class="k-portlet__head-title">
+                            <i class="flaticon-truck mr-1" style="font-size: 23px; display: inline-block; transform: translateY(2px);"></i>
+                            <span>{{ __('Đóng gói và giao hàng') }}</span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="k-portlet__body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <span class="d-block mr-2" style="width: 10px; height: 10px; border-radius: 50%; background-color: #5867dd;"></span>
+                            <div>
+                                <span class="text-primary shipping-referece-id">{{ data_get($order->latestUserOrderShippingHistory, ['reference_id']) ?? 'N/A' }}</span>
+                                <span class="copy-text-click ml-2" data-copy-reference=".shipping-referece-id" title="{{ __('Sao chép') }}" style="font-size: 17px; display: inline-block; transform: translateY(2px);">
+                                    <i class="flaticon2-copy"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-secondary btn-elevate btn-circle btn-icon" data-toggle="modal" data-target="#process_shipping_order">
+                                <i class="la la-pencil"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="detail-information row">
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-start">
+                                <div style="flex: 0 0 30%;" class="pt-2 pb-2">Vận chuyển bởi</div>
+                                <span class="pt-2 pb-2 mr-2">:</span>
+                                <div style="flex: 1;" class="pt-2 bp-2">{{ data_get($order->latestUserOrderShippingHistory, ['shippingProvider', 'name']) }}</div>
+                            </div>
 
-                                    {{-- Brand --}}
-                                    <div class="form-group">
-                                        <label for="brand_id" class="form-label mb-1">Thương hiệu</label>
-                                        <select name="brand_id" id="brand_id"
-                                            class="form-control k_selectpicker" data-live-search="true">
-                                            <option value="">-- Chọn thương hiệu --</option>
-                                            @foreach($brands as $brand)
-                                                <option value="{{ $brand->id }}"
-                                                    {{ old('brand_id', $product->brand_id) == $brand->id ? 'selected' : '' }}>
-                                                    {{ $brand->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('brand_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
+                            <div class="d-flex justify-content-start">
+                                <div style="flex: 0 0 30%;" class="pt-2 pb-2">P.T vận chuyển</div>
+                                <span class="pt-2 pb-2 mr-2">:</span>
+                                <div style="flex: 1;" class="pt-2 bp-2">{{ $order->shippingOption->name }}</div>
+                            </div>
 
-                                    {{-- Type --}}
-                                    <div class="form-group">
-                                        <label for="type">Loại <span class="text-danger">*</span></label>
-                                        <select name="type" id="type" class="form-control k_selectpicker" required>
-                                            <option value="">Chọn loại</option>
-                                            @foreach($ProductTypeEnumLabels as $key => $label)
-                                                <option value="{{ $key }}"
-                                                    {{ old('type', $product->type) == $key ? 'selected' : '' }}>
-                                                    {{ $label }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('type') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
+                            <div class="d-flex justify-content-start">
+                                <div style="flex: 0 0 30%;" class="pt-2 pb-2">Khối lượng</div>
+                                <span class="pt-2 pb-2 mr-2">:</span>
+                                <div style="flex: 1;" class="pt-2 bp-2">{{ $order->total_weight ?? 'N/A' }} <small>(gam)</small> -> {{ (float) $order->total_weight / 1000 }} <small>(kg)</small></div>
+                            </div>
+                        </div>
 
-                                    {{-- Status --}}
-                                    <div class="form-group d-flex align-items-center">
-                                        <label class="mr-3">Kích hoạt</label>
-                                        <span class="k-switch">
-                                            <label>
-                                                <input type="checkbox" name="status" value="1"
-                                                    {{ old('status', $product->status) ? 'checked' : '' }}>
-                                                <span></span>
-                                            </label>
-                                        </span>
-                                        @error('status') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-start">
+                                <div style="flex: 0 0 30%;" class="pt-2 pb-2">Người trả phí</div>
+                                <span class="pt-2 pb-2 mr-2">:</span>
+                                <div style="flex: 1;" class="pt-2 bp-2">Shop</div>
+                            </div>
+
+                            <div class="d-flex justify-content-start">
+                                <div style="flex: 0 0 30%;" class="pt-2 pb-2">Phí ước tính</div>
+                                <span class="pt-2 pb-2 mr-2">:</span>
+                                <div style="flex: 1;" class="pt-2 bp-2">
+                                    <b class="text-danger">{{ format_price(data_get($order->latestUserOrderShippingHistory, ['estimated_transport_fee'])) }}</b>
                                 </div>
                             </div>
 
-                            <div class="k-portlet__foot">
-                                <div class="k-form__actions">
-                                    <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
-                                    <button type="reset" class="btn btn-secondary">Hủy</button>
+                            <div class="d-flex justify-content-start">
+                                <div style="flex: 0 0 30%;" class="pt-2 pb-2">Phí trả ĐVVC</div>
+                                <span class="pt-2 pb-2 mr-2">:</span>
+                                <div style="flex: 1;" class="pt-2 bp-2">
+                                    <b class="text-danger">{{ $order->transport_fee ? format_price($order->transport_fee) : 'N/A' }}</b>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
-                <!-- End::Form -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="k-portlet">
+                <div class="k-portlet__head">
+                    <div class="k-portlet__head-label">
+                        <h3 class="k-portlet__head-title">{{ __('Thông tin đơn hàng') }}</h3>
+                    </div>
+                </div>
+                <div class="k-portlet__body">
+                    <div class="d-flex justify-content-start">
+                        <div style="flex: 0 0 40%;" class="pt-2 pb-2">Chính sách giá</div>
+                        <span class="pt-2 pb-2 mr-2">:</span>
+                        <div style="flex: 1;" class="pt-2 bp-2">Giá bán lẻ</div>
+                    </div>
+
+                    <div class="d-flex justify-content-start">
+                        <div style="flex: 0 0 40%;" class="pt-2 pb-2">Bán tại</div>
+                        <span class="pt-2 pb-2 mr-2">:</span>
+                        <div style="flex: 1;" class="pt-2 bp-2">Chi nhánh mặc định</div>
+                    </div>
+
+                    <div class="d-flex justify-content-start">
+                        <div style="flex: 0 0 40%;" class="pt-2 pb-2">NV lên đơn</div>
+                        <span class="pt-2 pb-2 mr-2">:</span>
+                        <div style="flex: 1;" class="pt-2 bp-2">admin</div>
+                    </div>
+
+                    <div class="d-flex justify-content-start">
+                        <div style="flex: 0 0 40%;" class="pt-2 pb-2">Ngày bán</div>
+                        <span class="pt-2 pb-2 mr-2">:</span>
+                        <div style="flex: 1;" class="pt-2 bp-2">{{ format_datetime($order->created_at, 'd/m/Y H:s:i') }}</div>
+                    </div>
+
+                    <div class="d-flex justify-content-start">
+                        <div style="flex: 0 0 40%;" class="pt-2 pb-2">Kênh bán hàng</div>
+                        <span class="pt-2 pb-2 mr-2">:</span>
+                        <div style="flex: 1;" class="pt-2 bp-2">{{ enum('AccessChannelType')::findConstantLabel(data_get($order, 'order_channel.type')) }}</div>
+                    </div>
+
+                    <div class="d-flex justify-content-start">
+                        <div style="flex: 0 0 40%;" class="pt-2 pb-2">Tham chiếu</div>
+                        <span class="pt-2 pb-2 mr-2">:</span>
+                        <div style="flex: 1;" class="pt-2 bp-2">{{ data_get($order, 'order_channel.reference_id') ?? 'N/A' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-portlet">
+                <div class="k-portlet__head">
+                    <div class="k-portlet__head-label">
+                        <h3 class="k-portlet__head-title">{{ __('Ghi chú') }}</h3>
+                    </div>
+                </div>
+                <div class="k-portlet__body">
+                    <div class="form-group">
+                        <label for=""><b>{{ __('Khách hàng ghi chú') }}</b></label>
+                        <p class="p-0 m-0">{{ $order->user_note ?? 'N/A' }}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for=""><b>{{ __('NV ghi chú') }}</b></label>
+                        <p class="p-0 m-0">{{ $order->admin_note ?? 'N/A' }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="k-portlet">
+                <div class="k-portlet__head">
+                    <div class="k-portlet__head-label">
+                        <h3 class="k-portlet__head-title">{{ __('Thông tin sản phẩm') }}</h3>
+                    </div>
+                </div>
+                <div class="k-portlet__body">
+                    <table id="table_order_items_index" data-searching="true" data-request-url="{{ route('bo.api.order-items.index', ['order_id' => $order->id]) }}" class="datatable table table-striped table-bordered table-hover table-checkable">
+                        <thead>
+                            <tr>
+                                <th data-property="id">{{ __('ID') }}</th>
+                                <th data-orderable="false" data-property="inventory.image" data-render-callback="renderCallbackImage">{{ __('Ảnh') }}</th>
+                                <th data-link="inventory.edit" data-link-target="_blank" data-orderable="false" data-property="inventory.title" data-width="400">{{ __('Tên sản phẩm') }}</th>
+                                <th data-property="quantity">{{ __('Số lượng') }}</th>
+                                <th data-property="price">{{ __('Đơn giá') }}</th>
+                                <th data-property="total_price">{{ __('Thành tiền') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use App\Models\Traits\Activatable;
@@ -18,8 +19,6 @@ class Cart extends Model
         'total_quantity',
         'total_price',
         'order_id',
-        'retry_parent_id',
-        'retry_times'
     ];
 
     public function user()

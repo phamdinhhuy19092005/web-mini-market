@@ -90,6 +90,4 @@
         </div>
         </form>
     </div>
-
-    @include('backoffice.pages.posts.pagejs.post')
 @endsection

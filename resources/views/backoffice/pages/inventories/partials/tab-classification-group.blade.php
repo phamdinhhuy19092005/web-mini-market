@@ -86,14 +86,7 @@
                 <!-- Title -->
                 <div class="form-group">
                     <label for="title">{{ __('Tiêu đề') }} <span class="text-danger">*</span></label>
-                    <input type="text"
-                           name="title"
-                           id="title"
-                           class="form-control"
-                           placeholder="{{ __('Nhập tiêu đề sản phẩm') }}"
-                           autocomplete="off"
-                           value="{{ old('title', $inventory->title ?? $product->name) }}"
-                           required>
+                    <input type="text" name="title" id="title" class="form-control"placeholder="Nhập tên tiêu đề" autocomplete="off" value="{{ old('title', $inventory->title ?? '') }}" required>
                     @error('title')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -102,14 +95,7 @@
                 <!-- Slug -->
                 <div class="form-group">
                     <label for="slug">{{ __('Slug') }} <span class="text-danger">*</span></label>
-                    <input type="text"
-                           name="slug"
-                           id="slug"
-                           class="form-control"
-                           placeholder="{{ __('Nhập slug sản phẩm') }}"
-                           autocomplete="off"
-                           value="{{ old('slug', $inventory->slug ?? $product->slug) }}"
-                           required>
+                    <input type="text" name="slug" id="slug" class="form-control" placeholder="{{ __('Nhập slug sản phẩm') }}" autocomplete="off" value="{{ old('slug', $inventory->slug ?? $product->slug) }}" required>
                     @error('slug')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -228,19 +214,13 @@
                                    class="flaticon-questions-circular-button"
                                    data-title="Giá chưa có thuế. Thuế sẽ được tính tự động dựa trên khu vực vận chuyển."></i>
                             </label>
-                            <input type="text"
-                                   data-digits="2"
-                                   data-type="inputmask_numeric"
-                                   data-allow-minus="false"
-                                   class="form-control {{ $errors->has('sale_price') ? 'is-invalid' : '' }}"
+                            <input type="text" data-digits="2" data-type="inputmask_numeric" data-allow-minus="false" class="form-control {{ $errors->has('sale_price') ? 'is-invalid' : '' }}"
                                    data-key="sale_price"
                                    id="sale_price"
                                    name="sale_price"
                                    value="{{ old('sale_price', $inventory->sale_price ?? '') }}"
                                    required>
-                            <input type="hidden"
-                                   data-type="inputmask_numeric_unmasked"
-                                   name="sale_price"
+                            <input type="hidden" data-type="inputmask_numeric_unmasked" name="sale_price"
                                    data-key="sale_price"
                                    value="{{ old('sale_price', $inventory->sale_price ?? '') }}">
                             @error('sale_price')
@@ -255,18 +235,12 @@
                                    class="flaticon-questions-circular-button"
                                    data-title="Giá ưu đãi sẽ được thực hiện giữa ngày bắt đầu và ngày kết thúc ưu đãi"></i>
                             </label>
-                            <input type="text"
-                                   data-digits="2"
-                                   data-type="inputmask_numeric"
-                                   data-allow-minus="false"
-                                   class="form-control {{ $errors->has('offer_price') ? 'is-invalid' : '' }}"
+                            <input type="text" data-digits="2" data-type="inputmask_numeric" data-allow-minus="false" class="form-control {{ $errors->has('offer_price') ? 'is-invalid' : '' }}"
                                    data-key="offer_price"
                                    id="offer_price"
                                    name="offer_price"
                                    value="{{ old('offer_price', $inventory->offer_price ?? '') }}">
-                            <input type="hidden"
-                                   data-type="inputmask_numeric_unmasked"
-                                   name="offer_price"
+                            <input type="hidden" data-type="inputmask_numeric_unmasked" name="offer_price"
                                    data-key="offer_price"
                                    value="{{ old('offer_price', $inventory->offer_price ?? '') }}">
                             @error('offer_price')
@@ -284,10 +258,8 @@
 <script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
 <script>
     $(document).ready(function () {
-        // Khởi tạo selectpicker
         $('.k_selectpicker').selectpicker();
 
-        // Xử lý generate SKU
         $('[data-generate]').on('click', function () {
             const length = $(this).data('generate-length') || 5;
             const ref = $(this).data('generate-ref');
@@ -309,11 +281,11 @@
             $(ref).val(result);
         });
 
-        // Xử lý xóa attribute group
         window.removeAttributeGroup = function(attributeName, button) {
             if (!confirm('Bạn có chắc muốn xóa nhóm phân loại này không?')) return;
             button.closest('.border').remove();
         };
+        
     });
 </script>
 @endpush

@@ -32,16 +32,12 @@
                         <thead>
                             <tr>
                                 <th data-property="id" scope="col">{{ __('ID') }}</th>
-                                <th class="none" data-property="title" scope="col">{{ __('Tiêu đề') }}</th>
-                                <th data-property="code" scope="col">{{ __('Mã') }}</th>
-                                <th data-property="discount_type_name" scope="col">{{ __('Loại ') }}</th>
-                                <th data-property="discount_value" scope="col">{{ __('Giá trị giảm giá') }}</th>
-                                <th data-property="usage_limit" scope="col">{{ __('Giới hạn sử dụng') }}</th>
-                                <th data-property="used" scope="col">{{ __('Đã sử dụng') }}</th>
-                                <th data-property="start_date" scope="col">{{ __('Ngày bắt đầu ') }}</th>
-                                <th data-property="end_date" scope="col">{{ __('Ngày kết thúc') }}</th>
-                                <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
-                                <th class="none" data-property="created_at" scope="col">{{ __('Ngày tạo ') }}</th>
+                                <th data-property="user_name" scope="col">{{ __('Người dùng') }}</th>
+                                <th data-property="uuid" scope="col">{{ __('Mã giỏ hàng (UUID)') }}</th>
+                                <th data-property="total_item" scope="col">{{ __('Số lượng sản phẩm') }}</th>
+                                <th data-property="total_quantity" scope="col">{{ __('Tổng số lượng') }}</th>
+                                <th data-property="total_price" scope="col">{{ __('Tổng giá trị') }}</th>
+                                <th class="none" data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
                                 <th class="none" data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>
                                 <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                             </tr>

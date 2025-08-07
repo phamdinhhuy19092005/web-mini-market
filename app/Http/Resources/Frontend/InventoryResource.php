@@ -17,6 +17,7 @@ class InventoryResource extends BaseResource
             ],
             'condition' => $this->condition,
             'condition_note' => $this->condition_note,
+            'description',
             'slug' => $this->slug,
             'sku' => $this->sku,
             'status' => $this->status,
@@ -33,6 +34,7 @@ class InventoryResource extends BaseResource
             'image' => $this->image,
             'init_sold_count' => $this->init_sold_count ?? 0,
             'sold_count' => $this->sold_count ?? 0,
+            'description' => $this->description,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

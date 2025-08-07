@@ -33,9 +33,11 @@ class CategoryGroupService extends BaseService
         return DB::transaction(function () use ($attributes) {
             $imageResult = (new ImageHelper('category_group'))->upload($attributes['image']);
             $coverResult = (new ImageHelper('category_group'))->upload($attributes['cover']);
+            $bannerResult = (new ImageHelper('category_group'))->upload($attributes['banner']);
 
             $attributes['image'] = is_array($imageResult) ? $imageResult['path'] : $imageResult;
             $attributes['cover'] = is_array($coverResult) ? $coverResult['path'] : $coverResult;
+            $attributes['banner'] = is_array($bannerResult) ? $bannerResult['path'] : $bannerResult;
 
             return $this->categoryGroupRepository->create($attributes);
         });
@@ -59,6 +61,7 @@ class CategoryGroupService extends BaseService
 
             $attributes['image'] = $this->handleImageUpdate($model->image, $attributes['image'] ?? null);
             $attributes['cover'] = $this->handleImageUpdate($model->cover, $attributes['cover'] ?? null);
+            $attributes['banner'] = $this->handleImageUpdate($model->banner, $attributes['banner'] ?? null);
             $attributes['status'] = isset($attributes['status']) ? (bool) $attributes['status'] : $model->status;
 
             return $this->categoryGroupRepository->update($id, $attributes);

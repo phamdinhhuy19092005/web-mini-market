@@ -55,11 +55,7 @@ class OrderController extends BaseController
     {
         $order = $this->orderService->create($request->validated());
 
-        // return $this->responses(StoreOrderResponseContract::class, $order);
-        return response()->json([
-            'status' => 'success',
-            'data' => ['id' => $order->id],
-        ], 200);
+        return $this->responses(StoreOrderResponseContract::class, $order);
     }
 
     public function show($id)

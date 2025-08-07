@@ -9,6 +9,11 @@ class StoreOrderResponses extends BaseViewResponses implements StoreOrderRespons
 {
     public function toResponse($request)
     {
-        return redirect()->route('bo.web.orders.index');
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'id' => $this->resource->id ?? null,
+            ],
+        ], 200);
     }
 }

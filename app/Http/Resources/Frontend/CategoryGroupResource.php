@@ -14,6 +14,7 @@ class CategoryGroupResource extends BaseResource
             'slug' => $this->slug,
             'image' => $this->image,
             'cover' => $this->cover,
+            'banner' => $this->banner,
             'description' => $this->description,
             'categories' => $this->categories->map(function ($category) {
                 return [
