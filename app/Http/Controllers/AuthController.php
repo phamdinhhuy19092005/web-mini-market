@@ -133,7 +133,11 @@ class AuthController extends BaseController
             $user->remember_token = $token;
             $user->save();
 
-            $resetUrl = url("/reset-password?token={$token}&email={$user->email}");
+            $frontendUrl = "http://localhost:3001/resetPassword";
+            $resetUrl = "{$frontendUrl}?token={$token}&email={$user->email}";
+
+
+            // $resetUrl = url("/reset-password?token={$token}&email={$user->email}");
 
             Mail::raw("Click vào link để đặt lại mật khẩu: {$resetUrl}", function ($message) use ($user) {
                 $message->to($user->email)
