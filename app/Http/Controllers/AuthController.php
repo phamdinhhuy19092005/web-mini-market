@@ -65,7 +65,7 @@ class AuthController extends BaseController
 
         // Trả về response và xóa cookie cart_uuid
         return response()->json([
-            'access_token' => $token,
+            'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => 3600,
             'user' => [
