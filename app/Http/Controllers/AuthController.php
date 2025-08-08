@@ -84,6 +84,13 @@ class AuthController extends BaseController
 
     public function register(RegisterRequest $request)
     {
+
+        // Check email tồn tại
+    if (User::where('email', $request->email)->exists()) {
+        return response()->json([
+            'message' => 'Email đã tồn tại',
+        ], 400);
+    }
         try {
             DB::beginTransaction();
 
