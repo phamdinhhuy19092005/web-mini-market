@@ -146,3 +146,9 @@ Route::get('/wards/{id}', [WardController::class, 'show'])->name('wards.show');
 Route::get('/districts/{provinceCode}', [AddressController::class, 'getDistrictsByProvince']);
 
 
+Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
+
+
+
+
+

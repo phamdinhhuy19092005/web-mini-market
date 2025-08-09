@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Controller as BaseController;
@@ -13,6 +13,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends BaseController
 {
@@ -28,7 +29,11 @@ class AuthController extends BaseController
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['error' => 'Sai email hoặc mật khẩu'], 401);
         }
-
+        //check status
+        if($user["status"] != ACTIVE_USER ){
+            return response()->json(['error' => 'vui lòng kích hoạt tài khoản!'], 403);
+            
+        };
         $cartUuid = $request->cookie('cart_uuid');
         if ($cartUuid) {
             $guestCart = Cart::with('items')->where('uuid', $cartUuid)->whereNull('user_id')->first();
@@ -82,45 +87,120 @@ class AuthController extends BaseController
     }
 
 
-    public function register(RegisterRequest $request)
-    {
-
-        // Check email tồn tại
+public function register(RegisterRequest $request)
+{
+    // Kiểm tra email tồn tại
     if (User::where('email', $request->email)->exists()) {
         return response()->json([
-            'message' => 'Email đã tồn tại',
+            'status'  => 'error',
+            'message' => 'Email đã tồn tại'
+        ], 409); // 409 Conflict
+    }
+
+    try {
+        DB::beginTransaction();
+
+        // Tạo token xác thực email
+        $token = Str::random(60);
+
+        // Tạo user
+        $user = User::create([
+            'name'                => $request->name,
+            'email'               => $request->email,
+            'password'            => Hash::make($request->password),
+            'phone_number'        => $request->phone_number,
+            'currency_code'       => 'VND',
+            'genders'             => $request->genders,
+            'birthday'            => $request->birthday,
+            'status'              => 0, // Chưa kích hoạt
+            'allow_login'         => 1,
+            'access_channel_type' => 2,
+            'remember_token'      => $token,
+        ]);
+
+        // URL xác thực gửi về FE (ví dụ FE ở cổng 3001)
+        $verifyUrl = "http://localhost:3001/verify-email?token={$token}&email=".urlencode($user->email);
+
+        // Gửi email xác thực
+        Mail::to($user->email)->send(new VerifyEmail($user, $verifyUrl));
+
+        DB::commit();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực.',
+            'data'    => [
+                'user_id'    => $user->id,
+                'email'      => $user->email,
+                'verify_url' => $verifyUrl // Trả luôn cho FE nếu muốn
+            ]
+        ], 201);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'Đăng ký thất bại',
+            'error'   => config('app.debug') ? $e->getMessage() : null
+        ], 500);
+    }
+}
+public function verifyEmail(Request $request)
+{
+    Log::info('Dữ liệu nhận được từ request:', $request->all());
+
+    $token = $request->input('token');
+    $email = $request->input('email');
+
+    if (!$token || !$email) {
+        Log::warning('Thiếu token hoặc email');
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'Thiếu token hoặc email'
         ], 400);
     }
-        try {
-            DB::beginTransaction();
 
-            $user = User::create([
-                'name'              => $request->name,
-                'email'             => $request->email,
-                'password'          => Hash::make($request->password),
-                'phone_number'      => $request->phone_number,
-                'currency_code'     => 'VND',
-                'genders'           => $request->genders,
-                'birthday'          => $request->birthday,
-                'status'            => 1,
-                'allow_login'       => 1,
-                'access_channel_type' => 2,
-            ]);
+    $user = User::where('email', $email)
+        ->where('remember_token', $token)
+        ->first();
 
-            DB::commit();
-
-            return response()->json([
-                'message' => 'Register success',
-                'data'    => $user,
-            ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => 'Register failed',
-                'error'   => $e->getMessage(),
-            ], 500);
-        }
+    if (!$user) {
+        Log::warning('Token hoặc email không hợp lệ', [
+            'email' => $email,
+            'token' => $token
+        ]);
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'Token hoặc email không hợp lệ'
+        ], 404);
     }
+
+    if ($user->status == 1) {
+        Log::info('Tài khoản đã xác thực trước đó', ['email' => $email]);
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Tài khoản đã được xác thực trước đó'
+        ], 200);
+    }
+
+    // Cập nhật trạng thái đã kích hoạt
+    $user->status = 1;
+    $user->email_verified_at = now();
+    $user->remember_token = null;
+    $user->save();
+
+    Log::info('Xác thực email thành công', ['email' => $email]);
+
+    return response()->json([
+        'status'  => 'success',
+        'message' => 'Xác thực email thành công'
+    ], 200);
+}
+
+
+
+
+  
     public function sendResetLink(Request $request)
     {
         $request->validate([
