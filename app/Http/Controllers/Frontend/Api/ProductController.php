@@ -11,7 +11,19 @@ class ProductController extends BaseController
 {
     public function index(): JsonResponse
     {
-        $products = Product::with(['brand', 'inventories', 'subcategories.category.categoryGroup'])->get();
+        $query = Product::with(['brand', 'inventories', 'subcategories.category.categoryGroup']);
+
+        if (request()->has('brand_id') && request()->brand_id) {
+            $query->where('brand_id', request()->brand_id);
+        }
+
+        if (request()->has('category_id') && request()->category_id) {
+            $query->whereHas('subcategories.category', function ($q) {
+                $q->where('id', request()->category_id);
+            });
+        }
+
+        $products = $query->get();
 
         return response()->json([
             'success' => true,

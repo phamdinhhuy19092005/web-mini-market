@@ -11,7 +11,7 @@ class StoreCartRequest extends BaseFormRequest implements StoreCartRequestInterf
     {
         // dd($this->all());
         return [
-            'user_id' => ['required', 'exists:users,id'],
+            'user_id' => ['nullable', 'exists:users,id'],
             'address_id' => ['nullable', 'integer', 'min:1'],
             'currency_code' => ['required', 'in:VND,USD,EUR'],
             'order_id' => ['nullable', 'integer'],

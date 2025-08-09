@@ -31,11 +31,11 @@
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label for="user_id">{{ __('Người dùng') }} <span class="text-danger">*</span></label>
-                                    <select name="user_id" id="user_id" class="form-control k_selectpicker" data-live-search="true" required>
+                                    <select name="user_id" id="user_id" class="form-control k_selectpicker" data-live-search="true" >
                                         <option value="">{{ __('-- Chọn người dùng --') }}</option>
                                         @foreach ($users as $user)
-                                            <option value="{{ $user->id }}" 
-                                                    {{ old('user_id') == $user->id ? 'selected' : '' }} 
+                                            <option value="{{ $user->id }}"
+                                                    {{ old('user_id') == $user->id ? 'selected' : '' }}
                                                     data-address-id="{{ $user->address_id ?? '' }}">
                                                 {{ $user->name }} ({{ $user->email }})
                                             </option>
@@ -47,7 +47,7 @@
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="address_id">{{ __('Địa chỉ giao hàng') }}</label>
-                                    <input type="number" name="address_id" id="address_id" class="form-control" 
+                                    <input type="number" name="address_id" id="address_id" class="form-control"
                                            value="{{ old('address_id') }}" min="0">
                                     @error('address_id')
                                         <span class="k-form__error">{{ $message }}</span>
@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="order_id">{{ __('Mã đơn hàng liên kết') }}</label>
-                                    <input type="number" name="order_id" id="order_id" class="form-control" 
+                                    <input type="number" name="order_id" id="order_id" class="form-control"
                                            value="{{ old('order_id') }}" min="0">
                                     @error('order_id')
                                         <span class="k-form__error">{{ $message }}</span>
@@ -146,12 +146,12 @@
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label for="total_quantity">{{ __('Tổng số lượng') }}</label>
-                                    <input type="number" name="total_quantity" id="total_quantity" class="form-control" 
+                                    <input type="number" name="total_quantity" id="total_quantity" class="form-control"
                                            value="{{ old('total_quantity', 0) }}" min="0" readonly>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="total_price">{{ __('Tổng giá') }}</label>
-                                    <input type="number" name="total_price" id="total_price" class="form-control" 
+                                    <input type="number" name="total_price" id="total_price" class="form-control"
                                            value="{{ old('total_price', 0) }}" min="0" step="0.01" readonly>
                                 </div>
                             </div>

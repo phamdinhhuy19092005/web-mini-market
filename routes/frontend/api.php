@@ -42,27 +42,28 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     });
     Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
 
-
     Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
     Route::get('/addresses/user/{userId}', [AddressController::class, 'getByUser'])->name('addresses.user');
     Route::get('/addresses/{id}', [AddressController::class, 'show'])->name('addresses.show');
     Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
-    Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
+    Route::put('/addresses/{ids}', [AddressController::class, 'update'])->name('addresses.update');
     Route::post('/addresses/{id}/default', [AddressController::class, 'setDefault']);
-    
 
-    Route::get('/carts', [CartController::class, 'index'])->name('carts.index');
-    Route::get('/carts/{id}', [CartController::class, 'show'])->name('carts.show');
-    Route::post('/carts', [CartController::class, 'store'])->name('carts.store');
-    Route::put('/carts/{id}', [CartController::class, 'update'])->name('carts.update');
-    Route::delete('/carts/{id}', [CartController::class, 'destroy'])->name('carts.destroy');
-    Route::delete('/carts/{id}/items/{inventory_id}', [CartController::class, 'removeItem'])->name('carts.items.destroy');
+
 });
 
-    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
 // Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 // Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+
+Route::get('/carts', [CartController::class, 'index'])->name('carts.index');
+Route::get('/carts/{id}', [CartController::class, 'show'])->name('carts.show');
+Route::post('/carts', [CartController::class, 'store'])->name('carts.store');
+Route::put('/carts/{id}', [CartController::class, 'update'])->name('carts.update');
+Route::delete('/carts/{id}', [CartController::class, 'destroy'])->name('carts.destroy');
+Route::delete('/carts/{id}/items/{inventory_id}', [CartController::class, 'removeItem'])->name('carts.items.destroy');
+Route::post('/carts/add-item', [CartController::class, 'addItem'])->name('carts.add-item');
 
 Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
 Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
@@ -135,7 +136,7 @@ Route::get('/provinces/{id}', [ProvinceController::class, 'show'])->name('provin
 Route::get('/districts', [DistrictController::class, 'index'])->name('districts.index');
 Route::get('/districts/{id}', [DistrictController::class, 'show'])->name('districts.show');
 
- 
+
 
 Route::get('/wards/{districtCode}', [AddressController::class, 'getWardsByDistrict']);
 

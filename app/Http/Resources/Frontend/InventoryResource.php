@@ -35,7 +35,7 @@ class InventoryResource extends BaseResource
             'init_sold_count' => $this->init_sold_count ?? 0,
             'sold_count' => $this->sold_count ?? 0,
             'description' => $this->description,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at,  
             'updated_at' => $this->updated_at,
         ];
     }
