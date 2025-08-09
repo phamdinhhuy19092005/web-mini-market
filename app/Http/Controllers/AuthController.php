@@ -12,6 +12,7 @@ use Firebase\JWT\JWT;
 use App\Http\Requests\RegisterRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AuthController extends BaseController
@@ -37,6 +38,7 @@ class AuthController extends BaseController
                 $userCart = Cart::firstOrCreate(
                     ['user_id' => $user->id],
                     [
+                        'uuid' => (string) Str::uuid(),
                         'ip_address' => $request->ip(),
                         'currency_code' => $guestCart->currency_code ?? 'VND',
                     ]
@@ -81,7 +83,6 @@ class AuthController extends BaseController
         ])->withCookie(cookie('cart_uuid', null, -1)); // Xóa cookie cart_uuid
     }
 
-
     public function register(RegisterRequest $request)
     {
 
@@ -107,20 +108,69 @@ class AuthController extends BaseController
                 'access_channel_type' => 2,
             ]);
 
+            Auth::login($user);
+
+            // Merge giỏ hàng của khách (nếu có)
+            $uuid = $request->cookie('cart_uuid');
+            $userCart = null;
+            if ($uuid) {
+                $guestCart = Cart::where('uuid', $uuid)->whereNull('user_id')->first();
+                if ($guestCart) {
+                    $userCart = Cart::firstOrCreate(
+                        ['user_id' => $user->id],
+                        [
+                            'ip_address' => $request->ip(),
+                            'currency_code' => $guestCart->currency_code ?? 'VND',
+                            'uuid' => (string) Str::uuid(),
+                        ]
+                    );
+
+                    foreach ($guestCart->items as $item) {
+                        $existing = $userCart->items()->where('inventory_id', $item->inventory_id)->first();
+                        if ($existing) {
+                            $existing->quantity += $item->quantity;
+                            $existing->total_price = $existing->price * $existing->quantity;
+                            $existing->save();
+                        } else {
+                            // Tạo CartItem mới với uuid mới
+                            $userCart->items()->create([
+                                'inventory_id' => $item->inventory_id,
+                                'quantity' => $item->quantity,
+                                'uuid' => (string) Str::uuid(), // Tạo uuid mới
+                                'currency_code' => $item->currency_code,
+                                'status' => $item->status,
+                                'price' => $item->price,
+                                'total_price' => $item->total_price,
+                                'has_combo' => $item->has_combo,
+                                'note' => $item->note ?? null, // Thêm note nếu có
+                            ]);
+                        }
+                    }
+                    $guestCart->delete();
+                    $userCart->updateTotals();
+                }
+            }
+
             DB::commit();
+
+            // Tạo token (nếu dùng Sanctum)
+            $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
                 'message' => 'Register success',
-                'data'    => $user,
-            ], 201);
+                'data' => $user,
+                'cart' => $userCart ?? null,
+                'token' => $token,
+            ], 201)->withoutCookie('cart_uuid');
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'message' => 'Register failed',
-                'error'   => $e->getMessage(),
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
+
     public function sendResetLink(Request $request)
     {
         $request->validate([

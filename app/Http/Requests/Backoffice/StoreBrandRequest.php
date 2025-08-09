@@ -19,7 +19,7 @@ class StoreBrandRequest extends BaseFormRequest implements StoreBrandRequestInte
             'image.file' => ['nullable', 'file', 'mimes:jpeg,png,gif,webp', 'max:5200'],
             'image.path' => ['required', 'string', 'max:255'],
 
-            'order' => ['nullable', 'integer'],
+            'order' => ['required', 'integer', 'min:0'],
             'status' => ['required', Rule::in(ActivationStatus::all())],
         ];
     }
@@ -40,9 +40,10 @@ class StoreBrandRequest extends BaseFormRequest implements StoreBrandRequestInte
             'image.file.mimes' => 'Ảnh phải có định dạng jpeg, png, gif, hoặc webp.',
             'image.path.required' => 'Vui lòng chọn hình ảnh.',
             'status.in' => 'Trạng thái không hợp lệ.',
+            'order.required' => 'Vui lòng nhập thứ tự',
         ];
     }
-    
+
     public function imageFile()
     {
         return $this->file('image');

@@ -270,7 +270,7 @@
                                     @endphp
 
                                     <select name="subcategory_ids[]" id="subcategory_ids" class="form-control k_selectpicker"
-                                        data-live-search="true" multiple data-actions-box="true" required data-none-selected-text="-- Chọn danh mục con --">
+                                        data-live-search="true" multiple data-actions-box="true" data-none-selected-text="-- Chọn danh mục con --">
                                         @foreach($categories as $category)
                                             <optgroup label="{{ $category->name }}">
                                                 @foreach($category->subCategories ?? [] as $subCategory)

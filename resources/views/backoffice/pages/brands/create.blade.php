@@ -40,6 +40,9 @@
                                 <div class="form-group">
                                     <label class="form-label">Thứ tự</label>
                                     <input type="number" min="0" class="form-control" name="order" placeholder="Nhập thứ tự ưu tiên" value="{{ old('order') }}">
+                                    @error('order')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 

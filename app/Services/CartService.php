@@ -39,7 +39,7 @@ class CartService extends BaseService
                 ->except('items')
                 ->merge([
                     'uuid' => (string) Str::uuid(),
-                    'ip_address' => request()->ip(), 
+                    'ip_address' => request()->ip(),
                 ])
                 ->toArray();
             $cart = $this->CartRepository->create($cartAttributes);
@@ -47,7 +47,6 @@ class CartService extends BaseService
             foreach ($items as $item) {
                 $cart->items()->create([
                     'inventory_id' => $item['inventory_id'],
-                    'user_id' => $attributes['user_id'],
                     'currency_code' => $attributes['currency_code'],
                     'uuid' => Str::uuid(),
                     'quantity' => $item['quantity'],
@@ -57,8 +56,8 @@ class CartService extends BaseService
                 ]);
             }
 
-            $cart->total_item = $cart->items()->count(); 
-            $cart->total_quantity = $cart->items()->sum('quantity'); 
+            $cart->total_item = $cart->items()->count();
+            $cart->total_quantity = $cart->items()->sum('quantity');
             $cart->save();
 
             return $cart;
@@ -80,12 +79,12 @@ class CartService extends BaseService
         return DB::transaction(function () use ($id, $attributes) {
             // Fetch the cart
             $cart = $this->CartRepository->findOrFail($id);
-            
+
             // Extract cart attributes, excluding items
             $cartAttributes = collect($attributes)
                 ->except('items')
                 ->toArray();
-            
+
             // Update cart attributes
             $this->CartRepository->update($id, $cartAttributes);
 
@@ -93,16 +92,15 @@ class CartService extends BaseService
             $items = data_get($attributes, 'items', []);
             $existingItemIds = $cart->items->pluck('inventory_id')->toArray();
             $newItemIds = array_column($items, 'inventory_id');
-            
+
             // Remove items not in the new list
             $cart->items()->whereNotIn('inventory_id', $newItemIds)->delete();
-            
+
             // Add or update items
-            foreach ($items as $index => $item) {                
+            foreach ($items as $index => $item) {
                 $cart->items()->updateOrCreate(
                     ['inventory_id' => $item['inventory_id']],
                     [
-                        'user_id' => $cartAttributes['user_id'] ?? $cart->user_id,
                         'currency_code' => $cartAttributes['currency_code'] ?? $cart->currency_code,
                         'uuid' => Str::uuid(),
                         'quantity' => $item['quantity'],

@@ -40,4 +40,13 @@ class Cart extends Model
     {
         return $this->hasMany(CartItem::class);
     }
+
+    public function updateTotals()
+    {
+        $this->total_quantity = $this->items()->sum('quantity');
+        $this->total_price = $this->items()->sum('total_price');
+        $this->save();
+    }
+
+    
 }

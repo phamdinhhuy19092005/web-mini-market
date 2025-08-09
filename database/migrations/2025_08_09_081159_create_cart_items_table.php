@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cart_id')->index();
             $table->foreignId('inventory_id')->index();
-            $table->foreignId('user_id')->index();
             $table->text('note')->nullable();
             $table->string('uuid')->unique();
             $table->string('currency_code');
