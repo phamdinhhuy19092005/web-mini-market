@@ -12,6 +12,7 @@ use Firebase\JWT\JWT;
 use App\Http\Requests\RegisterRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -42,6 +43,7 @@ class AuthController extends BaseController
                 $userCart = Cart::firstOrCreate(
                     ['user_id' => $user->id],
                     [
+                        'uuid' => (string) Str::uuid(),
                         'ip_address' => $request->ip(),
                         'currency_code' => $guestCart->currency_code ?? 'VND',
                     ]
@@ -124,27 +126,68 @@ public function register(RegisterRequest $request)
         // Gửi email xác thực
         Mail::to($user->email)->send(new VerifyEmail($user, $verifyUrl));
 
-        DB::commit();
+        Auth::login($user);
+            // Merge giỏ hàng của khách (nếu có)
+            $uuid = $request->cookie('cart_uuid');
+            $userCart = null;
+            if ($uuid) {
+                $guestCart = Cart::where('uuid', $uuid)->whereNull('user_id')->first();
+                if ($guestCart) {
+                    $userCart = Cart::firstOrCreate(
+                        ['user_id' => $user->id],
+                        [
+                            'ip_address' => $request->ip(),
+                            'currency_code' => $guestCart->currency_code ?? 'VND',
+                            'uuid' => (string) Str::uuid(),
+                        ]
+                    );
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực.',
-            'data'    => [
-                'user_id'    => $user->id,
-                'email'      => $user->email,
-                'verify_url' => $verifyUrl // Trả luôn cho FE nếu muốn
-            ]
-        ], 201);
+                    foreach ($guestCart->items as $item) {
+                        $existing = $userCart->items()->where('inventory_id', $item->inventory_id)->first();
+                        if ($existing) {
+                            $existing->quantity += $item->quantity;
+                            $existing->total_price = $existing->price * $existing->quantity;
+                            $existing->save();
+                        } else {
+                            // Tạo CartItem mới với uuid mới
+                            $userCart->items()->create([
+                                'inventory_id' => $item->inventory_id,
+                                'quantity' => $item->quantity,
+                                'uuid' => (string) Str::uuid(), // Tạo uuid mới
+                                'currency_code' => $item->currency_code,
+                                'status' => $item->status,
+                                'price' => $item->price,
+                                'total_price' => $item->total_price,
+                                'has_combo' => $item->has_combo,
+                                'note' => $item->note ?? null, // Thêm note nếu có
+                            ]);
+                        }
+                    }
+                    $guestCart->delete();
+                    $userCart->updateTotals();
+                }
+            }
 
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'status'  => 'error',
-            'message' => 'Đăng ký thất bại',
-            'error'   => config('app.debug') ? $e->getMessage() : null
-        ], 500);
+            DB::commit();
+
+            // Tạo token (nếu dùng Sanctum)
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Register success',
+                'data' => $user,
+                'cart' => $userCart ?? null,
+                'token' => $token,
+            ], 201)->withoutCookie('cart_uuid');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Register failed',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-}
+
 public function verifyEmail(Request $request)
 {
     Log::info('Dữ liệu nhận được từ request:', $request->all());

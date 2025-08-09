@@ -12,6 +12,7 @@ class CategoryResource extends BaseResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'description' => $this->description,
             'subcategories' => SubCategoryResource::collection(
                 $this->whenLoaded('subcategoriesWithProducts')
             )
