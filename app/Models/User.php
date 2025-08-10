@@ -29,11 +29,11 @@ class User extends Authenticatable
         'google_id',
         'provider',
         'phone_number',
+        'remember_token',
     ];
 
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     protected function casts(): array
