@@ -1,4 +1,6 @@
-<?php 
-  
-    define('ACTIVE_USER',1);
-    define('PENDING',0);
+<?php
+enum UserActionEnum: int {
+    case PENDING = 0;
+    case ACTIVE_USER = 1;
+}
+

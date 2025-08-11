@@ -4,12 +4,14 @@ namespace App\Enum;
 
 enum UserActionEnum: int
 {
-    case ACTIVE = 1;
-    case DEACTIVATE = 2;
+    case PENDING = 0;      // chưa kích hoạt
+    case ACTIVE = 1;       // đã kích hoạt
+    case DEACTIVATE = 2;   // bị khóa/deactive
 
     public function label(): string
     {
         return match ($this) {
+            self::PENDING => 'PENDING',
             self::ACTIVE => 'ACTIVE',
             self::DEACTIVATE => 'DEACTIVATE',
         };

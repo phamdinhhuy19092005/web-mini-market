@@ -12,8 +12,12 @@ class GoogleAuthController extends BaseController
 {
     public function redirect()
     {
-        return Socialite::driver('google')->redirect();
+        // return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')->stateless()->redirect();
+
     }
+    
+
 
     public function callback()
     {
@@ -47,7 +51,7 @@ class GoogleAuthController extends BaseController
 
             $token = $user->createToken('google_login_token')->plainTextToken;
 
-            $frontendUrl = config('app.frontend_url', 'http://localhost:3001');
+            $frontendUrl = config('FRONTEND_URL', 'http://localhost:3001');
 
             return redirect()->away($frontendUrl . '/login-gg-success?' . http_build_query([
                 'token' => $token,

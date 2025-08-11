@@ -15,6 +15,7 @@ use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Enum\UserActionEnum;
 
 class AuthController extends BaseController
 {
@@ -31,10 +32,12 @@ class AuthController extends BaseController
             return response()->json(['error' => 'Sai email hoặc mật khẩu'], 401);
         }
         //check status
-        if($user["status"] != ACTIVE_USER ){
-            return response()->json(['error' => 'vui lòng kích hoạt tài khoản!'], 403);
-            
-        };
+        if ($user->status !== UserActionEnum::ACTIVE) {
+    return response()->json(['error' => 'Vui lòng kích hoạt tài khoản!'], 403);
+}
+
+
+
         $cartUuid = $request->cookie('cart_uuid');
         if ($cartUuid) {
             $guestCart = Cart::with('items')->where('uuid', $cartUuid)->whereNull('user_id')->first();
@@ -125,6 +128,7 @@ public function register(RegisterRequest $request)
 
         // Gửi email xác thực
         Mail::to($user->email)->send(new VerifyEmail($user, $verifyUrl));
+        // return response()->json(['message' => 'Vui lòng kiểm tra email để xác thực.']);
 
         Auth::login($user);
             // Merge giỏ hàng của khách (nếu có)
@@ -192,53 +196,53 @@ public function verifyEmail(Request $request)
 {
     Log::info('Dữ liệu nhận được từ request:', $request->all());
 
-    $token = $request->input('token');
-    $email = $request->input('email');
+    $token = urldecode($request->input('token'));
+    $email = urldecode($request->input('email'));
 
     if (!$token || !$email) {
-        Log::warning('Thiếu token hoặc email');
         return response()->json([
             'status'  => 'error',
             'message' => 'Thiếu token hoặc email'
         ], 400);
     }
 
-    $user = User::where('email', $email)
-        ->where('remember_token', $token)
-        ->first();
+    $user = User::where('email', $email)->first();
 
     if (!$user) {
-        Log::warning('Token hoặc email không hợp lệ', [
-            'email' => $email,
-            'token' => $token
-        ]);
         return response()->json([
             'status'  => 'error',
-            'message' => 'Token hoặc email không hợp lệ'
+            'message' => 'Email không tồn tại'
         ], 404);
     }
 
+    // Nếu đã kích hoạt rồi thì trả về success luôn
     if ($user->status == 1) {
-        Log::info('Tài khoản đã xác thực trước đó', ['email' => $email]);
         return response()->json([
             'status'  => 'success',
             'message' => 'Tài khoản đã được xác thực trước đó'
         ], 200);
     }
 
-    // Cập nhật trạng thái đã kích hoạt
+    // Nếu chưa kích hoạt thì kiểm tra token
+    if ($user->remember_token !== $token) {
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'Token không hợp lệ'
+        ], 400);
+    }
+
+    // Cập nhật trạng thái
     $user->status = 1;
     $user->email_verified_at = now();
     $user->remember_token = null;
     $user->save();
-
-    Log::info('Xác thực email thành công', ['email' => $email]);
 
     return response()->json([
         'status'  => 'success',
         'message' => 'Xác thực email thành công'
     ], 200);
 }
+
 
 
 
