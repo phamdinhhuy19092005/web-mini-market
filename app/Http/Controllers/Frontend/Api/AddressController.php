@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers\Frontend\Api;
 
-use App\Contracts\Responses\Backoffice\StoreAddressResponseContract;
-use App\Contracts\Responses\Backoffice\UpdateAddressResponseContract;
 use App\Http\Requests\Backoffice\Interfaces\StoreAddressRequestInterface;
-use App\Http\Controllers\Frontend\BaseController;
-use App\Http\Requests\Backoffice\Interfaces\UpdateAddressRequestInterface;
 use App\Http\Resources\Frontend\AddressResource;
 use App\Models\Address;
 use App\Services\AddressService;
@@ -15,7 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\District;
 use App\Models\Ward;
 
-class AddressController extends BaseController
+class AddressController extends BaseApiController
 {
     protected $addressService;
     public function __construct(AddressService $addressService)

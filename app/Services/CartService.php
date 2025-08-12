@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Enum\CartItemStatusEnum;
+use App\Models\Cart;
+use App\Models\CartItem;
+use App\Models\Inventory;
 use App\Repositories\Interfaces\CartRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -30,6 +33,92 @@ class CartService extends BaseService
             ->paginate($perPage);
     }
 
+    public function getOrCreateCart($user, $cartUuid, $ip)
+    {
+        if ($user) {
+            return Cart::firstOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'uuid' => Str::uuid(),
+                    'currency_code' => 'VND',
+                    'total_item' => 0,
+                    'total_quantity' => 0,
+                    'total_price' => 0,
+                    'ip_address' => $ip,
+                ]
+            );
+        } elseif ($cartUuid) {
+            return Cart::firstOrCreate(
+                ['uuid' => $cartUuid],
+                [
+                    'currency_code' => 'VND',
+                    'total_item' => 0,
+                    'total_quantity' => 0,
+                    'total_price' => 0,
+                    'ip_address' => $ip,
+                ]
+            );
+        }
+
+        return Cart::create([
+            'uuid' => Str::uuid(),
+            'currency_code' => 'VND',
+            'total_item' => 0,
+            'total_quantity' => 0,
+            'total_price' => 0,
+            'ip_address' => $ip,
+        ]);
+    }
+
+    public function addOrUpdateItem(Cart $cart, $inventoryId, $quantity)
+    {
+        $inventory = Inventory::findOrFail($inventoryId);
+
+        if ($inventory->stock_quantity < $quantity) {
+            return ['error' => 'Số lượng tồn kho không đủ'];
+        }
+
+        $price = $inventory->sale_price ?? $inventory->offer_price;
+
+        $cartItem = CartItem::where('cart_id', $cart->id)
+            ->where('inventory_id', $inventoryId)
+            ->first();
+
+        if ($cartItem) {
+            $newQuantity = $cartItem->quantity + $quantity;
+            if ($inventory->stock_quantity < $newQuantity) {
+                return ['error' => 'Số lượng tồn kho không đủ cho số lượng mới'];
+            }
+            $cartItem->quantity = $newQuantity;
+            $cartItem->total_price = $newQuantity * $price;
+            $cartItem->save();
+        } else {
+            $cartItem = CartItem::create([
+                'cart_id' => $cart->id,
+                'inventory_id' => $inventoryId,
+                'ip_address' => request()->ip(),
+                'uuid' => Str::uuid(),
+                'currency_code' => $cart->currency_code,
+                'quantity' => $quantity,
+                'price' => $price,
+                'total_price' => $quantity * $price,
+                'status' => 1,
+            ]);
+        }
+
+        $this->updateCartTotals($cart);
+
+        return ['cart' => $cart->load('items.inventory')];
+    }
+
+    public function updateCartTotals(Cart $cart)
+    {
+        $cart->total_item = $cart->items()->count();
+        $cart->total_quantity = $cart->items()->sum('quantity');
+        $cart->total_price = $cart->items()->sum('total_price');
+        $cart->save();
+    }
+
     public function create(array $attributes = [])
     {
         return DB::transaction(function () use ($attributes) {
@@ -42,6 +131,7 @@ class CartService extends BaseService
                     'ip_address' => request()->ip(),
                 ])
                 ->toArray();
+
             $cart = $this->CartRepository->create($cartAttributes);
 
             foreach ($items as $item) {
@@ -56,9 +146,7 @@ class CartService extends BaseService
                 ]);
             }
 
-            $cart->total_item = $cart->items()->count();
-            $cart->total_quantity = $cart->items()->sum('quantity');
-            $cart->save();
+            $this->updateCartTotals($cart);
 
             return $cart;
         });
@@ -77,27 +165,20 @@ class CartService extends BaseService
     public function update($id, array $attributes = [])
     {
         return DB::transaction(function () use ($id, $attributes) {
-            // Fetch the cart
             $cart = $this->CartRepository->findOrFail($id);
 
-            // Extract cart attributes, excluding items
             $cartAttributes = collect($attributes)
                 ->except('items')
                 ->toArray();
 
-            // Update cart attributes
             $this->CartRepository->update($id, $cartAttributes);
 
-            // Handle cart items
             $items = data_get($attributes, 'items', []);
-            $existingItemIds = $cart->items->pluck('inventory_id')->toArray();
             $newItemIds = array_column($items, 'inventory_id');
 
-            // Remove items not in the new list
             $cart->items()->whereNotIn('inventory_id', $newItemIds)->delete();
 
-            // Add or update items
-            foreach ($items as $index => $item) {
+            foreach ($items as $item) {
                 $cart->items()->updateOrCreate(
                     ['inventory_id' => $item['inventory_id']],
                     [
@@ -111,10 +192,7 @@ class CartService extends BaseService
                 );
             }
 
-            $cart->total_item = $cart->items()->count();
-            $cart->total_quantity = $cart->items()->sum('quantity');
-            $cart->total_price = $cart->items()->sum(DB::raw('price * quantity'));
-            $cart->save();
+            $this->updateCartTotals($cart);
 
             return $cart->fresh();
         });
@@ -126,4 +204,25 @@ class CartService extends BaseService
             return $this->CartRepository->delete($id);
         });
     }
+
+    public function removeItem(Cart $cart, $inventoryId)
+    {
+        $cartItem = $cart->items()
+            ->where('inventory_id', $inventoryId)
+            ->firstOrFail();
+
+        $cartItem->delete();
+
+        $this->updateCartTotals($cart);
+
+        return $cart->load('items.inventory');
+    }
+
+    public function clearCart(Cart $cart)
+    {
+        $cart->items()->delete();
+        $this->updateCartTotals($cart);
+        return $cart;
+    }
+
 }

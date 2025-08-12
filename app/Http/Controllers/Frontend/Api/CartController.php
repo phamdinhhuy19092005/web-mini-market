@@ -2,249 +2,485 @@
 
 namespace App\Http\Controllers\Frontend\Api;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Inventory;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Services\CartService;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Log;
 
-
-class CartController extends Controller
+class CartController extends BaseApiController
 {
+    // Lấy giỏ hàng hiện tại theo user hoặc uuid
     public function index(Request $request)
     {
-        $user = Auth::user();
-        $uuid = $this->getCartUuid($request);
+        $user = $request->user();
+        $cartUuid = $request->cookie('cart_uuid'); // có thể FE gửi header hoặc param khác
+
+        $cart = null;
 
         if ($user) {
-            $cart = Cart::with('items.inventory')
-                ->where('user_id', $user->id)
-                ->orderBy('updated_at', 'desc')
-                ->first();
+            $cart = Cart::with('items.inventory')->where('user_id', $user->id)->first();
+        }
 
-            if (!$cart && $uuid) {
-                $guestCart = Cart::where('uuid', $uuid)->whereNull('user_id')->first();
+        if (!$cart && $cartUuid) {
+            $cart = Cart::with('items.inventory')->where('uuid', $cartUuid)->first();
+        }
+
+        if (!$cart) {
+            // Tạo mới giỏ hàng guest
+            $cart = Cart::create([
+                'uuid' => Str::uuid(),
+                'currency_code' => 'VND',
+                'total_item' => 0,
+                'total_quantity' => 0,
+                'total_price' => 0,
+            ]);
+        }
+
+        $response = response()->json(['cart' => $cart]);
+
+        if (!$user) {
+            $response->cookie('cart_uuid', $cart->uuid, 60 * 24 * 30);
+        }
+
+        return $response;
+    }
+
+    // Đồng bộ giỏ hàng từ localStorage FE gửi lên
+    public function syncCart(Request $request)
+    {
+        $user = $request->user();
+        $cartUuid = $request->input('cart_uuid');
+        $items = $request->input('items');
+
+        if (!$items || !is_array($items)) {
+            return response()->json(['message' => 'Invalid cart items'], 400);
+        }
+
+        // ✅ Check token nếu có header Authorization mà chưa có user
+        if ($request->hasHeader('Authorization') && !$user) {
+            $token = $request->bearerToken();
+            if ($token) {
+                $personalAccessToken = PersonalAccessToken::findToken($token);
+                if ($personalAccessToken && $personalAccessToken->tokenable_type === 'App\\Models\\User') {
+                    $user = $personalAccessToken->tokenable;
+                } else {
+                    return response()->json(['message' => 'Unauthorized: Invalid token'], 401);
+                }
+            } else {
+                return response()->json(['message' => 'Unauthorized: Missing token'], 401);
+            }
+        }
+
+        $cart = null;
+
+        if ($user) {
+            // 🔹 Lấy giỏ hàng hiện tại của user
+            $userCart = Cart::with('items')->where('user_id', $user->id)->first();
+
+            // Nếu có cart_uuid (giỏ hàng guest)
+            if ($cartUuid) {
+                $guestCart = Cart::with('items')->where('uuid', $cartUuid)->first();
+
                 if ($guestCart) {
-                    $cart = Cart::firstOrCreate(
-                        ['user_id' => $user->id],
-                        [
-                            'ip_address' => $request->ip(),
-                            'currency_code' => $guestCart->currency_code ?? 'VND',
-                            'uuid' => (string) Str::uuid(),
-                        ]
-                    );
-
-                    foreach ($guestCart->items as $item) {
-                        $existing = $cart->items()->where('inventory_id', $item->inventory_id)->first();
-                        if ($existing) {
-                            $existing->quantity += $item->quantity;
-                            $existing->total_price = $existing->price * $existing->quantity;
-                            $existing->save();
-                        } else {
-                            $cart->items()->create($item->toArray());
+                    if ($userCart && $guestCart->id !== $userCart->id) {
+                        // Gộp items guest vào userCart
+                        foreach ($guestCart->items as $item) {
+                            $existing = $userCart->items->firstWhere('inventory_id', $item->inventory_id);
+                            if ($existing) {
+                                $existing->quantity += $item->quantity;
+                                $existing->total_price = $existing->quantity * $existing->price;
+                                $existing->save();
+                            } else {
+                                $userCart->items()->create([
+                                    'inventory_id' => $item->inventory_id,
+                                    'ip_address' => $request->ip(),
+                                    'uuid' => Str::uuid(),
+                                    'currency_code' => $userCart->currency_code,
+                                    'quantity' => $item->quantity,
+                                    'price' => $item->price,
+                                    'total_price' => $item->total_price,
+                                    'status' => 1,
+                                ]);
+                            }
                         }
+                        $guestCart->delete();
+                    } elseif (!$userCart) {
+                        // Gán user_id cho guestCart
+                        $guestCart->user_id = $user->id;
+                        $guestCart->ip_address = $request->ip();
+                        $guestCart->save();
+                        $userCart = $guestCart;
                     }
-                    $guestCart->delete();
-                    $cart->updateTotals();
+                } else {
+                    Log::warning('Guest Cart not found', ['cart_uuid' => $cartUuid]);
                 }
             }
 
-            if ($cart) {
-                $cart->updateTotals();
-            }
-
-            return response()->json($cart ?? [])->withoutCookie('cart_uuid');
-        } elseif ($uuid) {
-            $cart = Cart::with('items.inventory')->where('uuid', $uuid)->first();
-            if ($cart) {
-                $cart->updateTotals();
-            }
-            return response()->json($cart ?? [])->withCookie(cookie('cart_uuid', $uuid, 43200));
-        }
-
-        return response()->json([]);
-    }
-
-    public function store(Request $request)
-    {
-        $user = Auth::user();
-        $uuid = $request->cookie('cart_uuid') ?? (string) Str::uuid();
-
-        if ($user && $uuid) {
-            $guestCart = Cart::where('uuid', $uuid)->first();
-            $userCart = Cart::firstOrCreate(
+            // Nếu chưa có giỏ hàng user → tạo mới
+            $cart = $userCart ?? Cart::firstOrCreate(
                 ['user_id' => $user->id],
                 [
+                    'uuid' => Str::uuid(),
+                    'currency_code' => 'VND',
                     'ip_address' => $request->ip(),
-                    'currency_code' => $request->currency_code ?? 'VND',
-                    'uuid' => (string) Str::uuid(),
+                    'total_item' => 0,
+                    'total_quantity' => 0,
+                    'total_price' => 0,
                 ]
             );
+        } else {
+            // 🔹 Guest: tạo hoặc lấy giỏ bằng cart_uuid
+            if ($cartUuid) {
+                $cart = Cart::firstOrCreate(
+                    ['uuid' => $cartUuid],
+                    [
+                        'currency_code' => 'VND',
+                        'total_item' => 0,
+                        'total_quantity' => 0,
+                        'total_price' => 0,
+                        'ip_address' => $request->ip(),
+                    ]
+                );
+            } else {
+                $cart = Cart::create([
+                    'uuid' => Str::uuid(),
+                    'currency_code' => 'VND',
+                    'total_item' => 0,
+                    'total_quantity' => 0,
+                    'total_price' => 0,
+                    'ip_address' => $request->ip(),
+                ]);
+            }
+        }
 
-            if ($guestCart && $guestCart->id !== $userCart->id) {
-                foreach ($guestCart->items as $item) {
-                    $existing = $userCart->items()->where('inventory_id', $item->inventory_id)->first();
-                    if ($existing) {
-                        $existing->quantity += $item->quantity;
-                        $existing->total_price = $existing->price * $existing->quantity;
-                        $existing->save();
+        // 🔹 Lấy các item hiện có
+        $existingItems = $cart->items()->get()->keyBy('inventory_id');
+
+        // 🔹 Đồng bộ items từ request
+        DB::transaction(function () use ($cart, $items, $existingItems) {
+            foreach ($items as $item) {
+                $inventoryId = $item['inventory_id'];
+                $quantity = max(0, (int)$item['quantity']);
+
+                if ($existingItems->has($inventoryId)) {
+                    $cartItem = $existingItems->get($inventoryId);
+                    if ($quantity == 0) {
+                        $cartItem->delete();
                     } else {
-                        $userCart->items()->create([
-                            'inventory_id' => $item->inventory_id,
-                            'quantity' => $item->quantity,
-                            'uuid' => (string) Str::uuid(),
-                            'currency_code' => $item->currency_code,
-                            'status' => $item->status,
-                            'price' => $item->price,
-                            'total_price' => $item->total_price,
-                            'has_combo' => $item->has_combo,
+                        $cartItem->quantity = $quantity;
+                        $cartItem->total_price = $quantity * $cartItem->price;
+                        $cartItem->save();
+                    }
+                } else {
+                    if ($quantity > 0) {
+                        $inventory = Inventory::find($inventoryId);
+                        if (!$inventory) {
+                            continue;
+                        }
+
+                        CartItem::create([
+                            'cart_id' => $cart->id,
+                            'inventory_id' => $inventoryId,
+                            'ip_address' => request()->ip(),
+                            'uuid' => Str::uuid(),
+                            'currency_code' => $cart->currency_code,
+                            'quantity' => $quantity,
+                            'price' => $inventory->sale_price ?? $inventory->offer_price,
+                            'total_price' => $quantity * ($inventory->sale_price ?? $inventory->offer_price),
+                            'status' => 1,
                         ]);
                     }
                 }
-                $guestCart->delete();
-                $userCart->updateTotals(); // Cập nhật tổng số lượng và giá
             }
 
-            if ($userCart->user_id !== $user->id) {
-                $userCart->user_id = $user->id;
-                $userCart->save();
-            }
+            // Cập nhật tổng giỏ
+            $this->updateCartTotals($cart);
+        });
 
-            return response()->json($userCart)->withoutCookie('cart_uuid');
+        // 🔹 Trả về giỏ hàng
+        $response = response()->json([
+            'cart' => $cart->load('items.inventory'),
+        ]);
+
+        if (!$user) {
+            $response->cookie('cart_uuid', $cart->uuid, 60 * 24 * 30);
         }
 
-        $cart = Cart::firstOrCreate(
-            ['uuid' => $uuid],
-            [
-                'ip_address' => $request->ip(),
-                'currency_code' => $request->currency_code ?? 'VND',
-                'user_id' => null,
-                'uuid' => $uuid,
-            ]
-        );
-        $cart->updateTotals(); // Cập nhật tổng số lượng và giá
-
-        return response()->json($cart)->withCookie(cookie('cart_uuid', $uuid, 43200));
+        return $response;
     }
-    
 
-    public function addItem(Request $request)
+
+    public function guestSyncCart(Request $request)
+    {
+        $cartUuid = $request->input('cart_uuid');
+        $items = $request->input('items');
+
+        if (!$items || !is_array($items)) {
+            return response()->json(['message' => 'Invalid cart items'], 400);
+        }
+
+        $cart = null;
+
+        if ($cartUuid) {
+            $cart = Cart::firstOrCreate(
+                ['uuid' => $cartUuid],
+                [
+                    'currency_code' => 'VND',
+                    'total_item' => 0,
+                    'total_quantity' => 0,
+                    'total_price' => 0,
+                    'ip_address' => $request->ip(),
+                ]
+            );
+        } else {
+            $cart = Cart::create([
+                'uuid' => Str::uuid(),
+                'currency_code' => 'VND',
+                'total_item' => 0,
+                'total_quantity' => 0,
+                'total_price' => 0,
+                'ip_address' => $request->ip(),
+            ]);
+        }
+
+        $existingItems = $cart->items()->get()->keyBy('inventory_id');
+
+        DB::transaction(function () use ($cart, $items, $existingItems) {
+            foreach ($items as $item) {
+                $inventoryId = $item['inventory_id'];
+                $quantity = max(0, (int)$item['quantity']);
+
+                if ($existingItems->has($inventoryId)) {
+                    $cartItem = $existingItems->get($inventoryId);
+                    if ($quantity == 0) {
+                        $cartItem->delete();
+                    } else {
+                        $cartItem->quantity = $quantity;
+                        $cartItem->total_price = $quantity * $cartItem->price;
+                        $cartItem->save();
+                    }
+                } else {
+                    if ($quantity > 0) {
+                        $inventory = Inventory::find($inventoryId);
+                        if (!$inventory) {
+                            continue;
+                        }
+
+                        CartItem::create([
+                            'cart_id' => $cart->id,
+                            'inventory_id' => $inventoryId,
+                            'ip_address' => request()->ip(),
+                            'uuid' => Str::uuid(),
+                            'currency_code' => $cart->currency_code,
+                            'quantity' => $quantity,
+                            'price' => $inventory->sale_price ?? $inventory->offer_price,
+                            'total_price' => $quantity * ($inventory->sale_price ?? $inventory->offer_price),
+                            'status' => 1,
+                        ]);
+                    }
+                }
+            }
+
+            $this->updateCartTotals($cart);
+        });
+
+        return response()->json([
+            'cart' => $cart->load('items.inventory'),
+        ])->cookie('cart_uuid', $cart->uuid, 60 * 24 * 30);
+    }
+
+    // Thêm sản phẩm đơn lẻ (nếu muốn)
+    public function addItem(Request $request, CartService $cartService)
     {
         $request->validate([
             'inventory_id' => 'required|exists:inventories,id',
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $user = Auth::user();
-        $inventory = Inventory::find($request->inventory_id);
-        $price = $inventory ? ($inventory->offer_price ?? $inventory->sale_price ?? 0) : 0;
-        $totalPrice = $price * $request->quantity;
-        $uuid = $request->cookie('cart_uuid') ?? (string) Str::uuid();
+        // Lấy cart_uuid từ body, header, hoặc cookie
+        $cartUuid = $request->input('cart_uuid')?? $request->header('Cart-UUID')?? $request->cookie('cart_uuid');
 
-        if ($user) {
-            $userCart = Cart::firstOrCreate(
-                ['user_id' => $user->id],
-                [
-                    'ip_address' => $request->ip(),
-                    'currency_code' => $request->currency_code ?? 'VND',
-                    'uuid' => (string) Str::uuid(),
-                ]
-            );
+        $cart = $cartService->getOrCreateCart(
+            $request->user(),
+            $cartUuid,
+            $request->ip()
+        );
 
-            $guestCart = Cart::where('uuid', $uuid)->whereNull('user_id')->first();
+        $result = $cartService->addOrUpdateItem(
+            $cart,
+            $request->input('inventory_id'),
+            $request->input('quantity')
+        );
 
-            if ($guestCart && $guestCart->id !== $userCart->id) {
-                foreach ($guestCart->items as $item) {
-                    $existing = $userCart->items()->where('inventory_id', $item->inventory_id)->first();
-                    if ($existing) {
-                        $existing->quantity += $item->quantity;
-                        $existing->total_price = $existing->price * $existing->quantity;
-                        $existing->save();
+        if (isset($result['error'])) {
+            return response()->json(['message' => $result['error']], 422);
+        }
+
+        $response = response()->json($result);
+
+        if (!$request->user()) {
+            $response->cookie('cart_uuid', $cart->uuid, 60 * 24 * 30); // 30 ngày
+        }
+
+        return $response;
+    }
+
+
+
+
+    // Cập nhật số lượng nhiều item
+    public function update(Request $request, $cartId)
+    {
+        $cart = Cart::findOrFail($cartId);
+        if ($cart->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized: You do not own this cart'], 403);
+        }
+
+        $request->validate([
+            'items' => 'required|array',
+            'items.*.inventory_id' => 'required|exists:inventories,id',
+            'items.*.quantity' => 'required|integer|min:0',
+        ]);
+
+        $cart = Cart::findOrFail($cartId);
+
+        DB::transaction(function () use ($request, $cart) {
+            foreach ($request->input('items') as $item) {
+                $cartItem = CartItem::where('cart_id', $cart->id)
+                    ->where('inventory_id', $item['inventory_id'])
+                    ->first();
+
+                if (!$cartItem) continue;
+
+                if ($item['quantity'] == 0) {
+                    $cartItem->delete();
+                } else {
+                    $cartItem->quantity = $item['quantity'];
+                    $cartItem->total_price = $cartItem->quantity * $cartItem->price;
+                    $cartItem->save();
+                }
+            }
+
+            $this->updateCartTotals($cart);
+        });
+
+        return response()->json(['cart' => $cart->load('items.inventory')]);
+    }
+
+    public function removeItemForUser(Request $request, CartService $cartService, $cartId, $inventoryId)
+    {
+        $cart = Cart::where('id', $cartId)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        $updatedCart = $cartService->removeItem($cart, $inventoryId);
+
+        return response()->json(['cart' => $updatedCart]);
+    }
+
+    // Xóa item trong giỏ hàng guest (dùng cart_uuid)
+    public function removeItemForGuest(Request $request, CartService $cartService, $cartUuid, $inventoryId)
+    {
+        $cart = Cart::where('uuid', $cartUuid)->firstOrFail();
+
+        $updatedCart = $cartService->removeItem($cart, $inventoryId);
+
+        return response()->json(['cart' => $updatedCart]);
+    }
+
+    public function destroy(Request $request, CartService $cartService)
+    {
+        $cartUuid = $request->input('cart_uuid')
+            ?? $request->header('Cart-UUID')
+            ?? $request->cookie('cart_uuid');
+
+        $cart = Cart::where('uuid', $cartUuid)
+            ->orWhere('user_id', optional($request->user())->id)
+            ->firstOrFail();
+
+        $cartService->clearCart($cart);
+
+        return response()->json(['message' => 'Cart deleted successfully']);
+    }
+
+
+    // Cập nhật tổng số lượng, giá tiền
+    protected function updateCartTotals(Cart $cart)
+    {
+        $totalQuantity = $cart->items()->sum('quantity');
+        $totalItem = $cart->items()->count();
+        $totalPrice = $cart->items()->sum('total_price');
+
+        $cart->total_quantity = $totalQuantity;
+        $cart->total_item = $totalItem;
+        $cart->total_price = $totalPrice;
+        $cart->save();
+    }
+
+    public function updateGuestCart(Request $request, $cartUuid)
+    {
+        $items = $request->input('items');
+
+        if (!$items || !is_array($items)) {
+            return response()->json(['message' => 'Invalid cart items'], 400);
+        }
+
+        $cart = Cart::where('uuid', $cartUuid)->first();
+
+        if (!$cart) {
+            return response()->json(['message' => 'Cart not found'], 404);
+        }
+
+        $existingItems = $cart->items()->get()->keyBy('inventory_id');
+
+        DB::transaction(function () use ($cart, $items, $existingItems) {
+            foreach ($items as $item) {
+                $inventoryId = $item['inventory_id'];
+                $quantity = max(0, (int)$item['quantity']);
+
+                if ($existingItems->has($inventoryId)) {
+                    $cartItem = $existingItems->get($inventoryId);
+                    if ($quantity == 0) {
+                        $cartItem->delete();
                     } else {
-                        $userCart->items()->create([
-                            'inventory_id' => $item->inventory_id,
-                            'quantity' => $item->quantity,
-                            'uuid' => (string) Str::uuid(),
-                            'currency_code' => $item->currency_code,
-                            'status' => $item->status,
-                            'price' => $item->price,
-                            'total_price' => $item->total_price,
-                            'has_combo' => $item->has_combo,
+                        $cartItem->quantity = $quantity;
+                        $cartItem->total_price = $quantity * $cartItem->price;
+                        $cartItem->save();
+                    }
+                } else {
+                    if ($quantity > 0) {
+                        $inventory = Inventory::find($inventoryId);
+                        if (!$inventory) {
+                            continue;
+                        }
+
+                        CartItem::create([
+                            'cart_id' => $cart->id,
+                            'inventory_id' => $inventoryId,
+                            'ip_address' => request()->ip(),
+                            'uuid' => Str::uuid(),
+                            'currency_code' => $cart->currency_code,
+                            'quantity' => $quantity,
+                            'price' => $inventory->sale_price ?? $inventory->offer_price,
+                            'total_price' => $quantity * ($inventory->sale_price ?? $inventory->offer_price),
+                            'status' => 1,
                         ]);
                     }
                 }
-                $guestCart->delete();
             }
 
-            $existingItem = $userCart->items()->where('inventory_id', $request->inventory_id)->first();
-            if ($existingItem) {
-                $existingItem->quantity += $request->quantity;
-                $existingItem->total_price = $existingItem->price * $existingItem->quantity;
-                $existingItem->save();
-                $item = $existingItem;
-            } else {
-                $item = $userCart->items()->create([
-                    'inventory_id' => $request->inventory_id,
-                    'quantity' => $request->quantity,
-                    'uuid' => (string) Str::uuid(),
-                    'currency_code' => $request->currency_code ?? 'VND',
-                    'status' => 1,
-                    'price' => $price,
-                    'total_price' => $totalPrice,
-                    'has_combo' => 0,
-                ]);
-            }
+            // Cập nhật tổng số lượng, tổng giá giỏ hàng
+            $this->updateCartTotals($cart);
+        });
 
-            $userCart->updateTotals(); // Cập nhật tổng số lượng và giá
-
-            return response()->json($item)->withoutCookie('cart_uuid');
-        } else {
-            $cart = Cart::firstOrCreate(
-                ['uuid' => $uuid],
-                [
-                    'ip_address' => $request->ip(),
-                    'currency_code' => $request->currency_code ?? 'VND',
-                    'user_id' => null,
-                ]
-            );
-
-            $existingItem = $cart->items()->where('inventory_id', $request->inventory_id)->first();
-            if ($existingItem) {
-                $existingItem->quantity += $request->quantity;
-                $existingItem->total_price = $existingItem->price * $existingItem->quantity;
-                $existingItem->save();
-                $item = $existingItem;
-            } else {
-                $item = $cart->items()->create([
-                    'inventory_id' => $request->inventory_id,
-                    'quantity' => $request->quantity,
-                    'uuid' => (string) Str::uuid(),
-                    'currency_code' => $request->currency_code ?? 'VND',
-                    'status' => 1,
-                    'price' => $price,
-                    'total_price' => $totalPrice,
-                    'has_combo' => 0,
-                ]);
-            }
-
-            $cart->updateTotals(); // Cập nhật tổng số lượng và giá
-
-            return response()->json($item)->withCookie(cookie('cart_uuid', $uuid, 43200));
-        }
-    }
-
-    public function show($id)
-    {
-        $cart = Cart::with('items.inventory')->find($id);
-
-        if (!$cart) {
-            return response()->json(['message' => 'Giỏ hàng không tìm thấy'], 404);
-        }
-
-        return response()->json($cart);
+        return response()->json([
+            'cart' => $cart->load('items.inventory'),
+        ])->cookie('cart_uuid', $cart->uuid, 60 * 24 * 30);
     }
 
 }

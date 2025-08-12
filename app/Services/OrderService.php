@@ -104,7 +104,7 @@ class OrderService extends BaseService
                 $order->items()->create([
                     'inventory_id' => $item['inventory_id'],
                     'quantity' => $item['quantity'],
-                    'price' => $inventory->final_price ?? 0,
+                    'price' => $inventory->sale_price ?? $inventory->offer_price,
                     'user_id' => $order->user_id,
                     'currency_code' => $order->currency_code,
                 ]);

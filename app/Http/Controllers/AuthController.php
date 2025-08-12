@@ -8,15 +8,86 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Firebase\JWT\JWT;
 use App\Http\Requests\RegisterRequest;
 use App\Models\Cart;
-use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends BaseController
 {
+    protected function getCartUuidFromRequest(Request $request)
+    {
+        return $request->cookie('cart_uuid')
+            ?? $request->header('X-Cart-UUID')
+            ?? $request->input('cart_uuid');
+    }
+
+    protected function mergeGuestCartToUserCart(?string $guestUuid, User $user, string $ipAddress)
+    {
+        if (!$guestUuid) {
+            Log::info("No guest cart UUID provided for merge.");
+            return null;
+        }
+
+        $guestCart = Cart::where('uuid', $guestUuid)->whereNull('user_id')->first();
+
+        if (!$guestCart) {
+            Log::info("Guest cart with UUID {$guestUuid} not found or already merged.");
+            return null;
+        }
+
+        DB::beginTransaction();
+        try {
+            $userCart = Cart::firstOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'ip_address' => $ipAddress,
+                    'currency_code' => $guestCart->currency_code ?? 'VND',
+                    'uuid' => (string) Str::uuid(),
+                    'total_item' => 0,
+                    'total_quantity' => 0,
+                    'total_price' => 0,
+                ]
+            );
+
+            foreach ($guestCart->items as $item) {
+                $existing = $userCart->items()->where('inventory_id', $item->inventory_id)->first();
+                if ($existing) {
+                    $existing->quantity += $item->quantity;
+                    $existing->total_price = $existing->price * $existing->quantity;
+                    $existing->save();
+                } else {
+                    $userCart->items()->create([
+                        'inventory_id' => $item->inventory_id,
+                        'quantity' => $item->quantity,
+                        'uuid' => (string) Str::uuid(),
+                        'currency_code' => $item->currency_code,
+                        'status' => $item->status,
+                        'price' => $item->price,
+                        'total_price' => $item->total_price,
+                        'has_combo' => $item->has_combo ?? 0,
+                        'note' => $item->note ?? null,
+                    ]);
+                }
+            }
+
+            $userCart->total_quantity = $userCart->items()->sum('quantity');
+            $userCart->total_item = $userCart->items()->count();
+            $userCart->total_price = $userCart->items()->sum('total_price');
+            $userCart->save();
+
+            $guestCart->delete();
+
+            DB::commit();
+            return $userCart;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error merging guest cart: " . $e->getMessage());
+            return null;
+        }
+    }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -30,42 +101,13 @@ class AuthController extends BaseController
             return response()->json(['error' => 'Sai email hoặc mật khẩu'], 401);
         }
 
-        $cartUuid = $request->cookie('cart_uuid');
-        if ($cartUuid) {
-            $guestCart = Cart::with('items')->where('uuid', $cartUuid)->whereNull('user_id')->first();
+        Auth::login($user);
 
-            if ($guestCart) {
-                $userCart = Cart::firstOrCreate(
-                    ['user_id' => $user->id],
-                    [
-                        'uuid' => (string) Str::uuid(),
-                        'ip_address' => $request->ip(),
-                        'currency_code' => $guestCart->currency_code ?? 'VND',
-                    ]
-                );
+        $guestUuid = $this->getCartUuidFromRequest($request);
+        $userCart = $this->mergeGuestCartToUserCart($guestUuid, $user, $request->ip());
 
-                foreach ($guestCart->items as $item) {
-                    $existingItem = CartItem::where('cart_id', $userCart->id)
-                        ->where('inventory_id', $item->inventory_id)
-                        ->first();
-
-                    if ($existingItem) {
-                        $existingItem->quantity += $item->quantity;
-                        $existingItem->save();
-                    } else {
-                        $item->cart_id = $userCart->id;
-                        $item->save();
-                    }
-                }
-
-                $guestCart->delete();
-            }
-        }
-
-        // Tạo access token
         $token = $user->createToken('authToken')->plainTextToken;
 
-        // Trả về response và xóa cookie cart_uuid
         return response()->json([
             'token' => $token,
             'token_type' => 'bearer',
@@ -78,82 +120,41 @@ class AuthController extends BaseController
                 'phone_number' => $user->phone_number ?? null,
                 'birthday' => $user->birthday ?? null,
                 'genders' => $user->genders ?? null,
-                'access_channel_type' => $user->access_channel_type ?? null
-            ]
-        ])->withCookie(cookie('cart_uuid', null, -1)); // Xóa cookie cart_uuid
+                'access_channel_type' => $user->access_channel_type ?? null,
+            ],
+            'cart' => $userCart ?? null,
+        ])->withoutCookie('cart_uuid');
     }
 
     public function register(RegisterRequest $request)
     {
+        if (User::where('email', $request->email)->exists()) {
+            return response()->json(['message' => 'Email đã tồn tại'], 400);
+        }
 
-        // Check email tồn tại
-    if (User::where('email', $request->email)->exists()) {
-        return response()->json([
-            'message' => 'Email đã tồn tại',
-        ], 400);
-    }
         try {
             DB::beginTransaction();
 
             $user = User::create([
-                'name'              => $request->name,
-                'email'             => $request->email,
-                'password'          => Hash::make($request->password),
-                'phone_number'      => $request->phone_number,
-                'currency_code'     => 'VND',
-                'genders'           => $request->genders,
-                'birthday'          => $request->birthday,
-                'status'            => 1,
-                'allow_login'       => 1,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'phone_number' => $request->phone_number,
+                'currency_code' => 'VND',
+                'genders' => $request->genders,
+                'birthday' => $request->birthday,
+                'status' => 1,
+                'allow_login' => 1,
                 'access_channel_type' => 2,
             ]);
 
             Auth::login($user);
 
-            // Merge giỏ hàng của khách (nếu có)
-            $uuid = $request->cookie('cart_uuid');
-            $userCart = null;
-            if ($uuid) {
-                $guestCart = Cart::where('uuid', $uuid)->whereNull('user_id')->first();
-                if ($guestCart) {
-                    $userCart = Cart::firstOrCreate(
-                        ['user_id' => $user->id],
-                        [
-                            'ip_address' => $request->ip(),
-                            'currency_code' => $guestCart->currency_code ?? 'VND',
-                            'uuid' => (string) Str::uuid(),
-                        ]
-                    );
-
-                    foreach ($guestCart->items as $item) {
-                        $existing = $userCart->items()->where('inventory_id', $item->inventory_id)->first();
-                        if ($existing) {
-                            $existing->quantity += $item->quantity;
-                            $existing->total_price = $existing->price * $existing->quantity;
-                            $existing->save();
-                        } else {
-                            // Tạo CartItem mới với uuid mới
-                            $userCart->items()->create([
-                                'inventory_id' => $item->inventory_id,
-                                'quantity' => $item->quantity,
-                                'uuid' => (string) Str::uuid(), // Tạo uuid mới
-                                'currency_code' => $item->currency_code,
-                                'status' => $item->status,
-                                'price' => $item->price,
-                                'total_price' => $item->total_price,
-                                'has_combo' => $item->has_combo,
-                                'note' => $item->note ?? null, // Thêm note nếu có
-                            ]);
-                        }
-                    }
-                    $guestCart->delete();
-                    $userCart->updateTotals();
-                }
-            }
+            $guestUuid = $this->getCartUuidFromRequest($request);
+            $userCart = $this->mergeGuestCartToUserCart($guestUuid, $user, $request->ip());
 
             DB::commit();
 
-            // Tạo token (nếu dùng Sanctum)
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([

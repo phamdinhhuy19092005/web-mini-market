@@ -16,10 +16,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cart_id')->index();
             $table->foreignId('inventory_id')->index();
-            $table->text('note')->nullable();
             $table->string('uuid')->unique();
             $table->string('currency_code');
-            $table->boolean('has_combo')->default(0);
             $table->integer('quantity')->default(0);
             $table->decimal('price', 20, 6)->default(0);
             $table->decimal('total_price', 20, 6)->nullable();
