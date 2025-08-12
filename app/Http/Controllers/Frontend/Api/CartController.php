@@ -18,36 +18,24 @@ class CartController extends BaseApiController
     public function index(Request $request)
     {
         $user = $request->user();
-        $cartUuid = $request->cookie('cart_uuid'); // có thể FE gửi header hoặc param khác
-
-        $cart = null;
 
         if ($user) {
             $cart = Cart::with('items.inventory')->where('user_id', $user->id)->first();
+            if (!$cart) {
+                $cart = Cart::create([
+                    'user_id' => $user->id,
+                    'uuid' => Str::uuid(),             
+                    'currency_code' => 'VND',          
+                    'ip_address' => request()->ip(),
+                    'total_item' => 0,
+                    'total_quantity' => 0,
+                    'total_price' => 0,
+                ]);
+            }
+            return response()->json(['cart' => $cart]); 
         }
 
-        if (!$cart && $cartUuid) {
-            $cart = Cart::with('items.inventory')->where('uuid', $cartUuid)->first();
-        }
-
-        if (!$cart) {
-            // Tạo mới giỏ hàng guest
-            $cart = Cart::create([
-                'uuid' => Str::uuid(),
-                'currency_code' => 'VND',
-                'total_item' => 0,
-                'total_quantity' => 0,
-                'total_price' => 0,
-            ]);
-        }
-
-        $response = response()->json(['cart' => $cart]);
-
-        if (!$user) {
-            $response->cookie('cart_uuid', $cart->uuid, 60 * 24 * 30);
-        }
-
-        return $response;
+        return response()->json(['cart' => null]);
     }
 
     // Đồng bộ giỏ hàng từ localStorage FE gửi lên
@@ -61,7 +49,7 @@ class CartController extends BaseApiController
             return response()->json(['message' => 'Invalid cart items'], 400);
         }
 
-        // ✅ Check token nếu có header Authorization mà chưa có user
+        // Xác thực token nếu header Authorization có token nhưng chưa có $user
         if ($request->hasHeader('Authorization') && !$user) {
             $token = $request->bearerToken();
             if ($token) {
@@ -76,19 +64,16 @@ class CartController extends BaseApiController
             }
         }
 
-        $cart = null;
-
         if ($user) {
-            // 🔹 Lấy giỏ hàng hiện tại của user
+            // Lấy giỏ hàng user hiện tại (nếu có)
             $userCart = Cart::with('items')->where('user_id', $user->id)->first();
 
-            // Nếu có cart_uuid (giỏ hàng guest)
             if ($cartUuid) {
                 $guestCart = Cart::with('items')->where('uuid', $cartUuid)->first();
 
                 if ($guestCart) {
-                    if ($userCart && $guestCart->id !== $userCart->id) {
-                        // Gộp items guest vào userCart
+                    if ($userCart) {
+                        // Merge items guestCart vào userCart
                         foreach ($guestCart->items as $item) {
                             $existing = $userCart->items->firstWhere('inventory_id', $item->inventory_id);
                             if ($existing) {
@@ -108,33 +93,35 @@ class CartController extends BaseApiController
                                 ]);
                             }
                         }
+                        // Xóa giỏ guest sau khi merge
+                        $guestCart->items()->delete();
                         $guestCart->delete();
-                    } elseif (!$userCart) {
-                        // Gán user_id cho guestCart
+                    } else {
+                        // Nếu chưa có giỏ user thì gán guestCart thành userCart
                         $guestCart->user_id = $user->id;
                         $guestCart->ip_address = $request->ip();
                         $guestCart->save();
                         $userCart = $guestCart;
                     }
-                } else {
-                    Log::warning('Guest Cart not found', ['cart_uuid' => $cartUuid]);
                 }
             }
 
-            // Nếu chưa có giỏ hàng user → tạo mới
-            $cart = $userCart ?? Cart::firstOrCreate(
-                ['user_id' => $user->id],
-                [
+            // Nếu user chưa có giỏ hàng thì tạo mới
+            if (!$userCart) {
+                $userCart = Cart::create([
+                    'user_id' => $user->id,
                     'uuid' => Str::uuid(),
                     'currency_code' => 'VND',
                     'ip_address' => $request->ip(),
                     'total_item' => 0,
                     'total_quantity' => 0,
                     'total_price' => 0,
-                ]
-            );
+                ]);
+            }
+
+            $cart = $userCart;
         } else {
-            // 🔹 Guest: tạo hoặc lấy giỏ bằng cart_uuid
+            // User chưa login thì xử lý như cũ (lấy hoặc tạo cart guest)
             if ($cartUuid) {
                 $cart = Cart::firstOrCreate(
                     ['uuid' => $cartUuid],
@@ -158,10 +145,9 @@ class CartController extends BaseApiController
             }
         }
 
-        // 🔹 Lấy các item hiện có
+        // Lấy các item hiện có trong cart (user hoặc guest)
         $existingItems = $cart->items()->get()->keyBy('inventory_id');
 
-        // 🔹 Đồng bộ items từ request
         DB::transaction(function () use ($cart, $items, $existingItems) {
             foreach ($items as $item) {
                 $inventoryId = $item['inventory_id'];
@@ -197,12 +183,10 @@ class CartController extends BaseApiController
                     }
                 }
             }
-
-            // Cập nhật tổng giỏ
-            $this->updateCartTotals($cart);
         });
 
-        // 🔹 Trả về giỏ hàng
+        $this->updateCartTotals($cart);
+
         $response = response()->json([
             'cart' => $cart->load('items.inventory'),
         ]);
@@ -213,7 +197,6 @@ class CartController extends BaseApiController
 
         return $response;
     }
-
 
     public function guestSyncCart(Request $request)
     {
@@ -329,8 +312,6 @@ class CartController extends BaseApiController
 
         return $response;
     }
-
-
 
 
     // Cập nhật số lượng nhiều item
