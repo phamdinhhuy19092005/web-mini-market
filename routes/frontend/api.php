@@ -49,28 +49,29 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     Route::put('/addresses/{ids}', [AddressController::class, 'update'])->name('addresses.update');
     Route::post('/addresses/{id}/default', [AddressController::class, 'setDefault']);
 
-    Route::delete('/carts/{id}', [CartController::class, 'destroy'])->name('carts.destroy');
-    Route::post('/carts/sync-cart', [CartController::class, 'syncCart'])->name('carts.sync-cart'); 
-    Route::put('/carts/{id}', [CartController::class, 'update'])->name('carts.update'); 
-    Route::delete('/carts/{cart_id}/items/{inventory_id}', [CartController::class, 'removeItemForUser'])->name('carts.items.destroy');
+    Route::get('/carts', [CartController::class, 'index'])->name('carts.index');
 
-    
+    // Thêm sản phẩm vào giỏ
+    Route::post('/carts/items', [CartController::class, 'addItem'])->name('carts.add-item');
+
+    // Cập nhật số lượng sản phẩm (tăng/giảm)
+    Route::put('/carts/items/{item}', [CartController::class, 'updateItem'])->name('carts.update-item');
+
+    // Xóa sản phẩm khỏi giỏ
+    Route::delete('/carts/items/{item}', [CartController::class, 'removeItem'])->name('carts.remove-item');
+
+    // Xóa toàn bộ giỏ hàng
+    Route::delete('/carts/clear', [CartController::class, 'clearCart'])->name('carts.clear');
+
+    // Đồng bộ giỏ hàng
+    Route::post('/carts/sync-cart', [CartController::class, 'syncCart'])->name('carts.sync-cart');
+
 });
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
 // Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 // Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
-
-//=================================== Dành cho khách hàng vãng lai ===================================//
-
-Route::get('/carts', [CartController::class, 'index'])->name('carts.index'); 
-Route::post('/carts/add-item', [CartController::class, 'addItem'])->name('carts.add-item'); 
-Route::post('/carts/guest-sync', [CartController::class, 'guestSyncCart'])->name('carts.guest-sync'); 
-Route::put('/carts/guest/{cart_uuid}', [CartController::class, 'updateGuestCart'])->name('carts.update-guest');
-Route::delete('/carts/guest/{cart_uuid}/items/{inventory_id}', [CartController::class, 'removeItemForGuest'])->name('carts.items.destroy');
-
-//=================================== END ===================================//
 
 Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
 Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');

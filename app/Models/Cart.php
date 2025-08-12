@@ -43,4 +43,12 @@
             return $this->hasMany(CartItem::class, 'cart_id', 'id');
         }
 
+        public function updateTotals()
+        {
+            $this->total_quantity = $this->items()->sum('quantity');
+            $this->total_price = $this->items()->sum('total_price');
+            $this->total_item = $this->items()->count();
+            $this->save();
+        }
+
     }
