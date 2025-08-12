@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -8,10 +9,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Firebase\JWT\JWT;
 use App\Http\Requests\RegisterRequest;
 use App\Models\Cart;
-use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -19,6 +18,78 @@ use App\Enum\UserActionEnum;
 
 class AuthController extends BaseController
 {
+    protected function getCartUuidFromRequest(Request $request)
+    {
+        return $request->cookie('cart_uuid')
+            ?? $request->header('X-Cart-UUID')
+            ?? $request->input('cart_uuid');
+    }
+
+    protected function mergeGuestCartToUserCart(?string $guestUuid, User $user, string $ipAddress)
+    {
+        if (!$guestUuid) {
+            Log::info("No guest cart UUID provided for merge.");
+            return null;
+        }
+
+        $guestCart = Cart::where('uuid', $guestUuid)->whereNull('user_id')->first();
+
+        if (!$guestCart) {
+            Log::info("Guest cart with UUID {$guestUuid} not found or already merged.");
+            return null;
+        }
+
+        DB::beginTransaction();
+        try {
+            $userCart = Cart::firstOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'ip_address' => $ipAddress,
+                    'currency_code' => $guestCart->currency_code ?? 'VND',
+                    'uuid' => (string) Str::uuid(),
+                    'total_item' => 0,
+                    'total_quantity' => 0,
+                    'total_price' => 0,
+                ]
+            );
+
+            foreach ($guestCart->items as $item) {
+                $existing = $userCart->items()->where('inventory_id', $item->inventory_id)->first();
+                if ($existing) {
+                    $existing->quantity += $item->quantity;
+                    $existing->total_price = $existing->price * $existing->quantity;
+                    $existing->save();
+                } else {
+                    $userCart->items()->create([
+                        'inventory_id' => $item->inventory_id,
+                        'quantity' => $item->quantity,
+                        'uuid' => (string) Str::uuid(),
+                        'currency_code' => $item->currency_code,
+                        'status' => $item->status,
+                        'price' => $item->price,
+                        'total_price' => $item->total_price,
+                        'has_combo' => $item->has_combo ?? 0,
+                        'note' => $item->note ?? null,
+                    ]);
+                }
+            }
+
+            $userCart->total_quantity = $userCart->items()->sum('quantity');
+            $userCart->total_item = $userCart->items()->count();
+            $userCart->total_price = $userCart->items()->sum('total_price');
+            $userCart->save();
+
+            $guestCart->delete();
+
+            DB::commit();
+            return $userCart;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error merging guest cart: " . $e->getMessage());
+            return null;
+        }
+    }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -31,49 +102,18 @@ class AuthController extends BaseController
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['error' => 'Sai email hoặc mật khẩu'], 401);
         }
-        //check status
+
         if ($user->status !== UserActionEnum::ACTIVE) {
-    return response()->json(['error' => 'Vui lòng kích hoạt tài khoản!'], 403);
-}
-
-
-
-        $cartUuid = $request->cookie('cart_uuid');
-        if ($cartUuid) {
-            $guestCart = Cart::with('items')->where('uuid', $cartUuid)->whereNull('user_id')->first();
-
-            if ($guestCart) {
-                $userCart = Cart::firstOrCreate(
-                    ['user_id' => $user->id],
-                    [
-                        'uuid' => (string) Str::uuid(),
-                        'ip_address' => $request->ip(),
-                        'currency_code' => $guestCart->currency_code ?? 'VND',
-                    ]
-                );
-
-                foreach ($guestCart->items as $item) {
-                    $existingItem = CartItem::where('cart_id', $userCart->id)
-                        ->where('inventory_id', $item->inventory_id)
-                        ->first();
-
-                    if ($existingItem) {
-                        $existingItem->quantity += $item->quantity;
-                        $existingItem->save();
-                    } else {
-                        $item->cart_id = $userCart->id;
-                        $item->save();
-                    }
-                }
-
-                $guestCart->delete();
-            }
+            return response()->json(['error' => 'Vui lòng kích hoạt tài khoản!'], 403);
         }
 
-        // Tạo access token
+        Auth::login($user);
+
+        $guestUuid = $this->getCartUuidFromRequest($request);
+        $userCart = $this->mergeGuestCartToUserCart($guestUuid, $user, $request->ip());
+
         $token = $user->createToken('authToken')->plainTextToken;
 
-        // Trả về response và xóa cookie cart_uuid
         return response()->json([
             'token' => $token,
             'token_type' => 'bearer',
@@ -86,95 +126,49 @@ class AuthController extends BaseController
                 'phone_number' => $user->phone_number ?? null,
                 'birthday' => $user->birthday ?? null,
                 'genders' => $user->genders ?? null,
-                'access_channel_type' => $user->access_channel_type ?? null
-            ]
-        ])->withCookie(cookie('cart_uuid', null, -1)); // Xóa cookie cart_uuid
+                'access_channel_type' => $user->access_channel_type ?? null,
+            ],
+            'cart' => $userCart ?? null,
+        ])->withoutCookie('cart_uuid');
     }
 
+    public function register(RegisterRequest $request)
+    {
+        if (User::where('email', $request->email)->exists()) {
+            return response()->json(['message' => 'Email đã tồn tại'], 400);
+        }
 
-public function register(RegisterRequest $request)
-{
-    // Kiểm tra email tồn tại
-    if (User::where('email', $request->email)->exists()) {
-        return response()->json([
-            'status'  => 'error',
-            'message' => 'Email đã tồn tại'
-        ], 409); // 409 Conflict
-    }
+        try {
+            DB::beginTransaction();
 
-    try {
-        DB::beginTransaction();
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'phone_number' => $request->phone_number,
+                'currency_code' => 'VND',
+                'genders' => $request->genders,
+                'birthday' => $request->birthday,
+                'status' => 0, // Chưa kích hoạt
+                'allow_login' => 1,
+                'access_channel_type' => 2,
+            ]);
 
-        // Tạo token xác thực email
-        $token = Str::random(60);
+            // Tạo token xác thực email
+            $token = Str::random(60);
+            $user->remember_token = $token;
+            $user->save();
 
-        // Tạo user
-        $user = User::create([
-            'name'                => $request->name,
-            'email'               => $request->email,
-            'password'            => Hash::make($request->password),
-            'phone_number'        => $request->phone_number,
-            'currency_code'       => 'VND',
-            'genders'             => $request->genders,
-            'birthday'            => $request->birthday,
-            'status'              => 0, // Chưa kích hoạt
-            'allow_login'         => 1,
-            'access_channel_type' => 2,
-            'remember_token'      => $token,
-        ]);
+            $verifyUrl = "http://localhost:3001/verify-email?token={$token}&email=" . urlencode($user->email);
+            Mail::to($user->email)->send(new VerifyEmail($user, $verifyUrl));
 
-        // URL xác thực gửi về FE (ví dụ FE ở cổng 3001)
-        $verifyUrl = "http://localhost:3001/verify-email?token={$token}&email=".urlencode($user->email);
+            Auth::login($user);
 
-        // Gửi email xác thực
-        Mail::to($user->email)->send(new VerifyEmail($user, $verifyUrl));
-        // return response()->json(['message' => 'Vui lòng kiểm tra email để xác thực.']);
-
-        Auth::login($user);
-            // Merge giỏ hàng của khách (nếu có)
-            $uuid = $request->cookie('cart_uuid');
-            $userCart = null;
-            if ($uuid) {
-                $guestCart = Cart::where('uuid', $uuid)->whereNull('user_id')->first();
-                if ($guestCart) {
-                    $userCart = Cart::firstOrCreate(
-                        ['user_id' => $user->id],
-                        [
-                            'ip_address' => $request->ip(),
-                            'currency_code' => $guestCart->currency_code ?? 'VND',
-                            'uuid' => (string) Str::uuid(),
-                        ]
-                    );
-
-                    foreach ($guestCart->items as $item) {
-                        $existing = $userCart->items()->where('inventory_id', $item->inventory_id)->first();
-                        if ($existing) {
-                            $existing->quantity += $item->quantity;
-                            $existing->total_price = $existing->price * $existing->quantity;
-                            $existing->save();
-                        } else {
-                            // Tạo CartItem mới với uuid mới
-                            $userCart->items()->create([
-                                'inventory_id' => $item->inventory_id,
-                                'quantity' => $item->quantity,
-                                'uuid' => (string) Str::uuid(), // Tạo uuid mới
-                                'currency_code' => $item->currency_code,
-                                'status' => $item->status,
-                                'price' => $item->price,
-                                'total_price' => $item->total_price,
-                                'has_combo' => $item->has_combo,
-                                'note' => $item->note ?? null, // Thêm note nếu có
-                            ]);
-                        }
-                    }
-                    $guestCart->delete();
-                    $userCart->updateTotals();
-                }
-            }
+            $guestUuid = $this->getCartUuidFromRequest($request);
+            $userCart = $this->mergeGuestCartToUserCart($guestUuid, $user, $request->ip());
 
             DB::commit();
 
-            // Tạo token (nếu dùng Sanctum)
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
@@ -192,62 +186,54 @@ public function register(RegisterRequest $request)
         }
     }
 
-public function verifyEmail(Request $request)
-{
-    Log::info('Dữ liệu nhận được từ request:', $request->all());
+    public function verifyEmail(Request $request)
+    {
+        Log::info('Dữ liệu nhận được từ request:', $request->all());
 
-    $token = urldecode($request->input('token'));
-    $email = urldecode($request->input('email'));
+        $token = urldecode($request->input('token'));
+        $email = urldecode($request->input('email'));
 
-    if (!$token || !$email) {
+        if (!$token || !$email) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Thiếu token hoặc email'
+            ], 400);
+        }
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email không tồn tại'
+            ], 404);
+        }
+
+        if ($user->status == 1) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Tài khoản đã được xác thực trước đó'
+            ], 200);
+        }
+
+        if ($user->remember_token !== $token) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Token không hợp lệ'
+            ], 400);
+        }
+
+        $user->status = 1;
+        $user->email_verified_at = now();
+        $user->remember_token = null;
+        $user->save();
+
         return response()->json([
-            'status'  => 'error',
-            'message' => 'Thiếu token hoặc email'
-        ], 400);
-    }
-
-    $user = User::where('email', $email)->first();
-
-    if (!$user) {
-        return response()->json([
-            'status'  => 'error',
-            'message' => 'Email không tồn tại'
-        ], 404);
-    }
-
-    // Nếu đã kích hoạt rồi thì trả về success luôn
-    if ($user->status == 1) {
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Tài khoản đã được xác thực trước đó'
+            'status' => 'success',
+            'message' => 'Xác thực email thành công'
         ], 200);
     }
 
-    // Nếu chưa kích hoạt thì kiểm tra token
-    if ($user->remember_token !== $token) {
-        return response()->json([
-            'status'  => 'error',
-            'message' => 'Token không hợp lệ'
-        ], 400);
-    }
-
-    // Cập nhật trạng thái
-    $user->status = 1;
-    $user->email_verified_at = now();
-    $user->remember_token = null;
-    $user->save();
-
-    return response()->json([
-        'status'  => 'success',
-        'message' => 'Xác thực email thành công'
-    ], 200);
-}
-
-
-
-
-
-  
     public function sendResetLink(Request $request)
     {
         $request->validate([
@@ -270,9 +256,6 @@ public function verifyEmail(Request $request)
             $frontendUrl = "http://localhost:3001/resetPassword";
             $resetUrl = "{$frontendUrl}?token={$token}&email={$user->email}";
 
-
-            // $resetUrl = url("/reset-password?token={$token}&email={$user->email}");
-
             Mail::raw("Click vào link để đặt lại mật khẩu: {$resetUrl}", function ($message) use ($user) {
                 $message->to($user->email)
                     ->subject('Khôi phục mật khẩu');
@@ -292,8 +275,8 @@ public function verifyEmail(Request $request)
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email',
-            'token'    => 'required',
+            'email' => 'required|email',
+            'token' => 'required',
             'password' => 'required|confirmed|min:6',
         ]);
 
