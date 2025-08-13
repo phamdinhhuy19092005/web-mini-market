@@ -38,7 +38,7 @@ class User extends Authenticatable
 
     protected $casts = [
     'status' => \App\Enum\UserActionEnum::class, // ✅ Đúng namespace
-];
+    ];
 
 
     protected function casts(): array

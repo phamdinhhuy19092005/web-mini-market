@@ -17,24 +17,33 @@ abstract class BaseApiController extends Controller
     /**
      * Hàm tiện ích trả về response dạng chuẩn
      */
-    protected function respondSuccess($data = null, $message = 'Success', $code = 200)
-    {
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'data' => $data,
-        ], $code);
+    protected function respondSuccess($success = true, $data = null, $message = 'Success', $code = 200)
+{
+    $code = (int) $code;
+    if ($code < 100 || $code > 599) {
+        $code = 200; // fallback
     }
 
-    /**
-     * Hàm tiện ích trả về response lỗi
-     */
-    protected function respondError($message = 'Error', $code = 400, $errors = null)
-    {
-        return response()->json([
-            'success' => false,
-            'message' => $message,
-            'errors' => $errors,
-        ], $code);
+    return response()->json([
+        'success' => $success,
+        'message' => $message,
+        'data'    => $data,
+    ], $code);
+}
+
+protected function respondError($success = false, $data = null, $message = 'Error', $code = 400, $errors = null)
+{
+    $code = (int) $code;
+    if ($code < 100 || $code > 599) {
+        $code = 400; // fallback
     }
+
+    return response()->json([
+        'success' => $success,
+        'message' => $message,
+        'data'    => $data,
+        'errors'  => $errors,
+    ], $code);
+}
+
 }

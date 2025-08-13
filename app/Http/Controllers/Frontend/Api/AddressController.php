@@ -23,12 +23,12 @@ class AddressController extends BaseApiController
     $user = auth()->user(); 
 
     if (!$user) {
-        return $this->jsonResponse(false, null, 'Bạn chưa đăng nhập', 401);
+        return $this->respondError(false, null, 'Bạn chưa đăng nhập', 401);
     }
 
     $addresses = Address::where('user_id', $user->id)->get();
 
-    return $this->jsonResponse(true, AddressResource::collection($addresses));
+    return $this->respondSuccess(true, AddressResource::collection($addresses));
 }
 
 
@@ -70,9 +70,9 @@ public function getWardsByDistrict($districtCode)
     {
         $address = Address::find($id);
         if (!$address) {
-            return $this->jsonResponse(false, null, 'Địa chỉ không tìm thấy', 404);
+            return $this->respondError(false, null, 'Địa chỉ không tìm thấy', 404);
         }
-        return $this->jsonResponse(true, new AddressResource($address));
+        return $this->respondSuccess(true, new AddressResource($address));
     }
 
     public function store(StoreAddressRequestInterface $request): JsonResponse
@@ -91,7 +91,7 @@ public function getWardsByDistrict($districtCode)
 
     $address = $this->addressService->create($data);
 
-    return $this->jsonResponse(true, new AddressResource($address), 'Tạo địa chỉ thành công');
+    return $this->respondSuccess(true, new AddressResource($address), 'Tạo địa chỉ thành công');
 }
 
 
@@ -99,10 +99,7 @@ public function getWardsByDistrict($districtCode)
 {
     $user = auth()->user();
     if (!$user) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Bạn chưa đăng nhập hoặc token không hợp lệ.'
-        ], 401);
+        return $this->respondError(false, null, 'Bạn chưa đăng nhập hoặc token không hợp lệ.', 401);
     }
 
     $data = $request->all();
@@ -119,19 +116,12 @@ public function getWardsByDistrict($districtCode)
         ->first();
 
     if (!$address) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Địa chỉ không tồn tại.'
-        ], 404);
+        return $this->respondError(false, null, 'Địa chỉ không tồn tại.', 404);
     }
 
     $address->update($data);
 
-    return response()->json([
-        'success' => true,
-        'data' => $address,
-        'message' => 'Cập nhật địa chỉ thành công.'
-    ]);
+    return $this->respondSuccess(true, $address, 'Cập nhật địa chỉ thành công.');
 }
 
 
@@ -140,12 +130,12 @@ public function setDefault($id): JsonResponse
 {
     $user = auth()->user();
     if (!$user) {
-        return $this->jsonResponse(false, null, 'Bạn chưa đăng nhập', 401);
+        return $this->respondError(false, null, 'Bạn chưa đăng nhập', 401);
     }
 
     $address = Address::where('id', $id)->where('user_id', $user->id)->first();
     if (!$address) {
-        return $this->jsonResponse(false, null, 'Địa chỉ không tồn tại', 404);
+        return $this->respondError(false, null, 'Địa chỉ không tồn tại', 404);
     }
 
     // Bỏ mặc định các địa chỉ khác
@@ -155,7 +145,7 @@ public function setDefault($id): JsonResponse
     $address->is_default = 1;
     $address->save();
 
-    return $this->jsonResponse(true, new AddressResource($address), 'Cập nhật mặc định thành công');
+    return $this->respondSuccess(true, new AddressResource($address), 'Cập nhật mặc định thành công');
 }
 
 }
