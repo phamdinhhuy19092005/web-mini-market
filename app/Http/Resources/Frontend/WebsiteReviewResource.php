@@ -10,8 +10,7 @@ class WebsiteReviewResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'user_name' => optional($this->user)->name,
+            'name' => $this->name,
             'status' => $this->status,
             'status_name' => $this->status_name,
             'rating' => $this->rating,
