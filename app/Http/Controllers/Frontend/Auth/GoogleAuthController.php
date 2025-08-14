@@ -37,13 +37,11 @@ class GoogleAuthController extends BaseController
                     'email_verified_at' => now(),
                     'last_logged_in_at' => now(),
                     'access_channel_type' => 1,
-                    'provider' => 'google',
                 ]);
             } else {
                 $user->update([
                     'last_logged_in_at' => now(),
                     'access_channel_type' => $user->access_channel_type ?? 1,
-                    'provider' => $user->provider ?? 'google',
                 ]);
             }
 
