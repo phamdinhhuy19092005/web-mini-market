@@ -12,6 +12,7 @@ class CartResource extends BaseResource
             'id' => $this->id,
             'user_name' => optional($this->user)->name,
             'total_item' => $this->total_item, 
+            'ip_address' => $this->ip_address,
             'uuid' => $this->uuid,
             'address_id' => $this->address_id,
             'currency_code' => $this->currency_code,

@@ -72,7 +72,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
     Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');
     Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
+
     Route::get('/carts', [CartController::class, 'index'])->name('carts.index');
+    Route::get('/carts/{userId}', [CartController::class, 'userCarts'])->name('carts.user');
+
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/order-status/{orderStatus}', [OrderController::class, 'statisticOrderStatus'])->name('orders.statistic.order-status');
 });

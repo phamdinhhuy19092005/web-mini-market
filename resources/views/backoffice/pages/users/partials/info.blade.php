@@ -68,6 +68,38 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="status">Trạng thái <span class="text-danger">*</span></label>
+                    <input type="text" name="status" id="status" class="form-control" autocomplete="off" value="{{ old('status', $user->status_name) }}" disabled>
+                    @error('status') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="birthday">Sinh nhật <span class="text-danger">*</span></label>
+                    <input type="text" name="birthday" id="birthday" class="form-control" autocomplete="off" value="{{ old('currency_code', $user->birthday) }}" disabled>
+                    @error('birthday') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="genders">Giới tính <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="genders" name="genders"
+                        value="{{ old('genders', $user->genders) == 0 ? 'Nam' : 'Nữ' }}" disabled>
+                    @error('genders')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
 

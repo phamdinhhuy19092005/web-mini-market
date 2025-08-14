@@ -11,9 +11,9 @@ enum UserActionEnum: int
     public function label(): string
     {
         return match ($this) {
-            self::PENDING => 'PENDING',
-            self::ACTIVE => 'ACTIVE',
-            self::DEACTIVATE => 'DEACTIVATE',
+            self::PENDING => 'Pending',
+            self::ACTIVE => 'Active',
+            self::DEACTIVATE => 'Deactivate',
         };
     }
 

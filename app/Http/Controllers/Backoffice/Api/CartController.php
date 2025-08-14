@@ -16,7 +16,15 @@ class CartController extends BaseApiController
     public function index(Request $request)
     {
         $carts = $this->CartService->searchByAdmin($request->all());
-        
+
         return $this->responses(ListCartResponseContract::class, $carts);
     }
+
+    public function userCarts($userId)
+    {
+        $carts = $this->CartService->getCartsWithItemsByUserId($userId);
+
+        return $this->responses(ListCartResponseContract::class, $carts);
+    }
+
 }

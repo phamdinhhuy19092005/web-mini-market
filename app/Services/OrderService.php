@@ -101,10 +101,12 @@ class OrderService extends BaseService
 
             foreach ($cartItems as $item) {
                 $inventory = Inventory::findOrFail($item['inventory_id']);
+                $price = $inventory->sale_price ?? $inventory->offer_price;
                 $order->items()->create([
                     'inventory_id' => $item['inventory_id'],
                     'quantity' => $item['quantity'],
-                    'price' => $inventory->sale_price ?? $inventory->offer_price,
+                    'price' => $price,
+                    'total_price' => $price * $item['quantity'],
                     'user_id' => $order->user_id,
                     'currency_code' => $order->currency_code,
                 ]);

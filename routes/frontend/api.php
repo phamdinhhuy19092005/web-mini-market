@@ -66,6 +66,8 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     // Đồng bộ giỏ hàng
     Route::post('/carts/sync-cart', [CartController::class, 'syncCart'])->name('carts.sync-cart');
 
+    Route::post('/web-reviews/store', [WebsiteReviewController::class, 'store'])->name('web-reviews.store');
+
 });
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
@@ -77,7 +79,6 @@ Route::post('/payment/create', [PaymentController::class, 'createPayment'])->nam
 Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
 
 Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');
-Route::post('/website-reviews', [WebsiteReviewController::class, 'store'])->name('website-reviews.store');
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
@@ -138,7 +139,7 @@ Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.sh
 Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
 Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
 
-
+// ====================== Địa chỉ ======================
 
 Route::get('/provinces', [ProvinceController::class, 'index'])->name('provinces.index');
 Route::get('/provinces/{id}', [ProvinceController::class, 'show'])->name('provinces.show');
@@ -146,17 +147,14 @@ Route::get('/provinces/{id}', [ProvinceController::class, 'show'])->name('provin
 Route::get('/districts', [DistrictController::class, 'index'])->name('districts.index');
 Route::get('/districts/{id}', [DistrictController::class, 'show'])->name('districts.show');
 
-
-
 Route::get('/wards/{districtCode}', [AddressController::class, 'getWardsByDistrict']);
 
 Route::get('/wards', [WardController::class, 'index'])->name('wards.index');
 Route::get('/wards/{id}', [WardController::class, 'show'])->name('wards.show');
 
-
 Route::get('/districts/{provinceCode}', [AddressController::class, 'getDistrictsByProvince']);
 
-
+// ================== Tạo tài khoản và xác thực email ======================
 Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
 
 

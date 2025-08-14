@@ -127,7 +127,7 @@ License: You must have a valid license purchased only from https://themes.getboo
                     <div class="k-login-v1__body-wrapper">
                         <div class="k-login-v1__body-container">
                             <h3 class="k-login-v1__body-title">
-                                Sign To Account
+                                ĐĂNG NHẬP 
                             </h3>
                             {{-- {{ dd(csrf_token()) }} --}}
                             <!--begin::Form-->
@@ -143,7 +143,7 @@ License: You must have a valid license purchased only from https://themes.getboo
 
                                 <!-- Action buttons phải nằm trong form -->
                                 <div class="k-login-v1__body-action">
-                                    <button type="submit" class="btn btn-pill btn-elevate">Sign In</button>
+                                    <button type="submit" class="btn btn-pill btn-elevate">Đăng nhập</button>
                                 </div>
                             </form>
 

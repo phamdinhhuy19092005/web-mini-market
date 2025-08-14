@@ -43,12 +43,12 @@ class UserService extends BaseService
 
             UserActionLog::create([
                 'user_id' => $user->id,
-                'type' => $status === ActivationStatusEnum::ACTIVE
-                    ? UserActionLogTypeEnum::ACTIVATE
-                    : UserActionLogTypeEnum::DEACTIVATE,
+                'type' => $status === ActivationStatusEnum::ACTIVE ? UserActionLogTypeEnum::ACTIVATE : UserActionLogTypeEnum::DEACTIVATE,
                 'reason' => $reason,
                 'created_by_id' => auth()->id(),
                 'created_by_type' => get_class(auth()->user()),
+                'updated_by_id' => auth()->id(),
+                'updated_by_type' => get_class(auth()->user()),
             ]);
 
             return $user;

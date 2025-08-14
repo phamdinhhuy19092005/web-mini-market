@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Enum\AccessChannelEnum;
+use App\Enum\UserActionEnum;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,7 +12,6 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
-    use Activatable;
 
     protected $fillable = [
         'name',
@@ -36,17 +35,13 @@ class User extends Authenticatable
         'password',
     ];
 
-    protected $casts = [
-    'status' => \App\Enum\UserActionEnum::class, // ✅ Đúng namespace
-];
-
-
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'access_channel_type' => AccessChannelEnum::class,
+            'status' => UserActionEnum::class, // enum cast
         ];
     }
 
@@ -70,10 +65,13 @@ class User extends Authenticatable
         return $this->hasMany(Address::class);
     }
 
-
     public function getAccessChannelTypeNameAttribute(): string
     {
         return $this->access_channel_type?->label() ?? 'Không xác định';
     }
 
+    public function getStatusNameAttribute(): string
+    {
+        return $this->status?->label() ?? 'Không xác định';
+    }
 }

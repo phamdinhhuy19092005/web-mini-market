@@ -13,18 +13,26 @@ class WebsiteReviewService extends BaseService
         $this->websiteReviewRepository = $websiteReviewRepository;
     }
 
+    
+
     public function searchByAdmin($data = [])
     {
         $query = data_get($data, 'query');
+        $status = data_get($data, 'status');
         $perPage = data_get($data, 'per_page', 10);
 
         return $this->websiteReviewRepository->model()::query()
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                    ->orWhere('name', 'like', "%$query%");
+                ->orWhere('name', 'like', "%$query%");
             })
+            ->when(isset($status), function ($q) use ($status) {
+                $q->where('status_name', $status);
+            })
+            ->orderBy('id', 'desc') 
             ->paginate($perPage);
     }
+
 
     public function create(array $attributes = [])
     {
@@ -46,9 +54,16 @@ class WebsiteReviewService extends BaseService
     public function update($id, array $attributes = [])
     {
         return DB::transaction(function () use ($id, $attributes) {
+            $model = $this->websiteReviewRepository->findOrFail($id);
+
+            if (isset($attributes['status'])) {
+                $attributes['status'] = (int) $attributes['status'];
+            }
+
             return $this->websiteReviewRepository->update($id, $attributes);
         });
     }
+
 
 
     public function delete($id)

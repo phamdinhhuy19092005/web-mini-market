@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="k-separator k-separator--border-dashed k-separator--height-xs"></div>
                                 <div class="k-section__content action mt-4">
-                                    @if($user->status == $activationStatus::ACTIVE)
+                                    @if($user->status->value === $activationStatus::ACTIVE)
                                         <button data-url="{{ route('bo.web.users.action.deactivate', $user->id) }}"
                                                 data-type="DEACTIVATE"
                                                 data-toggle="modal"
@@ -66,8 +66,8 @@
                                                 class="btn_user_action btn btn-outline-danger btn-block btn-pill btn-label-danger">
                                             {{ __('Vô hiệu hóa') }}
                                         </button>
-                                    @elseif($user->status == $activationStatus::INACTIVE)
-                                        <button data-url="{{ route('bo.web.users.action.active', $user->id) }}"
+                                    @elseif($user->status->value === $activationStatus::INACTIVE)
+                                        <button data-url="{{ route('bo.web.users.action.activate', $user->id) }}"
                                                 data-type="ACTIVE"
                                                 data-toggle="modal"
                                                 data-target="#UserActionModal"
@@ -112,4 +112,87 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const userActionButtons = document.querySelectorAll('.btn_user_action');
+            const userActionModal = document.getElementById('UserActionModal');
+            const formUserAction = document.getElementById('form_user_action');
+            const textareaReason = formUserAction.querySelector('textarea[name="reason"]');
+            const modalTitle = userActionModal.querySelector('.modal-title');
+
+            userActionButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const url = btn.getAttribute('data-url');
+                    const type = btn.getAttribute('data-type'); // "ACTIVE" hoặc "DEACTIVATE"
+
+                    formUserAction.setAttribute('action', url);
+                    modalTitle.textContent = type === 'DEACTIVATE' ? 'Vô hiệu hóa' : 'Kích hoạt';
+                    textareaReason.value = '';
+                });
+            });
+
+            formUserAction.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const actionUrl = formUserAction.getAttribute('action');
+                const formData = new FormData(formUserAction);
+
+                try {
+                    const response = await fetch(actionUrl, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        alert(data.message || 'Đã có lỗi xảy ra!');
+                        return;
+                    }
+
+                    alert(data.message || 'Thao tác thành công!');
+                    location.reload();
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Đã có lỗi xảy ra!');
+                }
+            });
+
+            const tabLinks = document.querySelectorAll('.k-nav__item .k-nav__link');
+
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // Xóa active ở tất cả tab
+                    document.querySelectorAll('.k-nav__item').forEach(item => {
+                        item.classList.remove('k-nav__item--active');
+                    });
+
+                    // Thêm active cho tab hiện tại
+                    this.closest('.k-nav__item').classList.add('k-nav__item--active');
+
+                    // Hiển thị nội dung tab tương ứng
+                    const targetId = this.getAttribute('href');
+                    document.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('active', 'show');
+                    });
+                    document.querySelector(targetId).classList.add('active', 'show');
+
+                    // Nếu có data-tab, bạn có thể xử lý load dữ liệu tại đây
+                    const dataTab = this.dataset.tab;
+                    if (dataTab) {
+                        console.log('Load data for tab:', dataTab);
+                        // Gọi API hoặc load nội dung động ở đây nếu cần
+                    }
+                });
+            });
+        });
+        </script>
+
 @endpush

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Frontend;
 
-class HomeController 
+class HomeController
 {
     public function index()
     {
-        dd('home');
+        return view('frontend.pages.home.index');
     }
 }

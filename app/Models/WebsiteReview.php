@@ -15,6 +15,7 @@ class WebsiteReview extends Model
         'rating',
         'status',
     ];
+    
 
     public function getStatusNameAttribute(): string
     {

@@ -25,7 +25,15 @@ class ActivationStatus extends BaseEnum
 
     public static function label($value): string
     {
-        return self::labels()[$value] ?? 'Unknown';
+        if ($value instanceof self) {
+            $value = $value->value ?? null;
+        } elseif (!is_scalar($value)) {
+            return 'Unknown';
+        }
+
+        return self::labels()[(int)$value] ?? 'Unknown';
     }
+
+
 
 }

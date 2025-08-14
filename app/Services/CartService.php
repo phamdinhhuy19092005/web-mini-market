@@ -33,6 +33,14 @@ class CartService extends BaseService
             ->paginate($perPage);
     }
 
+    public function getCartsWithItemsByUserId(int $userId)
+    {
+        return Cart::with(['items.inventory']) 
+            ->where('user_id', $userId)
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
     public function getOrCreateCart($user, $cartUuid, $ip)
     {
         if ($user) {

@@ -1,17 +1,17 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Edit Post');
+    $title = __('Chỉnh sửa đánh giá');
 
     $breadcrumbs = [
         [
-            'label' => __('Utilities'),
+            'label' => __('Hỗ trợ khách hàng'),
         ],
         [
-            'label' => __('Blogs'),
+            'label' => __('Đánh giá websites'),
         ],
         [
-            'label' => __('Edit Post'),
+            'label' => __('Chỉnh sửa đánh giá'),
         ],
     ];
 @endphp
@@ -28,7 +28,7 @@
                 <div class="k-portlet">
                     <div class="k-portlet__head">
                         <div class="k-portlet__head-label">
-                            <h3 class="k-portlet__head-title">Edit Post</h3>
+                            <h3 class="k-portlet__head-title">Chỉnh sửa đánh giá</h3>
                         </div>
                     </div>
 
@@ -87,15 +87,29 @@
                                     <textarea name="comment" rows="4" class="form-control" placeholder="{{ __('Viết nhận xét...') }}" disabled>{{ old('comment', $web_review->comment) }}</textarea>
                                 </div>
 
-                                <!-- Status Toggle -->
-                                <div class="col-md-6 form-group d-flex align-items-center">
-                                    <label class="mr-3">{{ __('Kích hoạt (tán thành)') }}</label>
-                                    <span class="k-switch">
-                                        <label>
-                                            <input type="checkbox" name="status" value="1" {{ old('status', $web_review->status) ? 'checked' : '' }}>
-                                            <span></span>
-                                        </label>
-                                    </span>
+                                <!-- Status Dropdown -->
+                                <div class="col-md-6 form-group">
+                                    <label for="status">{{ __('Trạng thái') }}</label>
+                                    <select name="status" class="form-control k_selectpicker">
+                                        <option value="{{ \App\Enum\ReviewStatusEnum::DECLINED->value }}" 
+                                            {{ (string) old('status', $web_review->status ?? \App\Enum\ReviewStatusEnum::APPROVED->value) === (string) \App\Enum\ReviewStatusEnum::DECLINED->value ? 'selected' : '' }}>
+                                            {{ __('Từ chối') }}
+                                        </option>
+
+                                        <option value="{{ \App\Enum\ReviewStatusEnum::PENDING->value }}" 
+                                            {{ (string) old('status', $web_review->status ?? \App\Enum\ReviewStatusEnum::APPROVED->value) === (string) \App\Enum\ReviewStatusEnum::PENDING->value ? 'selected' : '' }}>
+                                            {{ __('Đang chờ') }}
+                                        </option>
+
+                                        <option value="{{ \App\Enum\ReviewStatusEnum::APPROVED->value }}" 
+                                            {{ (string) old('status', $web_review->status ?? \App\Enum\ReviewStatusEnum::APPROVED->value) === (string) \App\Enum\ReviewStatusEnum::APPROVED->value ? 'selected' : '' }}>
+                                            {{ __('Đã duyệt') }}
+                                        </option>
+                                    </select>
+
+                                    @error('status')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>

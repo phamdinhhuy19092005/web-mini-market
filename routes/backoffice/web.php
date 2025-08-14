@@ -392,8 +392,8 @@ Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-Route::post('users/{id}/deactivate', [UserController::class, 'deactivate'])->name('users.action.deactivate');
-Route::post('active/{id}/active', [UserController::class, 'active'])->name('users.action.active');
+Route::post('users/{id}/actions/deactivate', [UserController::class, 'deactivate'])->name('users.action.deactivate');
+Route::post('users/{id}/actions/activate', [UserController::class, 'activate'])->name('users.action.activate');
 
 /*
 |--------------------------------------------------------------------------

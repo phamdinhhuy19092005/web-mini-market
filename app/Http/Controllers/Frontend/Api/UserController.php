@@ -31,7 +31,7 @@ public function update(Request $request, $id)
         $user->save();
 
         $duration = round((microtime(true) - $start) * 1000, 2);
-        \Log::info("⚡️ Cập nhật user mất {$duration} ms");
+        Log::info("⚡️ Cập nhật user mất {$duration} ms");
 
         return response()->json([
             'user' => $user->only([

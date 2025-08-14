@@ -24,7 +24,7 @@
                 </div>
 
                 <!--begin::Form-->
-                <form class="k-form" method="POST" action="{{ route('bo.web.address.update', $admin->id) }}" enctype="multipart/form-data">
+                <form class="k-form" method="POST" action="{{ route('bo.web.admins.update', $admin->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="k-portlet__body">

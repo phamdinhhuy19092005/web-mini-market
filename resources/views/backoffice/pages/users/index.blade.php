@@ -46,7 +46,5 @@
             </div>
         </div>
     </div>
-
-    @component('backoffice.partials.datatable')
-    @endcomponent
+    @component('backoffice.partials.datatable')@endcomponent
 @endsection
