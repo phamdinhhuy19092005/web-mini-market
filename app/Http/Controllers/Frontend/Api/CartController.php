@@ -11,6 +11,20 @@ use Illuminate\Support\Str;
 class CartController extends BaseApiController
 {
     /**
+     * Hiển thị giỏ hàng
+     */
+    public function index(Request $request)
+    {
+        $user = $request->user();
+        $cart = Cart::with('items.inventory')->where('user_id', $user->id)->first();
+
+        return response()->json([
+            'message' => 'Cart fetched successfully',
+            'data'    => $cart ? $cart->items : [],
+        ]);
+    }
+
+    /**
      * Thêm sản phẩm vào giỏ hàng
      */
     public function addItem(Request $request)
@@ -56,7 +70,7 @@ class CartController extends BaseApiController
 
         return response()->json([
             'message' => 'Item added to cart successfully',
-            'cart'    => $cart->load('items'),
+            'cart'    => $cart->load(['items.inventory']),
         ]);
     }
 
@@ -90,7 +104,6 @@ class CartController extends BaseApiController
         $cart = $item->cart;
         $item->delete();
         $cart->updateTotals();
-
         return response()->json([
             'message' => 'Item removed from cart successfully',
         ]);
@@ -162,7 +175,7 @@ class CartController extends BaseApiController
 
         return response()->json([
             'message' => 'Cart merged successfully',
-            'cart'    => $cart->load('items'),
+            'cart'    => $cart->load(['items.inventory']),
         ]);
     }
 }
