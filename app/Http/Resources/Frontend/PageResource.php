@@ -13,7 +13,7 @@ class PageResource extends BaseResource
             'name' => $this->name,
             'slug' => $this->slug,
             'title' => $this->title,
-            'description' => $this->description,
+            'content' => $this->content,
             'order' => $this->order,
             'code' => $this->code,
             'display_in' => $this->display_in,
