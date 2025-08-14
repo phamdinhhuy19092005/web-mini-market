@@ -105,6 +105,8 @@ Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
 
 Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
 Route::get('/pages/{id}', [PageController::class, 'show'])->name('pages.show');
+Route::get('/pages/{slug}', [PageController::class, 'show'])->name('pages.show');
+
 
 Route::get('/faq-topics', [FaqTopicController::class, 'index'])->name('faq-topics.index');
 Route::get('/faq-topics/{id}', [FaqTopicController::class, 'show'])->name('faq-topics.show');
