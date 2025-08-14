@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log
 
 class UserController extends Controller
 {
@@ -43,7 +44,6 @@ public function update(Request $request, $id)
                 'phone_number',
                 'avatar',
                 'access_channel_type',
-                'provider',
                 'created_at',
             ])
         ]);
