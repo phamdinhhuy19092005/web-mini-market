@@ -15,12 +15,13 @@ class PageController extends BaseController
         return $this->jsonResponse(true, PageResource::collection($pages));
     }
 
-    public function show($id): JsonResponse
-    {
-        $page = Page::find($id);
-        if (!$page) {
-            return $this->jsonResponse(false, null, 'Trang không tìm thấy', 404);
-        }
-        return $this->jsonResponse(true, new PageResource($page));
+    public function show($slug): JsonResponse
+{
+    $page = Page::where('slug', $slug)->first();
+    if (!$page) {
+        return $this->jsonResponse(false, null, 'Trang không tìm thấy', 404);
     }
+    return $this->jsonResponse(true, new PageResource($page));
+}
+
 }
