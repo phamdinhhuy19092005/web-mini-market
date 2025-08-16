@@ -1,0 +1,41 @@
+<?php
+
+use App\Enum\ActivationStatusEnum;
+use App\Enum\DiscountConditionTypeEnum;
+use App\Enum\DiscountTypeEnum;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('auto_discounts', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->tinyInteger('discount_type')->comment(DiscountTypeEnum::class);
+            $table->decimal('discount_value', 10, 2);
+            $table->tinyInteger('condition_type')->comment(DiscountConditionTypeEnum::class);
+            $table->string('condition_value')->nullable();
+            $table->integer('usage_limit')->nullable();
+            $table->integer('used')->default(0);
+            $table->dateTime('start_date')->nullable()->index();
+            $table->dateTime('end_date')->nullable()->index();
+            $table->tinyInteger('status')->comment(ActivationStatusEnum::class);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('auto_discounts');
+    }
+};

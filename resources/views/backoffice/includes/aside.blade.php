@@ -66,7 +66,7 @@
                                     <li class="k-menu__item {{ request()->routeIs('bo.web.attribute-values.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
                                         <a href="{{ route('bo.web.attribute-values.index') }}" class="k-menu__link">
                                             <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
-                                            <span class="k-menu__link-text">Biến thể</span>
+                                            <span class="k-menu__link-text">Giá trị thuộc tính</span>
                                         </a>
                                     </li>
                                 </ul>

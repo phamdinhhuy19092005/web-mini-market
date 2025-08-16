@@ -92,13 +92,50 @@
                     @enderror
                 </div>
 
-                <!-- Slug -->
-                <div class="form-group">
-                    <label for="slug">{{ __('Slug') }} <span class="text-danger">*</span></label>
-                    <input type="text" name="slug" id="slug" class="form-control" placeholder="{{ __('Nhập slug sản phẩm') }}" autocomplete="off" value="{{ old('slug', $inventory->slug ?? $product->slug) }}" required>
-                    @error('slug')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Slug -->
+                        <div class="form-group">
+                            <label for="slug">{{ __('Slug') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="slug" id="slug" class="form-control" placeholder="{{ __('Nhập slug sản phẩm') }}" autocomplete="off" value="{{ old('slug', $inventory->slug ?? $product->slug) }}" required>
+                            @error('slug')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                    <!-- Unit -->
+                        <div class="form-group">
+                            <label for="unit">{{ __('Đơn vị') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="unit" id="unit" class="form-control" placeholder="{{ __('Nhập đơn vị sản phẩm') }}" autocomplete="off" value="{{ old('unit', $inventory->unit) }}" required>
+                            @error('unit')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <!-- Unit Price Display -->
+                        <div class="form-group">
+                            <label for="unit_price_display">{{ __('Đơn giá') }} <span class="text-danger">*</span></label>
+                            <input type="text" id="unit_price_display" class="form-control" placeholder="{{ __('Đơn giá') }}" autocomplete="off" value="{{ old('unit_price', $inventory->unit_price) }}" readonly>
+                            <input type="hidden" name="unit_price" id="unit_price" value="{{ old('unit_price', $inventory->unit_price) }}">
+                            @error('unit_price')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                    <!-- Quantity Unit Price -->
+                        <div class="form-group">
+                            <label for="quantity_in_unit">{{ __('Giá đơn giá') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="quantity_in_unit" id="quantity_in_unit" class="form-control" placeholder="{{ __('Giá đơn giá') }}" autocomplete="off" value="{{ old('quantity_in_unit', $inventory->quantity_in_unit) }}" required>
+                            @error('quantity_in_unit')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SKU and Condition -->
@@ -258,6 +295,36 @@
 <script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
 <script>
     $(document).ready(function () {
+        const quantityInUnitInput = document.getElementById('quantity_in_unit'); 
+        const salePriceInput = document.getElementById('sale_price');
+        const offerPriceInput = document.getElementById('offer_price');
+        const unitPriceDisplayInput = document.getElementById('unit_price_display');
+        const unitPriceHiddenInput = document.getElementById('unit_price');
+
+        function parseNumber(value) {
+            if (!value) return 0;
+            return parseFloat(value.toString().replace(/\./g, '').replace(/,/g, '.'));
+        }
+
+        function calculateUnitPrice() {
+            const quantity = parseFloat(quantityInUnitInput.value) || 1;
+            const totalPrice = parseNumber(offerPriceInput.value) || parseNumber(salePriceInput.value) || 0;
+            const unitPrice = totalPrice / quantity;
+
+            // Hiển thị dạng 69.000
+            unitPriceDisplayInput.value = unitPrice.toLocaleString('vi-VN', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+
+            // Gửi về backend dạng số nguyên
+            unitPriceHiddenInput.value = parseFloat(unitPrice.toFixed(2));
+        }
+
+        quantityInUnitInput.addEventListener('input', calculateUnitPrice);
+        salePriceInput.addEventListener('input', calculateUnitPrice);
+        offerPriceInput.addEventListener('input', calculateUnitPrice);
+
+        calculateUnitPrice(); // tính lần đầu
+
+
         $('.k_selectpicker').selectpicker();
 
         $('[data-generate]').on('click', function () {

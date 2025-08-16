@@ -30,6 +30,8 @@ use App\Http\Controllers\Frontend\Api\WardController;
 use App\Http\Controllers\Frontend\Api\CartController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Frontend\Api\OrderAutoDiscountTestController;
+use App\Http\Controllers\Frontend\Api\OrderDiscountTestController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -67,6 +69,16 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     Route::post('/carts/sync-cart', [CartController::class, 'syncCart'])->name('carts.sync-cart');
 
     Route::post('/web-reviews/store', [WebsiteReviewController::class, 'store'])->name('web-reviews.store');
+
+    Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
+    Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.show');
+
+    Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
+    Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
+
+
+    Route::post('/orders/{order}/apply-coupon', [OrderDiscountTestController::class, 'applyCoupon']);
+    Route::post('/orders/{orderId}/auto-apply-coupon', [OrderAutoDiscountTestController::class, 'autoApply']);
 
 });
 
@@ -133,11 +145,9 @@ Route::get('/inventories/{id}', [InventoryController::class, 'show'])->name('inv
 // Route::get('/shipping-rates', [ShippingRateController::class, 'index'])->name('shipping-rates.index');
 // Route::get('/shipping-rates/{id}', [ShippingRateController::class, 'show'])->name('shipping-rates.show');
 
-Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
-Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.show');
+// ====================== Đánh giá website ======================
 
-Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
-Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
+Route::get('/web-reviews', [WebsiteReviewController::class, 'index'])->name('web-reviews.index');
 
 // ====================== Địa chỉ ======================
 

@@ -11,12 +11,16 @@ class UpdateInventoryRequest extends BaseFormRequest implements UpdateInventoryR
 {
     public function rules(): array
     {
+        // dd($this->all());
         return [
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', Rule::unique('inventories', 'slug')->ignore($this->route('id'))],
             'sku' => ['required', 'string', 'max:50', Rule::unique('inventories', 'sku')->ignore($this->route('id'))],
             'condition' => ['required', Rule::in(InventoryConditionEnum::all())],
+            'unit' => ['nullable', 'string', 'max:50'],
+            'unit_price' => ['nullable', 'numeric', 'min:0'],
+            'quantity_in_unit' => ['nullable', 'integer', 'min:1'],
             'stock_quantity' => ['required', 'integer', 'min:0'],
             'purchase_price' => ['nullable', 'numeric', 'min:0'],
             'sale_price' => ['required', 'numeric', 'min:0'],

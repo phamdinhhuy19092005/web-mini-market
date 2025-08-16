@@ -129,6 +129,24 @@ class OrderService extends BaseService
         return $this->orderRepository->findOrFail($id);
     }
 
+    public function formatPrice($number, $suffix = '₫')
+    {
+        if ($number === null) {
+            return '0' . $suffix;
+        }
+
+        return number_format($number, 0, ',', '.') . $suffix;
+    }
+
+    public function formatDatetime($datetime, $format = 'd/m/Y H:i:s')
+    {
+        if (!$datetime) {
+            return '';
+        }
+
+        return \Carbon\Carbon::parse($datetime)->format($format);
+    }   
+
     public function update($id, array $attributes = [])
     {
         return DB::transaction(function () use ($id, $attributes) {

@@ -12,12 +12,16 @@ class StoreInventoryRequest extends BaseFormRequest implements StoreInventoryReq
 {
     public function rules(): array
     {
+
         return [
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'unique:inventories,slug,' . ($this->inventory->id ?? 'NULL')],
             'sku' => ['required', 'string', 'max:50', 'unique:inventories,sku,' . ($this->inventory->id ?? 'NULL')],
             'condition' => ['required', Rule::in(InventoryConditionEnum::all())],
+            'unit' => ['nullable', 'string', 'max:50'],
+            'unit_price' => ['nullable', 'numeric', 'min:0'],
+            'quantity_in_unit' => ['nullable', 'integer', 'min:1'],
             'stock_quantity' => ['required', 'integer', 'min:0'],
             'purchase_price' => ['nullable', 'numeric', 'min:0'],
             'sale_price' => ['required', 'numeric', 'min:0'],
