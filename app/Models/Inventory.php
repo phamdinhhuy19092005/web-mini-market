@@ -22,6 +22,9 @@ class Inventory extends Model
         'product_id',
         'condition',
         'condition_note',
+        'unit',
+        'unit_price',
+        'quantity_in_unit',
         'slug',
         'sku',
         'status',
@@ -50,6 +53,18 @@ class Inventory extends Model
         'key_features' => 'array',
     ];
 
+    public function setUnitPriceAttribute($value)
+    {
+        if ($value !== null) {
+            $normalized = str_replace(['.', ','], '', $value);
+            $this->attributes['unit_price'] = (int) $normalized;
+        } else {
+            $quantity = (float) ($this->quantity_in_unit ?? 1);
+            $totalPrice = (float) ($this->offer_price ?? $this->sale_price ?? 0);
+
+            $this->attributes['unit_price'] = $quantity > 0 ? round($totalPrice / $quantity) : (int) $totalPrice;
+        }
+    }
 
     public function product(): BelongsTo
     {

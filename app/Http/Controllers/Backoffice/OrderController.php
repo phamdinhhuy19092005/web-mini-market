@@ -43,11 +43,11 @@ class OrderController extends BaseController
         $accessChannelTypeLables = AccessChannelOptions::labels();
         $inventories = $this->inventoryService->getActiveInventoriesWithFinalPrice();
         $provinces = Province::all();
-        $districts = District::all(); 
-        $wards = Ward::all(); 
+        $districts = District::all();
+        $wards = Ward::all();
         $shippingOptions = ShippingOption::all();
         $paymentOptions = PaymentOption::all();
-        
+
         return view('backoffice.pages.orders.create', compact('users', 'accessChannelTypeLables', 'inventories', 'provinces', 'districts', 'wards', 'paymentOptions', 'shippingOptions'));
     }
 
@@ -61,8 +61,13 @@ class OrderController extends BaseController
     public function show($id)
     {
         $order = $this->orderService->show($id);
+        $accessChannelTypeLables = AccessChannelOptions::labels();
 
-        return view('backoffice.pages.orders.edit', compact('order'));
+        return view('backoffice.pages.orders.edit', [
+            'order' => $order,
+            'orderService' => $this->orderService,
+            'accessChannelTypeLables'
+        ]);
     }
 
     public function edit($id)

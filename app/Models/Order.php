@@ -56,10 +56,35 @@ class Order extends Model
         'status' => OrderStatusEnum::class,
     ];
 
+    public function getGrandTotalFormattedAttribute()
+    {
+        return number_format($this->grand_total, 0, ',', '.') . '₫';
+    }
+
+    public function getFullAddressAttribute()
+    {
+        $parts = [
+            $this->address_line,      // ví dụ: "Cao Thắng"
+            $this->ward,              // "Phường 12"
+            $this->district,          // "Quận 10"
+            $this->city,              // "Thành phố Hồ Chí Minh"
+            $this->postal_code,       // "72406"
+            $this->country            // "Việt Nam"
+        ];
+
+        // Lọc bỏ các phần null/rỗng, rồi nối bằng dấu ", "
+        return implode(', ', array_filter($parts));
+    }
+
     // Relationships
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function shippingOption()
+    {
+        return $this->belongsTo(ShippingOption::class, 'shipping_rate_id');
     }
 
     public function shippingRate()

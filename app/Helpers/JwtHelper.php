@@ -11,7 +11,7 @@ class JwtHelper
     public static function generateToken($payload = [])
     {
         $issuedAt = time();
-        $expirationTime = $issuedAt + 3600; // Token sống 1 giờ
+        $expirationTime = $issuedAt + 3600; 
 
         $payload = array_merge($payload, [
             'iat' => $issuedAt,

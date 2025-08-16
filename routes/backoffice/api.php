@@ -17,6 +17,7 @@ use App\Http\Controllers\Backoffice\Api\FaqController;
 use App\Http\Controllers\Backoffice\Api\FaqTopicController;
 use App\Http\Controllers\Backoffice\Api\InventoryController;
 use App\Http\Controllers\Backoffice\Api\OrderController;
+use App\Http\Controllers\Backoffice\Api\OrderItemController;
 use App\Http\Controllers\Backoffice\Api\PageController;
 use App\Http\Controllers\Backoffice\Api\PaymentOptionController;
 use App\Http\Controllers\Backoffice\Api\PaymentProviderController;
@@ -78,4 +79,7 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/order-status/{orderStatus}', [OrderController::class, 'statisticOrderStatus'])->name('orders.statistic.order-status');
+    Route::get('/orders/{order}/items', [OrderController::class, 'items'])->name('orders.items');
+    
+    Route::get('/order-items', [OrderItemController::class, 'index'])->name('order-items.index');
 });

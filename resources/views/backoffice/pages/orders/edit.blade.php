@@ -17,28 +17,29 @@
     $orderStatusBadge = 'badge-secondary';
 
     switch ($order->order_status) {
-        case OrderStatusEnum::DECLINED->value:
-        case OrderStatusEnum::PAYMENT_ERROR->value:
-        case OrderStatusEnum::CANCELED->value:
+        case OrderStatusEnum::DECLINED:
+        case OrderStatusEnum::PAYMENT_ERROR:
+        case OrderStatusEnum::CANCELED:
             $orderStatusBadge = 'badge-danger';
             break;
-        case OrderStatusEnum::REFUNDED->value:
+        case OrderStatusEnum::REFUNDED:
             $orderStatusBadge = 'badge-secondary';
             break;
-        case OrderStatusEnum::WAITING_FOR_PAYMENT->value:
-        case OrderStatusEnum::DELIVERY->value:
+        case OrderStatusEnum::WAITING_FOR_PAYMENT:
+        case OrderStatusEnum::DELIVERY:
             $orderStatusBadge = 'badge-warning';
             break;
-        case OrderStatusEnum::PROCESSING->value:
+        case OrderStatusEnum::PROCESSING:
             $orderStatusBadge = 'badge-info';
             break;
-        case OrderStatusEnum::COMPLETED->value:
+        case OrderStatusEnum::COMPLETED:
             $orderStatusBadge = 'badge-success';
             break;
         default:
             break;
     };
 @endphp
+
 
 @section('content_body')
     <div class="k-content__body	k-grid__item k-grid__item--fluid" id="k_content_body">
@@ -81,7 +82,9 @@
                             <label for=""><b>{{ __('Địa chỉ giao hàng') }}</b></label>
                             <div class="address-detail">
                                 <div>{{ $order->fullname ?? 'N/A' }} - {{ $order->phone ?? 'N/A' }} - {{ $order->email ?? 'N/A' }}</div>
-                                <div class="address-detail-content copy-text-click" data-copy-reference=".address-detail-content">{{ $order->full_address }}</div>
+                                <div class="address-detail-content copy-text-click" data-copy-reference=".address-detail-content">
+                                    {{ $order->full_address }}
+                                </div>
                                 <div>
                                     <a href="https://www.google.com/maps/search/{{ $order->full_address }}" target="_blank" class="d-inline-block btn btn-secondary btn-sm mt-2">{{ __('Xem google map') }}</a>
                                 </div>
@@ -102,9 +105,9 @@
                     <div class="k-portlet__body">
                         <div class="alert alert-outline-accent fade show p-3" role="alert">
                             <div class="d-flex justify-content-between w-100">
-                                <div style="color: #3d4465;">Khách phải trả: <b>{{ format_price($order->grand_total) }}</b></div>
+                                <div style="color: #3d4465;">Khách phải trả: <b>{{ $order->getGrandTotalFormattedAttribute() }}</b></div>
                                 <div style="color: #3d4465;">Đã thanh toán: 0</div>
-                                <div style="color: #3d4465;">Còn phải trả: <b class="text-danger">{{ format_price($order->grand_total) }}</b></div>
+                                <div style="color: #3d4465;">Còn phải trả: <b class="text-danger">{{ $order->getGrandTotalFormattedAttribute() }}</b></div>
                             </div>
                         </div>
 
@@ -177,7 +180,7 @@
                                 <div class="d-flex justify-content-start">
                                     <div style="flex: 0 0 30%;" class="pt-2 pb-2">P.T vận chuyển</div>
                                     <span class="pt-2 pb-2 mr-2">:</span>
-                                    <div style="flex: 1;" class="pt-2 bp-2">{{ $order->shippingOption->name }}</div>
+                                    <div style="flex: 1;" class="pt-2 bp-2">{{ optional($order->shippingOption)->name ?? 'N/A' }}</div>
                                 </div>
 
                                 <div class="d-flex justify-content-start">
@@ -198,7 +201,9 @@
                                     <div style="flex: 0 0 30%;" class="pt-2 pb-2">Phí ước tính</div>
                                     <span class="pt-2 pb-2 mr-2">:</span>
                                     <div style="flex: 1;" class="pt-2 bp-2">
-                                        <b class="text-danger">{{ format_price(data_get($order->latestUserOrderShippingHistory, ['estimated_transport_fee'])) }}</b>
+                                        <b class="text-danger">
+                                            {{ $orderService->formatPrice(data_get($order->latestUserOrderShippingHistory, ['estimated_transport_fee'])) }}
+                                        </b>
                                     </div>
                                 </div>
 
@@ -206,7 +211,9 @@
                                     <div style="flex: 0 0 30%;" class="pt-2 pb-2">Phí trả ĐVVC</div>
                                     <span class="pt-2 pb-2 mr-2">:</span>
                                     <div style="flex: 1;" class="pt-2 bp-2">
-                                        <b class="text-danger">{{ $order->transport_fee ? format_price($order->transport_fee) : 'N/A' }}</b>
+                                       <b class="text-danger">
+                                            {{ $order->transport_fee ? $orderService->formatPrice($order->transport_fee) : 'N/A' }}
+                                        </b>
                                     </div>
                                 </div>
                             </div>
@@ -241,16 +248,18 @@
                             <div style="flex: 1;" class="pt-2 bp-2">admin</div>
                         </div>
 
-                        <div class="d-flex justify-content-start">
+                       <div class="d-flex justify-content-start">
                             <div style="flex: 0 0 40%;" class="pt-2 pb-2">Ngày bán</div>
                             <span class="pt-2 pb-2 mr-2">:</span>
-                            <div style="flex: 1;" class="pt-2 bp-2">{{ format_datetime($order->created_at, 'd/m/Y H:s:i') }}</div>
+                            <div style="flex: 1;" class="pt-2 bp-2">
+                                {{ $orderService->formatDatetime($order->created_at, 'd/m/Y H:i:s') }}
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-start">
                             <div style="flex: 0 0 40%;" class="pt-2 pb-2">Kênh bán hàng</div>
                             <span class="pt-2 pb-2 mr-2">:</span>
-                            <div style="flex: 1;" class="pt-2 bp-2">{{ enum('AccessChannelType')::findConstantLabel(data_get($order, 'order_channel.type')) }}</div>
+                            {{ $accessChannelTypeLables[data_get($order, 'order_channel.type')] ?? 'Không xác định' }}
                         </div>
 
                         <div class="d-flex justify-content-start">

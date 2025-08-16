@@ -23,4 +23,15 @@ class OrderController extends BaseApiController
         $count = $this->orderService->statisticOrderStatus($orderStatus, $request->all());
         return response()->json(['count' => $count]);
     }
+
+    public function items($orderId)
+    {
+        $order = $this->orderService->find($orderId);
+
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        return response()->json($order->items); 
+    }
 }
