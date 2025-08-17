@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class PostCategory extends Model
 {
     use Activatable;
-    
+
     protected $fillable = [
         'name',
         'slug',
@@ -24,5 +24,9 @@ class PostCategory extends Model
         'category_group_id',
     ];
 
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'post_category_id');
+    }
 }
 

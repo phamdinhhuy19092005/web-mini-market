@@ -12,6 +12,8 @@
 @component('backoffice.partials.breadcrumb', ['title' => $title, 'items' => $breadcrumbs])
 @endcomponent
 
+
+
 @section('content_body')
     <div class="k-content__body k-grid__item k-grid__item--fluid" id="k_content_body">
         <div class="row">
@@ -50,10 +52,10 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group col-md-12">
+                                {{-- <div class="form-group col-md-12">
                                     <label for="">{{ __('Reference kênh truy cập') }}</label>
                                     <input type="text" class="form-control" name="order_channel[reference_id]" placeholder="{{ __('Nhập reference kênh truy cập') }}" value="{{ old('order_channel.reference_id') }}">
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -151,10 +153,9 @@
                                     <label>{{ __('Tên công ty') }}</label>
                                     <input type="text" class="form-control" name="company" placeholder="{{ __('Nhập tên công ty') }}" value="">
                                 </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>{{ __('Mã bưu điện') }}</label>
-                                    <input type="text" class="form-control" name="postal_code" placeholder="{{ __('Nhập mã bưu điện') }}" value="">
+                                <div class="form-group col-md-8">
+                                    <label>{{ __('Tên đường cụ thể') }}</label>
+                                    <input type="text" class="form-control" name="address_line" id="address_line" placeholder="{{ __('Nhập tên đường') }}" value="">
                                 </div>
                             </div>
 
@@ -212,7 +213,28 @@
                     <div class="k-portlet">
                         <div class="k-portlet__head">
                             <div class="k-portlet__head-label">
-                                <h3 class="k-portlet__head-title">5. {{ __('Thông tin thanh toán') }}</h3>
+                                <h3 class="k-portlet__head-title">5. {{ __('Thông tin ghi chú') }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="k-portlet__body">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="user_note">{{ __('Ghi chú người dùng') }} *</label>
+                                    <textarea name="user_note" id="user_note" class="form-control" rows="5" placeholder="{{ __('Nhập ghi chú của người dùng') }}"></textarea>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="admin_note">{{ __('Ghi chú quản trị') }} *</label>
+                                    <textarea name="admin_note" id="admin_note" class="form-control" rows="5" placeholder="{{ __('Nhập ghi chú của quản trị') }}"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="k-portlet">
+                        <div class="k-portlet__head">
+                            <div class="k-portlet__head-label">
+                                <h3 class="k-portlet__head-title">6. {{ __('Thông tin thanh toán') }}</h3>
                             </div>
                         </div>
 

@@ -17,32 +17,26 @@ class Order extends Model
         'currency_code',
         'fullname',
         'email',
+        'retry_order_times',
         'phone',
         'company',
         'country_code',
         'address_line',
         'city_name',
-        'postal_code',
         'shipping_rate_id',
         'payment_option_id',
         'deposit_transaction_id',
         'total_item',
         'total_quantity',
-        'taxrate',
         'shipping_weight',
         'total_price',
-        'taxes',
-        'coupon_id',
-        'promotion_id',
         'grand_total',
         'shipping_date',
         'delivery_date',
         'payment_status',
         'order_status',
-        'is_sent_invoice_to_user',
         'admin_note',
         'user_note',
-        'retry_order_times',
         'created_by_id',
         'created_by_type',
         'updated_by_id',
@@ -50,6 +44,7 @@ class Order extends Model
         'log',
         'order_channel',
     ];
+
 
     protected $casts = [
         'order_channel' => 'array',
@@ -61,22 +56,11 @@ class Order extends Model
         return number_format($this->grand_total, 0, ',', '.') . '₫';
     }
 
-    public function getFullAddressAttribute()
+    public function getOrderStatusNameAttribute(): string
     {
-        $parts = [
-            $this->address_line,      // ví dụ: "Cao Thắng"
-            $this->ward,              // "Phường 12"
-            $this->district,          // "Quận 10"
-            $this->city,              // "Thành phố Hồ Chí Minh"
-            $this->postal_code,       // "72406"
-            $this->country            // "Việt Nam"
-        ];
-
-        // Lọc bỏ các phần null/rỗng, rồi nối bằng dấu ", "
-        return implode(', ', array_filter($parts));
+        return OrderStatusEnum::findConstantLabelVn($this->order_status);
     }
 
-    // Relationships
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -131,4 +115,45 @@ class Order extends Model
     {
         return $this->morphTo('updated_by');
     }
+
+    /**
+     * Kiểm tra xem đơn hàng có thể chuyển trạng thái "Vận chuyển" không
+     */
+    public function canDelivery(): bool
+    {
+        return $this->order_status === OrderStatusEnum::PROCESSING;
+    }
+
+    /**
+     * Kiểm tra xem đơn hàng có thể chuyển trạng thái "Hoàn thành" không
+     */
+    public function canComplete(): bool
+    {
+        return $this->order_status === OrderStatusEnum::DELIVERY;
+    }
+
+    /**
+     * Kiểm tra xem đơn hàng có thể hủy không
+     */
+    public function canCancel(): bool
+    {
+        return in_array($this->order_status, [
+            OrderStatusEnum::WAITING_FOR_PAYMENT,
+            OrderStatusEnum::PROCESSING
+        ]);
+    }
+
+    /**
+     * Kiểm tra xem đơn hàng có thể hoàn tiền không
+     */
+    public function canRefund(): bool
+    {
+        return $this->order_status === OrderStatusEnum::COMPLETED;
+    }
+
+    public function canProcessing(): bool
+    {
+        return $this->order_status === OrderStatusEnum::WAITING_FOR_PAYMENT;
+    }
+
 }

@@ -252,7 +252,7 @@ $breadcrumbs = [
                 <div class="k-portlet__body k-portlet__body--fluid">
                     <div class="k-widget-20">
                         <div class="k-widget-20__title">
-                            <div class="k-widget-20__label">17M</div>
+                            <div class="k-widget-20__label">{{ $totalOrders }}</div>
                             <img class="k-widget-20__bg" src="../assets/media/misc/iconbox_bg.png" alt="bg" />
                         </div>
                         <div class="k-widget-20__data">

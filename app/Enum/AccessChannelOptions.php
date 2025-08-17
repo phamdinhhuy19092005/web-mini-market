@@ -40,6 +40,6 @@ class AccessChannelOptions extends BaseEnum
 
     public static function label(int|string|null $value): string
     {
-        return self::labels()[$value] ?? 'Không xác định';
+        return self::labels()[$value] ?? 'Không xác định 1';
     }
 }

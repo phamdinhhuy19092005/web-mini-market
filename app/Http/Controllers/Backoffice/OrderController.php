@@ -61,7 +61,7 @@ class OrderController extends BaseController
     public function show($id)
     {
         $order = $this->orderService->show($id);
-        $accessChannelTypeLables = \App\Enum\AccessChannelOptions::labels();
+        $accessChannelTypeLables = AccessChannelOptions::labels();
 
         return view('backoffice.pages.orders.edit', [
             'order' => $order,
@@ -73,7 +73,7 @@ class OrderController extends BaseController
     public function edit($id)
     {
         $order = $this->orderService->show($id);
-        $accessChannelTypeLables = \App\Enum\AccessChannelOptions::labels();
+        $accessChannelTypeLables = AccessChannelOptions::labels();
 
         return view('backoffice.pages.orders.edit', [
             'order' => $order,

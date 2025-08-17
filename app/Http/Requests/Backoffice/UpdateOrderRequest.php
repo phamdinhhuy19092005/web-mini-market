@@ -4,6 +4,7 @@ namespace App\Http\Requests\Backoffice;
 
 use App\Enum\ActivationStatus;
 use App\Enum\ActivationFE;
+use App\Enum\OrderStatusEnum;
 use App\Http\Requests\Backoffice\Interfaces\UpdateOrderRequestInterface;
 use Illuminate\Validation\Rule;
 
@@ -13,21 +14,26 @@ class UpdateOrderRequest extends BaseFormRequest implements UpdateOrderRequestIn
     {
         // dd($this->all());
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255'],
-            'title' => ['required', 'string', 'max:255'],
-            'order' => ['nullable', 'integer'],
+            'fullname' => ['required', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'phone' => ['required', 'string', 'max:20'],
+            'company' => ['nullable', 'string', 'max:255'],
+            'province_code' => ['required', 'string', 'max:10'],
+            'district_code' => ['required', 'string', 'max:10'],
+            'ward_code' => ['required', 'string', 'max:10'],
+            'address_line' => ['required', 'string', 'max:255'],
 
-            'display_in' => ['required', 'array'],
-            'display_in.*' => ['string', Rule::in(\App\Enum\PageDisplayInEnum::all())],
+            'shipping_rate_id' => ['nullable', 'integer', 'exists:shipping_rates,id'],
+            'payment_option_id' => ['nullable', 'integer', 'exists:payment_options,id'],
 
-            'meta_title' => ['nullable', 'string', 'max:255'],
-            'meta_description' => ['nullable', 'string', 'max:255'],
+            'user_note' => ['nullable', 'string'],
+            'admin_note' => ['nullable', 'string'],
 
-            'display_on_frontend' => ['required', Rule::in(ActivationFE::all())],
-            'status' => ['required', Rule::in(ActivationStatus::all())],
+            'cart_items' => ['nullable', 'array'],
+            'cart_items.*.inventory_id' => ['required', 'integer', 'exists:inventories,id'],
+            'cart_items.*.quantity' => ['required', 'integer', 'min:1'],
 
-            'content' => ['nullable', 'string'],
+            'order_status' => ['required', Rule::in(OrderStatusEnum::all())],
         ];
     }
 

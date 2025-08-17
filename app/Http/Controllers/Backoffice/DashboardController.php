@@ -6,6 +6,7 @@ class DashboardController
 {
     public function index()
     {
-        return view('backoffice.pages.dashboard.index');
+        $totalOrders = \App\Models\Order::count();
+        return view('backoffice.pages.dashboard.index', compact('totalOrders'));
     }
 }

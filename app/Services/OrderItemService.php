@@ -21,15 +21,18 @@ class OrderItemService extends BaseService
         $orderId  = data_get($data, 'order_id');
 
         return $this->orderItemRepository->model()::query()
-            ->with('inventory') 
+            ->with('inventory')
             ->when($orderId, fn($q) => $q->where('order_id', $orderId))
             ->when($query, function ($q) use ($query) {
-                $q->where('id', $query)
-                ->orWhereHas('inventory', fn($q2) => $q2->where('name', 'like', "%$query%"));
+                $q->where(function ($q2) use ($query) {
+                    $q2->where('id', $query)
+                    ->orWhereHas('inventory', fn($q3) => $q3->where('title', 'like', "%$query%"));
+                });
             })
             ->orderBy('id', 'desc')
             ->paginate($perPage);
     }
+
 
 
     public function create(array $attributes = [])

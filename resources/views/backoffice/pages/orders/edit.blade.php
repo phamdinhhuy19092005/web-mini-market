@@ -42,6 +42,24 @@
 
 
 @section('content_body')
+<style>
+    .address-detail-content {
+        display: inline-block;
+        border: 2px dashed #E8E8E8;
+        margin-left: 0px;
+        padding: 5px 10px;
+        cursor: pointer;
+        margin-top: 7px;
+    }
+
+    .order-transfer-content {
+        border: 2px dashed #E8E8E8;
+        border-radius: 4px;
+        padding: 10px;
+        background-color: #fefefe;
+    }
+</style>
+
     <div class="k-content__body	k-grid__item k-grid__item--fluid" id="k_content_body">
         <div class="row">
             <div class="col-md-6">
@@ -52,13 +70,19 @@
                 </div>
             </div>
             <div class="col-md-6">
+                
                 <div class="btns d-flex justify-content-end">
-                    @can('orders.manage')
-                    <button type="submit" data-btn-change-order-status="update-to-delivery" class="btn btn-secondary ml-2" data-route="{{ route('bo.api.orders.delivery', $order->id) }}" {{ !$order->canDelivery() ? 'disabled' : '' }}>{{ __('VẬN CHUYỂN') }}</button>
-                    <button type="submit" data-btn-change-order-status="update-to-complete" class="btn btn-success ml-2" data-route="{{ route('bo.api.orders.complete', $order->id) }}" {{ !$order->canComplete() ? 'disabled' : '' }}>{{ __('HOÀN THÀNH') }}</button>
-                    <button type="submit" data-btn-change-order-status="update-to-refund" class="btn btn-warning ml-2" data-route="{{ route('bo.api.orders.refund', $order->id) }}" {{ !$order->canRefund() ? 'disabled' : '' }}>{{ __('HOÀN TIỀN') }}</button>
-                    <button type="submit" data-btn-change-order-status="update-to-cancel" class="btn btn-danger ml-2" data-route="{{ route('bo.api.orders.cancel', $order->id) }}" {{ !$order->canCancel() ? 'disabled' : '' }}>{{ __('HỦY ĐƠN') }}</button>
-                    @endcan
+                    <button type="button" data-btn-change-order-status="update-to-delivery" class="btn btn-secondary ml-2" data-route="{{ route('bo.api.orders.delivery', $order->id) }}" {{ $order->canDelivery() ? '' : 'disabled' }}>{{ __('VẬN CHUYỂN') }}</button>
+                    <button type="button" data-btn-change-order-status="update-to-complete" class="btn btn-success ml-2" data-route="{{ route('bo.api.orders.complete', $order->id) }}" {{ !$order->canComplete() ? 'disabled' : '' }}>{{ __('HOÀN THÀNH') }}</button>
+                    <button type="button" data-btn-change-order-status="update-to-refund" class="btn btn-warning ml-2" data-route="{{ route('bo.api.orders.refund', $order->id) }}" {{ !$order->canRefund() ? 'disabled' : '' }}>{{ __('HOÀN TIỀN') }}</button>
+                    <button type="button" 
+                            data-btn-change-order-status="update-to-processing" 
+                            class="btn btn-info ml-2" 
+                            data-route="{{ route('bo.api.orders.processing', $order->id) }}" 
+                            {{ !$order->canProcessing() ? 'disabled' : '' }}>
+                        {{ __('ĐANG XỬ LÍ') }}
+                    </button>
+                    <button type="button" data-btn-change-order-status="update-to-cancel" class="btn btn-danger ml-2" data-route="{{ route('bo.api.orders.cancel', $order->id) }}" {{ !$order->canCancel() ? 'disabled' : '' }}>{{ __('HỦY ĐƠN') }}</button>
                 </div>
             </div>
         </div>
@@ -83,11 +107,13 @@
                             <div class="address-detail">
                                 <div>{{ $order->fullname ?? 'N/A' }} - {{ $order->phone ?? 'N/A' }} - {{ $order->email ?? 'N/A' }}</div>
                                 <div class="address-detail-content copy-text-click" data-copy-reference=".address-detail-content">
-                                    {{ $order->full_address }}
+                                    {{ $order->address_line . ', ' . $order->city_name }}
                                 </div>
                                 <div>
-                                    <a href="https://www.google.com/maps/search/{{ $order->full_address }}" target="_blank" class="d-inline-block btn btn-secondary btn-sm mt-2">{{ __('Xem google map') }}</a>
-                                </div>
+                                    <a href="https://www.google.com/maps/search/{{ urlencode($order->address_line .','. $order->city_name) }}" target="_blank" class="d-inline-block btn btn-secondary btn-sm mt-2">
+                                        {{ __('Xem google map') }}
+                                    </a>           
+                                 </div>
                             </div>
                         </div>
                     </div>
@@ -230,42 +256,37 @@
                         </div>
                     </div>
                     <div class="k-portlet__body">
-                        <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-start align-items-center">
                             <div style="flex: 0 0 40%;" class="pt-2 pb-2">Chính sách giá</div>
                             <span class="pt-2 pb-2 mr-2">:</span>
-                            <div style="flex: 1;" class="pt-2 bp-2">Giá bán lẻ</div>
+                            <div style="flex: 1;" class="pt-2 pb-2">Giá bán lẻ</div>
                         </div>
-
-                        <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-start align-items-center">
                             <div style="flex: 0 0 40%;" class="pt-2 pb-2">Bán tại</div>
                             <span class="pt-2 pb-2 mr-2">:</span>
-                            <div style="flex: 1;" class="pt-2 bp-2">Chi nhánh mặc định</div>
+                            <div style="flex: 1;" class="pt-2 pb-2">Chi nhánh mặc định</div>
                         </div>
-
-                        <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-start align-items-center">
                             <div style="flex: 0 0 40%;" class="pt-2 pb-2">NV lên đơn</div>
                             <span class="pt-2 pb-2 mr-2">:</span>
-                            <div style="flex: 1;" class="pt-2 bp-2">admin</div>
+                            <div style="flex: 1;" class="pt-2 pb-2">admin</div>
                         </div>
-
-                       <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-start align-items-center">
                             <div style="flex: 0 0 40%;" class="pt-2 pb-2">Ngày bán</div>
                             <span class="pt-2 pb-2 mr-2">:</span>
-                            <div style="flex: 1;" class="pt-2 bp-2">
+                            <div style="flex: 1;" class="pt-2 pb-2">
                                 {{ $orderService->formatDatetime($order->created_at, 'd/m/Y H:i:s') }}
                             </div>
                         </div>
-
-                        <div class="d-flex justify-content-start">
+                        @php
+                            $orderChannel = json_decode($order->order_channel, true);
+                        @endphp
+                        <div class="d-flex justify-content-start align-items-center">
                             <div style="flex: 0 0 40%;" class="pt-2 pb-2">Kênh bán hàng</div>
                             <span class="pt-2 pb-2 mr-2">:</span>
-                            {{ $accessChannelTypeLables[data_get($order, 'order_channel.type')] ?? 'Không xác định' }}
-                        </div>
-
-                        <div class="d-flex justify-content-start">
-                            <div style="flex: 0 0 40%;" class="pt-2 pb-2">Tham chiếu</div>
-                            <span class="pt-2 pb-2 mr-2">:</span>
-                            <div style="flex: 1;" class="pt-2 bp-2">{{ data_get($order, 'order_channel.reference_id') ?? 'N/A' }}</div>
+                            <div style="flex: 1;" class="pt-2 pb-2">
+                                {{ \App\Enum\AccessChannelOptions::label($orderChannel['type'] ?? null) }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -324,6 +345,40 @@
 
 @push('scripts')
     <script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
+    
+    <script>
+        document.querySelectorAll('[data-btn-change-order-status]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                const route = this.dataset.route;
+                const method = btn.dataset.btnChangeOrderStatus === 'update-to-processing' ? 'POST' : 'PUT';
+
+                fetch(route, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({}) 
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! Status: ${res.status}, Message: ${res.statusText}`);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    alert(data.message || 'Cập nhật thành công!');
+                    location.reload();
+                })
+                .catch(err => {
+                    console.error('Lỗi khi gửi yêu cầu:', err);
+                    alert('Đã xảy ra lỗi: ' + err.message);
+                });
+            });
+        });
+    </script>
+
 @endpush
 
 @component('backoffice.partials.datatable')@endcomponent

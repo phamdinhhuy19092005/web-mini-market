@@ -76,7 +76,9 @@ class OrderService extends BaseService
                 'province_code' => data_get($attributes, 'province_code'),
                 'district_code' => data_get($attributes, 'district_code'),
                 'ward_code' => data_get($attributes, 'ward_code'),
-                'postal_code' => data_get($attributes, 'postal_code'),
+                'address_line' => data_get($attributes, 'address_line'),
+                'user_note' => data_get($attributes, 'user_note'),
+                'admin_note' => data_get($attributes, 'admin_note'),
                 'city_name' => $province->name,
                 'shipping_option_id' => data_get($attributes, 'shipping_option_id'),
                 'shipping_rate_id' => data_get($attributes, 'shipping_rate_id'),
@@ -119,6 +121,7 @@ class OrderService extends BaseService
     }
 
 
+
     public function find($id)
     {
         return $this->orderRepository->find($id);
@@ -146,6 +149,41 @@ class OrderService extends BaseService
 
         return \Carbon\Carbon::parse($datetime)->format($format);
     }   
+
+    public function updateStatus($order, string $status)
+    {
+        return DB::transaction(function () use ($order, $status) {
+            $admin = auth('admin')->user();
+
+            switch ($status) {
+                case 'processing':
+                    $order->order_status = OrderStatusEnum::PROCESSING;
+                    break;
+                case 'delivery':
+                    $order->order_status = OrderStatusEnum::DELIVERY; 
+                    break;
+                case 'complete':
+                    $order->order_status = OrderStatusEnum::COMPLETED;
+                    break;
+                case 'refund':
+                    $order->order_status = OrderStatusEnum::REFUNDED;
+                    break;
+                case 'cancel':
+                    $order->order_status = OrderStatusEnum::CANCELED;
+                    break;
+                default:
+                    throw new \InvalidArgumentException("Invalid status: $status");
+            }
+
+            $order->updated_by_type = get_class($admin);
+            $order->updated_by_id = $admin->id;
+            $order->save();
+
+            return $order;
+        });
+    }
+
+
 
     public function update($id, array $attributes = [])
     {
@@ -197,7 +235,7 @@ class OrderService extends BaseService
     {
         return DB::transaction(function () use ($id) {
             $order = $this->orderRepository->findOrFail($id);
-            $order->items()->delete(); // Xóa các mục liên quan
+            $order->items()->delete(); 
             return $this->orderRepository->delete($id);
         });
     }

@@ -80,6 +80,18 @@ Route::prefix('v1')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/order-status/{orderStatus}', [OrderController::class, 'statisticOrderStatus'])->name('orders.statistic.order-status');
     Route::get('/orders/{order}/items', [OrderController::class, 'items'])->name('orders.items');
+
+    Route::put('orders/{id}/delivery', [OrderController::class, 'delivery'])->name('orders.delivery');
+    Route::put('orders/{id}/complete', [OrderController::class, 'complete'])->name('orders.complete');
+    Route::put('orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+    Route::put('orders/{id}/refund', [OrderController::class, 'refund'])->name('orders.refund');
+    Route::post('/orders/{id}/processing', [OrderController::class, 'updateToProcessing'])->name('orders.processing');
+
+    // routes/web.php hoặc routes/api.php
+    Route::get('bo/api/orders/statistics', [OrderController::class, 'statistics'])->name('orders.statistics');
+
+
+    Route::put('orders/{id}/update-shipping', [OrderController::class, 'updateShipping'])->name('orders.update-shipping');
     
     Route::get('/order-items', [OrderItemController::class, 'index'])->name('order-items.index');
 });

@@ -20,6 +20,7 @@ class PostCategoryService extends BaseService
         $perPage = data_get($data, 'per_page', 10);
 
         return $this->postCategoryRepository->model()::query()
+            ->with('posts')
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
                     ->orWhere('name', 'like', "%$query%");

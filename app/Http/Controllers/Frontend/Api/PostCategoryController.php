@@ -11,13 +11,13 @@ class PostCategoryController extends BaseController
 {
     public function index(): JsonResponse
     {
-        $postCategories = PostCategory::all();
+        $postCategories = PostCategory::with('posts')->get();
         return $this->jsonResponse(true, PostCategoryResource::collection($postCategories));
     }
 
     public function show($id): JsonResponse
     {
-        $postCategory = PostCategory::find($id);
+        $postCategory = PostCategory::with('posts')->find($id); 
         if (!$postCategory) {
             return $this->jsonResponse(false, null, 'Danh mục bài viết không tìm thấy', 404);
         }
