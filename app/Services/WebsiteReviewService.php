@@ -13,25 +13,26 @@ class WebsiteReviewService extends BaseService
         $this->websiteReviewRepository = $websiteReviewRepository;
     }
 
-    
-
     public function searchByAdmin($data = [])
     {
-        $query = data_get($data, 'query');
-        $status = data_get($data, 'status');
+        $query   = data_get($data, 'query');
+        $status  = data_get($data, 'status');
         $perPage = data_get($data, 'per_page', 10);
 
-        return $this->websiteReviewRepository->model()::query()
+        return $this->websiteReviewRepository->model()::with('user') 
             ->when($query, function ($q) use ($query) {
                 $q->where('id', $query)
-                ->orWhere('name', 'like', "%$query%");
+                ->orWhereHas('user', function ($uq) use ($query) {
+                    $uq->where('name', 'like', "%$query%"); 
+                });
             })
             ->when(isset($status), function ($q) use ($status) {
-                $q->where('status_name', $status);
+                $q->where('status', $status);
             })
-            ->orderBy('id', 'desc') 
+            ->orderBy('id', 'desc')
             ->paginate($perPage);
     }
+
 
 
     public function create(array $attributes = [])

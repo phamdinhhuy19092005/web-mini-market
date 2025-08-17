@@ -14,11 +14,9 @@ class UpdateWebsiteReviewRequest extends BaseFormRequest implements UpdateWebRev
         $reviewId = $this->route('id'); 
         // dd($this->all());
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable','email','max:255',Rule::unique('website_reviews', 'email')->ignore($reviewId)],
+            'user_id' => ['required', 'exists:users,id'],
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'comment' => ['nullable', 'string', 'max:1000'],
-            'phone_number' => ['nullable','string','max:20',Rule::unique('website_reviews', 'phone_number')->ignore($reviewId)],
             'status' => ['required', Rule::in(ReviewStatusEnum::all())],
         ];
     }

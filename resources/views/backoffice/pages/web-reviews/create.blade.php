@@ -29,24 +29,22 @@
                         @csrf
                         <div class="k-portlet__body">
                             <div class="row">
-                                <!-- Name Field -->
-                                <div class="col-md-4 form-group">
-                                    <label for="name">{{ __('Tên của bạn') }} <span class="text-danger">*</span></label>
-                                    <input type="text" name="name" class="form-control" placeholder="{{ __('Nhập tên') }}" 
-                                           value="{{ old('name') }}" required>
-                                </div>
-
-                                <!-- Email Field -->
-                                <div class="col-md-4 form-group">
-                                    <label for="email">{{ __('Email') }}</label>
-                                    <input type="email" name="email" class="form-control" placeholder="{{ __('Nhập email') }}" 
-                                           value="{{ old('email') }}">
-                                </div>
-
-                                <div class="col-md-4 form-group">
-                                    <label for="phone">{{ __('Số điện thoại') }} <span class="text-danger">*</span></label>
-                                    <input type="text" name="phone_number" class="form-control" placeholder="{{ __('Nhập số điện thoại') }}" 
-                                           value="{{ old('phone_number') }}" required>
+                                
+                                <div class="col-md-6 form-group">
+                                    <label for="user_id">{{ __('Người dùng') }} <span class="text-danger">*</span></label>
+                                    <select name="user_id" id="user_id" class="form-control k_selectpicker" data-live-search="true" >
+                                        <option value="">{{ __('-- Chọn người dùng --') }}</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}"
+                                                    {{ old('user_id') == $user->id ? 'selected' : '' }}
+                                                    data-address-id="{{ $user->address_id ?? '' }}">
+                                                {{ $user->name }} ({{ $user->email }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('user_id')
+                                        <span class="k-form__error">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                                 <!-- Rating Field -->

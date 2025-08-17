@@ -304,7 +304,7 @@
                             <thead>
                                 <tr>
                                     <th data-property="id">{{ __('ID') }}</th>
-                                    <th data-orderable="false" data-property="inventory.image" data-render-callback="renderCallbackImage">{{ __('Ảnh') }}</th>
+                                    <th data-orderable="false" data-property="inventory.image" data-render-callback="renderImageColumn">{{ __('Ảnh') }}</th>
                                     <th data-link="inventory.edit" data-link-target="_blank" data-orderable="false" data-property="inventory.title" data-width="400">{{ __('Tên sản phẩm') }}</th>
                                     <th data-property="quantity">{{ __('Số lượng') }}</th>
                                     <th data-property="price">{{ __('Đơn giá') }}</th>
@@ -325,3 +325,6 @@
 @push('scripts')
     <script src="{{ asset('js/backoffice/components/form-utils.js') }}"></script>
 @endpush
+
+@component('backoffice.partials.datatable')@endcomponent
+

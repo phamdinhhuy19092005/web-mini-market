@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers\Backoffice\Api;
 
-use App\Models\OrderItem;
+use App\Contracts\Responses\Backoffice\ListOrderItemResponseContract;
+use App\Services\OrderItemService;
 use Illuminate\Http\Request;
 
 class OrderItemController extends BaseApiController
 {
+    public function __construct(protected OrderItemService $orderItemService)
+    {
+    }
+
     public function index(Request $request)
     {
-        $query = OrderItem::query();
-
-        if ($request->has('order_id')) {
-            $query->where('order_id', $request->order_id);
-        }
-
-        return response()->json($query->paginate(20));
+        $order_items = $this->orderItemService->searchByAdmin($request->all());
+        
+        return $this->responses(ListOrderItemResponseContract::class, $order_items);
     }
+
+
+    
 }

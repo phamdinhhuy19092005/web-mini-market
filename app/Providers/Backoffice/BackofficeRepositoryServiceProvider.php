@@ -2,6 +2,8 @@
 
 namespace App\Providers\Backoffice;
 
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Repositories\AddressRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -42,6 +44,7 @@ use App\Repositories\Interfaces\BrandRepositoryInterface;
 use App\Repositories\Interfaces\CartRepositoryInterface;
 use App\Repositories\Interfaces\CouponRepositoryInterface;
 use App\Repositories\Interfaces\InventoryRepositoryInterface;
+use App\Repositories\Interfaces\OrderItemRepositoryInterface;
 use App\Repositories\Interfaces\OrderRepositoryInterface;
 use App\Repositories\Interfaces\PaymentOptionRepositoryInterface;
 use App\Repositories\Interfaces\PaymentProviderRepositoryInterface;
@@ -54,6 +57,7 @@ use App\Repositories\Interfaces\SubscriberRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\Interfaces\WebsiteReviewRepositoryInterface;
 use App\Repositories\InventoryRepository;
+use App\Repositories\OrderItemRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\PageRepository;
 use App\Repositories\PaymentOptionRepository;
@@ -290,5 +294,13 @@ class BackofficeRepositoryServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         OrderRepositoryInterface::class        => OrderRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Order Items
+        |--------------------------------------------------------------------------
+        */
+
+        OrderItemRepositoryInterface::class => OrderItemRepository::class,
     ];
 }

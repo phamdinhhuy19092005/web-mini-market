@@ -13,11 +13,9 @@ class StoreWebsiteReviewRequest extends BaseFormRequest implements StoreWebsiteR
     {
         // dd($this->all());
         return [
-            'name' => ['required', 'string', 'max:255', new NoForbiddenWords()],
-            'email' => ['nullable', 'email','max:255', Rule::unique('website_reviews', 'email')],
+            'user_id' => ['required', 'exists:users,id'],
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'comment' => ['nullable', 'string', 'max:1000', new NoForbiddenWords()],
-            'phone_number' => ['nullable', 'string', 'max:20', Rule::unique('website_reviews', 'phone_number')],
             'status' => ['required', Rule::in(ReviewStatusEnum::all())],
         ];
     }

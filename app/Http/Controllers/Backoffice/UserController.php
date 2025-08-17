@@ -9,6 +9,7 @@ use App\Enum\ActivationStatusEnum;
 use App\Http\Requests\Backoffice\Interfaces\StoreUserRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateUserRequestInterface;
 use App\Services\UserService;
+use Illuminate\Http\Request;
 
 class UserController extends BaseController
 {
@@ -58,17 +59,22 @@ class UserController extends BaseController
         return redirect()->route('users.index');
     }
 
-    public function deactivate($id)
+    public function deactivate(Request $request, $id)
     {
-        $this->userService->changeStatus($id, ActivationStatusEnum::INACTIVE, 'Admin đã vô hiệu hóa');
+        $reason = $request->input('reason', 'Admin đã vô hiệu hóa');
+        $this->userService->changeStatus($id, ActivationStatusEnum::INACTIVE, $reason);
+
         return response()->json(['message' => 'Đã vô hiệu hóa']);
     }
 
-    public function activate($id)
+    public function activate(Request $request, $id)
     {
-        $this->userService->changeStatus($id, ActivationStatusEnum::ACTIVE, 'Admin đã kích hoạt');
+        $reason = $request->input('reason', 'Admin đã kích hoạt');
+        $this->userService->changeStatus($id, ActivationStatusEnum::ACTIVE, $reason);
+
         return response()->json(['message' => 'Đã kích hoạt']);
     }
+
 
 
 }

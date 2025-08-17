@@ -39,30 +39,20 @@
 
                         <div class="k-portlet__body">
                             <div class="row">
-                                <!-- Name Field -->
-                                <div class="col-md-4 form-group">
-                                    <label for="name">{{ __('Tên của bạn') }} <span class="text-danger">*</span></label>
-                                    <input type="text" value="{{ old('name', $web_review->name) }}" class="form-control" disabled>
-                                    <input type="hidden" name="name" value="{{ old('name', $web_review->name) }}">
-                                </div>
-
-                                <!-- Email Field -->
-                                <div class="col-md-4 form-group">
-                                    <label for="email">{{ __('Email') }}</label>
-                                    <input type="email" value="{{ old('email', $web_review->email) }}" class="form-control" disabled>
-                                    <input type="hidden" name="email" value="{{ old('email', $web_review->email) }}">
-                                    @error('email')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <!-- Phone Number Field -->
-                                <div class="col-md-4 form-group">
-                                    <label for="phone">{{ __('Số điện thoại') }} <span class="text-danger">*</span></label>
-                                    <input type="text" value="{{ old('phone_number', $web_review->phone_number) }}" class="form-control" disabled>
-                                    <input type="hidden" name="phone_number" value="{{ old('phone_number', $web_review->phone_number) }}">
-                                    @error('phone_number')
-                                        <span class="text-danger">{{ $message }}</span>
+                                <div class="col-md-6 form-group">
+                                    <label for="user_id">{{ __('Người dùng') }} <span class="text-danger">*</span></label>
+                                    <select name="user_id" id="user_id" class="form-control k_selectpicker" data-live-search="true" >
+                                        <option value="">{{ __('-- Chọn người dùng --') }}</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}"
+                                                    {{ old('user_id', $web_review->user_id) == $user->id ? 'selected' : '' }}
+                                                    data-address-id="{{ $user->address_id ?? '' }}">
+                                                {{ $user->name }} ({{ $user->email }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('user_id')
+                                        <span class="k-form__error">{{ $message }}</span>
                                     @enderror
                                 </div>
 

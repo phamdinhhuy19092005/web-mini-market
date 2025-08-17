@@ -6,6 +6,7 @@ use App\Contracts\Responses\Backoffice\StoreWebsiteReviewResponseContract;
 use App\Contracts\Responses\Backoffice\UpdateWebsiteReviewResponseContract;
 use App\Http\Requests\Backoffice\Interfaces\StoreWebsiteReviewRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateWebReviewRequestInterface;
+use App\Models\User;
 use App\Services\WebsiteReviewService;
 use Illuminate\Http\Request;
 
@@ -25,14 +26,16 @@ class WebsiteReviewController extends BaseController
 
     public function create()
     {
-        return view('backoffice.pages.web-reviews.create');
+        $users = User::all();
+
+        return view('backoffice.pages.web-reviews.create', compact('users'));
     }
 
     public function store(StoreWebsiteReviewRequestInterface $request)
     {
-        $post = $this->webReviewService->create($request->validated());
+        $web_review = $this->webReviewService->create($request->validated());
 
-        return $this->responses(StoreWebsiteReviewResponseContract::class, $post);
+        return $this->responses(StoreWebsiteReviewResponseContract::class, $web_review);
     }
 
     public function show($id)
@@ -45,8 +48,9 @@ class WebsiteReviewController extends BaseController
     public function edit($id)
     {
         $web_review = $this->webReviewService->show($id);
+        $users = User::all();
 
-        return view('backoffice.pages.web-reviews.edit', compact('web_review'));
+        return view('backoffice.pages.web-reviews.edit', compact('web_review','users'));
     }
 
     public function update(UpdateWebReviewRequestInterface $request, $id)

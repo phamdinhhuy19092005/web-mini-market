@@ -9,9 +9,12 @@ class WebsiteReviewResource extends BaseResource
         return array_merge(
             [
                 'id' => $this->id,
-                'name' => $this->name,
-                'email' => $this->email,
-                'phone_number' => $this->phone_number,
+                'user_id' => $this->user_id,
+                'user' => $this->whenLoaded('user', fn() => [
+                    'id' => $this->user->id,
+                    'name' => $this->user->name,
+                ]),
+
                 'rating' => $this->rating,
                 'comment' => $this->comment,
                 'status' => $this->status,

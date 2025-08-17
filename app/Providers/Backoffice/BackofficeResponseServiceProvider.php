@@ -21,6 +21,7 @@ use App\Contracts\Responses\Backoffice\ListCurrencyResponseContract;
 use App\Contracts\Responses\Backoffice\ListFaqResponseContract;
 use App\Contracts\Responses\Backoffice\ListFaqTopicResponseContract;
 use App\Contracts\Responses\Backoffice\ListInventoryResponseContract;
+use App\Contracts\Responses\Backoffice\ListOrderItemResponseContract;
 use App\Contracts\Responses\Backoffice\ListOrderResponseContract;
 use App\Contracts\Responses\Backoffice\ListPageResponseContract;
 use App\Contracts\Responses\Backoffice\ListPaymentOptionResponseContract;
@@ -109,6 +110,7 @@ use App\Http\Responses\Backoffice\ListCurrencyResponse;
 use App\Http\Responses\Backoffice\ListFaqResponse;
 use App\Http\Responses\Backoffice\ListFaqTopicResponse;
 use App\Http\Responses\Backoffice\ListInventoryResponse;
+use App\Http\Responses\Backoffice\ListOrderItemResponse;
 use App\Http\Responses\Backoffice\ListOrderResponse;
 use App\Http\Responses\Backoffice\ListPageResponse;
 use App\Http\Responses\Backoffice\ListPaymentOptionResponse;
@@ -457,5 +459,12 @@ class BackofficeResponseServiceProvider extends ServiceProvider
         StoreOrderResponseContract::class         => StoreOrderResponses::class,
         UpdateOrderResponseContract::class        => UpdateOrderResponses::class,
         ListOrderResponseContract::class          => ListOrderResponse::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Order Items
+        |--------------------------------------------------------------------------
+        */
+        ListOrderItemResponseContract::class          => ListOrderItemResponse::class,
     ];
 }

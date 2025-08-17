@@ -11,6 +11,7 @@ class WebsiteReviewResource extends BaseResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'avatar' => $this->avatar,
             'status' => $this->status,
             'status_name' => $this->status_name,
             'rating' => $this->rating,

@@ -32,9 +32,8 @@
                         <thead>
                             <tr>
                                 <th data-property="id" scope="col">{{ __('ID') }}</th>
-                                <th data-property="name" scope="col">{{ __('Tên') }}</th>
-                                <th data-property="email" scope="col">{{ __('Email') }}</th>
-                                <th data-property="phone_number" scope="col">{{ __('SĐT') }}</th>
+                                <th data-property="user_id" scope="col">{{ __('Id người đăng ký') }}</th>
+                                <th data-property="user.name" data-name="user_id" data-link="user.actions.update" data-link-target="_blank">{{ __('Người dùng') }}</th>
                                 <th class="none" data-property="comment" scope="col">{{ __('Nội dung') }}</th>
                                 <th data-property="rating" scope="col">{{ __('Số sao') }}</th>
                                 <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>

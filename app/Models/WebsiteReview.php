@@ -8,18 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class WebsiteReview extends Model
 {
     protected $fillable = [
+        'user_id',
         'name',
-        'email',
-        'phone_number',
+        'avatar',
         'comment',
         'rating',
         'status',
     ];
-    
+
 
     public function getStatusNameAttribute(): string
     {
         return ReviewStatusEnum::tryFrom($this->status)?->label() ?? 'Không xác định';
+    }
+
+     public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
 }

@@ -40,17 +40,24 @@ class InventoryService extends BaseService
             'offer_start', 'offer_end', 'image', 'slug', 'stock_quantity'
         )
         ->where('status', 1)
+        ->whereNotNull('title')
+        ->whereNotNull('stock_quantity')
+        ->where(function ($query) {
+            $query->whereNotNull('offer_price')->orWhereNotNull('sale_price');
+        })
         ->get()
         ->map(function ($inventory) use ($now) {
-            $inventory->final_price =
-                $inventory->offer_price &&
+            $inventory->final_price = $inventory->offer_price &&
                 $inventory->offer_start &&
                 $inventory->offer_end &&
-                $now->between($inventory->offer_start, $inventory->offer_end)
+                $now->between(Carbon::parse($inventory->offer_start), Carbon::parse($inventory->offer_end))
                     ? $inventory->offer_price
-                    : $inventory->sale_price;
+                    : ($inventory->sale_price ?? 0);
 
             return $inventory;
+        })
+        ->filter(function ($inventory) {
+            return $inventory->final_price !== null && !is_nan($inventory->final_price) && $inventory->final_price >= 0;
         });
     }
 
