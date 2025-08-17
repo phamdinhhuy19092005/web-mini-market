@@ -12,7 +12,9 @@ class WebsiteReviewController extends BaseController
 {
     public function index(): JsonResponse
     {
-        $reviews = WebsiteReview::with('user')->get();
+        $reviews = WebsiteReview::with('user')
+        ->where('status', 2)
+        ->get();
         return $this->jsonResponse(true, WebsiteReviewResource::collection($reviews));
     }
 
@@ -33,6 +35,11 @@ class WebsiteReviewController extends BaseController
                 'comment' => $validated['comment'] ?? null,
                 'status'  => $validated['status'] ?? 1,
             ]);
+
+            return response()->json([
+        'success' => true,
+        'message' => 'Bình luận của bạn đang chờ phê duyệt.'
+    ]);
 
             return $this->jsonResponse(true, new WebsiteReviewResource($review), 'Tạo đánh giá thành công');
         } catch (\Exception $e) {
