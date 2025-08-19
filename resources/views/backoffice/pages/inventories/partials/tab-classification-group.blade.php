@@ -149,7 +149,7 @@
                                                 data-generate-ref="#sku"
                                                 data-generate-prefix="{{ $product->code ?? '' }}-"
                                                 data-generate-uppercase="true"
-                                                type="button">{{ __('Generate SKU') }}</button>
+                                                type="button">{{ __('Tạo SKU') }}</button>
                                     </div>
                                 @endempty
                             </div>

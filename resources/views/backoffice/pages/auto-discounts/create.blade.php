@@ -33,11 +33,6 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="code">Mã <span class="text-danger">*</span></label>
-                                    <input type="text" name="code" id="code" class="form-control text-uppercase" value="{{ old('code') }}" required>
-                                    @error('code') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
 
                                 <div class="col-md-4 form-group">
                                     <label for="discount_type">Loại giảm giá <span class="text-danger">*</span></label>

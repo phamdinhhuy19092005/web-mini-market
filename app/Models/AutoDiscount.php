@@ -13,7 +13,7 @@ class AutoDiscount extends Model
 
     protected $fillable = [
         'title',
-        'code',
+        'terms',
         'description',
         'terms',
         'condition_type',

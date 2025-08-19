@@ -12,10 +12,9 @@ class StoreAutoDiscountRequest extends BaseFormRequest implements StoreAutoDisco
 {
     public function rules(): array
     {
-        dd($this->all());
+        // dd($this->all());
         return [
             'title' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', 'unique:auto_discounts,code'],
             'discount_type' => ['required', 'integer', Rule::in(DiscountTypeEnum::values())],
             'discount_value' => ['required', 'numeric', 'min:0'],
             'condition_type' => ['required', Rule::in(DiscountConditionTypeEnum::values())],

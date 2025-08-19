@@ -23,14 +23,20 @@ class Coupon extends Model
         'status',
     ];
 
-    public function usedCoupons()
+    public function orders()
     {
-        return $this->hasMany(UsedCoupon::class);
+        return $this->hasMany(Order::class);
+    }
+
+
+    public function usedDiscounts()
+    {
+        return $this->hasMany(UsedDiscount::class);
     }
 
     public function getUsedCountAttribute()
     {
-        return $this->usedCoupons()->count();
+        return $this->usedDiscounts()->count();
     }
 
     public function getDiscountTypeNameAttribute(): string

@@ -96,9 +96,9 @@ class Order extends Model
         return $this->belongsTo(Coupon::class);
     }
 
-    public function usedCoupons()
+    public function usedDiscounts()
     {
-        return $this->hasMany(UsedCoupon::class);
+        return $this->hasMany(usedDiscount::class);
     }
 
     public function cart()
@@ -155,5 +155,6 @@ class Order extends Model
     {
         return $this->order_status === OrderStatusEnum::WAITING_FOR_PAYMENT;
     }
+
 
 }

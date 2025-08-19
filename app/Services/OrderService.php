@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enum\OrderStatusEnum;
+use App\Models\Coupon;
 use App\Repositories\Interfaces\OrderRepositoryInterface;
 use App\Models\Inventory; // Thêm để lấy giá sản phẩm
 use App\Models\Province;
@@ -56,11 +57,41 @@ class OrderService extends BaseService
 
             $cartItems = data_get($attributes, 'cart_items', []);
             $totalPrice = 0;
+
             foreach ($cartItems as $item) {
                 $inventory = Inventory::find($item['inventory_id']);
                 $totalPrice += ($inventory->final_price ?? 0) * $item['quantity'];
             }
 
+            // --- Xử lý coupon ---
+            $couponCode = data_get($attributes, 'coupon_code');
+            $discountAmount = 0;
+            $couponId = null;
+
+            if ($couponCode) {
+                $coupon = Coupon::where('code', $couponCode)
+                    ->where('status', 1)
+                    ->whereDate('start_date', '<=', now())
+                    ->whereDate('end_date', '>=', now())
+                    ->first();
+
+                if ($coupon) {
+                    if ($coupon->discount_type === 'percent') {
+                        $discountAmount = $totalPrice * ($coupon->discount_value / 100);
+                    } else {
+                        $discountAmount = $coupon->discount_value;
+                    }
+
+                    $discountAmount = min($discountAmount, $totalPrice);
+                    $couponId = $coupon->id;
+                } else {
+                    throw new \Exception("Mã giảm giá không hợp lệ");
+                }
+            }
+
+            $grandTotal = $totalPrice - $discountAmount;
+
+            // --- Dữ liệu order ---
             $province = Province::where('code', data_get($attributes, 'province_code'))->first();
 
             $orderData = [
@@ -79,12 +110,13 @@ class OrderService extends BaseService
                 'address_line' => data_get($attributes, 'address_line'),
                 'user_note' => data_get($attributes, 'user_note'),
                 'admin_note' => data_get($attributes, 'admin_note'),
-                'city_name' => $province->name,
+                'city_name' => optional($province)->name,
                 'shipping_option_id' => data_get($attributes, 'shipping_option_id'),
                 'shipping_rate_id' => data_get($attributes, 'shipping_rate_id'),
                 'payment_option_id' => data_get($attributes, 'payment_option_id'),
-                'total_price' => data_get($attributes, 'total_price'),
-                'grand_total' => data_get($attributes, 'total_price'),
+                'total_price' => $totalPrice,
+                'grand_total' => $grandTotal,
+                'coupon_id' => $couponId,
                 'order_status' => 1,
                 'created_by_type' => get_class($admin),
                 'created_by_id' => $admin->id,
@@ -120,8 +152,6 @@ class OrderService extends BaseService
         });
     }
 
-
-
     public function find($id)
     {
         return $this->orderRepository->find($id);
@@ -155,6 +185,8 @@ class OrderService extends BaseService
         return DB::transaction(function () use ($order, $status) {
             $admin = auth('admin')->user();
 
+            $oldStatus = $order->order_status; 
+
             switch ($status) {
                 case 'processing':
                     $order->order_status = OrderStatusEnum::PROCESSING;
@@ -164,6 +196,23 @@ class OrderService extends BaseService
                     break;
                 case 'complete':
                     $order->order_status = OrderStatusEnum::COMPLETED;
+
+                    // Nếu trước đó chưa hoàn thành => trừ kho
+                    if ($oldStatus != OrderStatusEnum::COMPLETED) {
+                        foreach ($order->items as $item) {
+                            $inventory = Inventory::find($item->inventory_id);
+                            if ($inventory) {
+                                // Trừ kho
+                                $inventory->stock_quantity -= $item->quantity;
+
+                                // Tăng số lượng đã bán
+                                $inventory->sold_count += $item->quantity;
+
+                                $inventory->save();
+                            }
+                        }
+                    }
+
                     break;
                 case 'refund':
                     $order->order_status = OrderStatusEnum::REFUNDED;

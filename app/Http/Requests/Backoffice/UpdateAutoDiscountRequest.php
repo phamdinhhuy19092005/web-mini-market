@@ -15,7 +15,6 @@ class UpdateAutoDiscountRequest extends BaseFormRequest implements UpdateAutoDis
         // dd($this->all());
         return [
             'title' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', Rule::unique('auto_discounts', 'code')->ignore($this->route('id'))],
             'discount_type' => ['required', 'integer', Rule::in(DiscountTypeEnum::values())],
             'discount_value' => ['required', 'numeric', 'min:0'],
             'condition_type' => ['required', Rule::in(DiscountConditionTypeEnum::values())],

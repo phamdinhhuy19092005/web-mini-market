@@ -90,52 +90,63 @@ Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
 Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
 
+// ====================== Đánh giá website ======================
 Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');
 
+// ====================== Người dùng ======================
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
+// ====================== Sản phẩm ======================
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
-
+// ====================== Danh mục nhóm ======================
 Route::get('/category-groups', [CategoryGroupController::class, 'index'])->name('category-groups.index');
 Route::get('/category-groups/{id}', [CategoryGroupController::class, 'show'])->name('category-groups.show');
 
+// ====================== Danh mục chính ======================
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('categories.show');
 
+// ====================== Danh mục phụ ======================
 Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-categories.index');
 Route::get('/sub-categories/{id}', [SubCategoryController::class, 'show'])->name('sub-categories.show');
 
+// ====================== Banner ======================
 Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');
 Route::get('/banners/{id}', [BannerController::class, 'show'])->name('banners.show');
 
+// ====================== Bài viết ======================
 Route::get('/post-categories', [PostCategoryController::class, 'index'])->name('post-categories.index');
 Route::get('/post-categories/{id}', [PostCategoryController::class, 'show'])->name('post-categories.show');
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
 
+// ====================== Trang tĩnh ======================
 Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
 Route::get('/pages/{id}', [PageController::class, 'show'])->name('pages.show');
 Route::get('/pages/{slug}', [PageController::class, 'show'])->name('pages.show');
 
-
+// ====================== Câu hỏi thường gặp ======================
 Route::get('/faq-topics', [FaqTopicController::class, 'index'])->name('faq-topics.index');
 Route::get('/faq-topics/{id}', [FaqTopicController::class, 'show'])->name('faq-topics.show');
 
 Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
 Route::get('/faqs/{id}', [FaqController::class, 'show'])->name('faqs.show');
 
+// ====================== Thương hiệu ======================
 Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
-Route::get('/brands/{id}', [BrandController::class, 'show'])->name('brands.show');
+Route::get('/brands/{slug}', [BrandController::class, 'show'])->name('brands.show');
 
+// ====================== Thuộc tính sản phẩm ======================
 Route::get('/attributes', [AttributeController::class, 'index'])->name('attributes.index');
 Route::get('/attributes/{id}', [AttributeController::class, 'show'])->name('attributes.show');
 
 Route::get('/attribute-values', [AttributeValueController::class, 'index'])->name('attribute-values.index');
 Route::get('/attribute-values/{id}', [AttributeValueController::class, 'show'])->name('attribute-values.show');
 
+// ====================== Kho hàng ======================
 Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
 Route::get('/inventories/{id}', [InventoryController::class, 'show'])->name('inventories.show');
 

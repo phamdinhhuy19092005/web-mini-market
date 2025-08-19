@@ -76,7 +76,7 @@
                         <li class="k-menu__item {{ request()->routeIs('bo.web.inventories.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
                             <a href="{{ route('bo.web.inventories.index') }}" class="k-menu__link">
                                 <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
-                                <span class="k-menu__link-text">Kho sản phẩm</span>
+                                <span class="k-menu__link-text">Kho sản phẩm & biến thể</span>
                             </a>
                         </li>
                         <!-- Coupons -->

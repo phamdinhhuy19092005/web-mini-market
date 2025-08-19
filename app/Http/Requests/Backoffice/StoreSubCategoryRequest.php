@@ -10,7 +10,6 @@ class StoreSubCategoryRequest extends BaseFormRequest implements StoreSubCategor
 {
     public function rules(): array
     {
-        dd($this->all());
         return [
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'unique:sub_categories,slug'],

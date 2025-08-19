@@ -35,6 +35,7 @@ class Inventory extends Model
         'offer_start',
         'offer_end',
         'init_sold_count',
+        'sold_count',
         'stock_quantity',
         'min_order_quantity',
         'available_from',

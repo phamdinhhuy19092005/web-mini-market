@@ -258,6 +258,26 @@
                             </div>
                         </div>
                     </div>
+                    <div class="k-portlet">
+                        <div class="k-portlet__head">
+                            <div class="k-portlet__head-label">
+                                <h3 class="k-portlet__head-title">7. {{ __('Mã giảm giá') }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="k-portlet__body">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="coupon_code">{{ __('Nhập mã giảm giá') }}</label>
+                                    <input type="text" class="form-control" name="coupon_code" id="coupon_code" placeholder="{{ __('VD: SALE10') }}">
+                                    <small class="form-text text-muted">{{ __('Nếu có mã giảm giá, nhập vào đây') }}</small>
+                                </div>
+                                <div class="form-group col-md-6 d-flex align-items-end">
+                                    <button type="button" class="btn btn-success" id="btn_apply_coupon">{{ __('Áp dụng') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

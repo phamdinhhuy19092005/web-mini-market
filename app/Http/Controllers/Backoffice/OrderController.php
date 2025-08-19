@@ -92,6 +92,7 @@ class OrderController extends BaseController
 
     public function destroy($id)
     {
+        // dd(11111);
         $this->orderService->delete($id);
 
         return redirect()->route('bo.web.pages.orders.index');

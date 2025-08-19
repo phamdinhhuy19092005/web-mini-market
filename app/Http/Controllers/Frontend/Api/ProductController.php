@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Frontend\Api;
 
 use App\Http\Controllers\Frontend\BaseController;
+use App\Http\Resources\Frontend\BrandResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
-use App\Http\Resources\Frontend\ProductResource; 
+use App\Http\Resources\Frontend\ProductResource;
+use App\Models\Brand;
 
 class ProductController extends BaseController
 {
@@ -13,8 +15,10 @@ class ProductController extends BaseController
     {
         $query = Product::with(['brand', 'inventories', 'subcategories.category.categoryGroup']);
 
-        if (request()->has('brand_id') && request()->brand_id) {
-            $query->where('brand_id', request()->brand_id);
+        if (request()->has('brand_slug') && request()->brand_slug) {
+            $query->whereHas('brand', function ($q) {
+                $q->where('slug', request()->brand_slug);
+            });
         }
 
         if (request()->has('category_id') && request()->category_id) {
@@ -31,24 +35,22 @@ class ProductController extends BaseController
         ]);
     }
 
-    public function show($id): JsonResponse
-    {   
-        $product = Product::with([
-            'brand',
-            'inventories',
-            'subcategories.category.categoryGroup' 
-        ])->find($id);
+    public function show($slug): JsonResponse
+    {
+        $brand = Brand::where('slug', $slug)
+            ->with(['products' => function($q) {
+                $q->with(['inventories', 'subcategories.category.categoryGroup']);
+            }])
+            ->first();
 
-        if (!$product) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Product not found'
-            ], 404);
+        if (!$brand) {
+            return $this->jsonResponse(false, null, 'Thương hiệu không tìm thấy', 404);
         }
 
-        return response()->json([
-            'success' => true,
-            'data' => new ProductResource($product)
+        return $this->jsonResponse(true, [
+            'brand' => new BrandResource($brand),
+            'products' => ProductResource::collection($brand->products)
         ]);
     }
+
 }

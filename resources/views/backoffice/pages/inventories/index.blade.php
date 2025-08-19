@@ -42,7 +42,6 @@
                                 <th class="all" data-property="sale_price">{{ __('Giá bán') }}</th>
                                 <th class="all" data-property="offer_price" data-render-callback="renderCallbackOfferPrice">{{ __('Giá khuyến mãi') }}</th>
                                 <th class="none" data-property="title">{{ __('Tiêu đề') }}</th>
-                                <th class="none" data-property="unit">{{ __('Đơn vị') }}</th>
                                 <th class="none" data-property="unit_type">{{ __('Loại đơn vị') }}</th>
                                 <th class="none" data-property="stock_quantity">{{ __('Số lượng') }}</th>
                                 <th class="none" data-property="created_by.name">{{ __('Người tạo') }}</th>
