@@ -40,11 +40,11 @@
                         </div>
 
                         <div class="form-group">
-                           <label for="payment_type">{{ __('Loại thanh toán') }}</label>
-                            <select name="payment_type" id="payment_type" class="form-control k_selectpicker">
+                           <label for="type">{{ __('Loại thanh toán') }}</label>
+                            <select name="type" id="type" class="form-control k_selectpicker">
                                 <option value="">-- {{ __('Chọn loại thanh toán') }} --</option>
                                 @foreach ($paymentOptionTypeEnumLabels as $key => $label)
-                                    <option value="{{ $key }}" {{ old('payment_type') == $key ? 'selected' : '' }}>
+                                    <option value="{{ $key }}" {{ old('type') == $key ? 'selected' : '' }}>
                                         {{ $label }}
                                     </option>
                                 @endforeach

@@ -1,10 +1,12 @@
 <script>
-    const ORDER_ADD_TO_CART = {
+const ORDER_ADD_TO_CART = {
     cart_items: {},
     elements: {
         btn_add: $('#btn_add_to_cart'),
         cart_item: $('[name="inventory_id"]'),
         table: $('#items_in_cart_table'),
+        form: $('#form_create_order'),
+        submit_btn: $('#form_create_order [type="submit"]'),
     },
 
     init: () => {
@@ -70,14 +72,11 @@
             const price = parseFloat($(this).attr('data-price'));
             const inventoryId = $(this).attr('data-inventory-id');
 
-            // Kiểm tra số lượng hợp lệ
             if (isNaN(value) || value < 1) {
                 fstoast.error('Số lượng không hợp lệ.');
                 $(this).val(1);
                 return;
             }
-
-            console.log({ inventoryId });
 
             const finalPrice = price * value;
             ORDER_ADD_TO_CART.cart_items[inventoryId] = {
@@ -92,10 +91,9 @@
 
     renderCartItems: (items) => {
         const itemsDom = Object.values(items).map((item, index) => {
-            // Kiểm tra item.id để tránh undefined
             if (!item.id || isNaN(item.id)) {
                 console.error('ID sản phẩm không hợp lệ:', item);
-                return ''; // Bỏ qua mục không hợp lệ
+                return '';
             }
 
             return `
@@ -124,7 +122,7 @@
                     </th>
                 </tr>
             `;
-        }).filter(row => row !== ''); 
+        }).filter(row => row !== '');
 
         ORDER_ADD_TO_CART.elements.table.find('tbody').html(itemsDom);
     },
@@ -149,8 +147,8 @@
 
         $('#input_total_quantity').val(totalQuantity);
         $('#input_total_price').val(totalPrice);
+        $('#input_grand_total').val(totalPrice); // Cập nhật grand_total
     },
-
 
     renderShippingOptions: () => {
         const { province_code, district_code, ward_code } = ADDRESS_MANAGEMENT.address_info;
@@ -171,8 +169,6 @@
             data: { status: 1, province_code, paginate: false },
             success: (response) => {
                 console.log('📦 Response từ server:', response);
-                console.log('Phản hồi từ API shipping-options:', response);
-
                 const shippingOptions = Array.isArray(response) ? response : (response.data || []);
                 const element = $('[name="shipping_option_id"]');
                 element.html('');
@@ -212,80 +208,92 @@
     },
 
     onSubmit: () => {
-        $('#form_create_order').on('submit', function(e) {
-            e.preventDefault();
+    ORDER_ADD_TO_CART.elements.form.off('submit').on('submit', function(e) {
+        e.preventDefault();
+        if (ORDER_ADD_TO_CART.elements.submit_btn.prop('disabled')) {
+            return; // Ngăn gửi nhiều lần
+        }
 
-            const requiredFields = ['user_id', 'order_channel[type]', 'province_code', 'district_code', 'ward_code', 'shipping_option_id', 'payment_option_id'];
-            let hasError = false;
-            requiredFields.forEach(field => {
-                const element = $(`[name="${field}"]`);
-                if (!element.val() || element.prop('disabled')) {
-                    console.error(`Trường ${field} trống hoặc bị vô hiệu hóa`);
-                    hasError = true;
-                }
-            });
-
-            // Kiểm tra giỏ hàng
-            if (!Object.keys(ORDER_ADD_TO_CART.cart_items).length) {
-                console.error('Giỏ hàng trống');
+        const requiredFields = ['user_id', 'order_channel[type]', 'province_code', 'district_code', 'ward_code', 'shipping_option_id', 'payment_option_id'];
+        let hasError = false;
+        requiredFields.forEach(field => {
+            const element = $(`[name="${field}"]`);
+            if (!element.val() || element.prop('disabled')) {
+                console.error(`Trường ${field} trống hoặc bị vô hiệu hóa`);
                 hasError = true;
             }
+        });
 
-            // Kiểm tra cart_items
-            Object.values(ORDER_ADD_TO_CART.cart_items).forEach((item, index) => {
-                if (!item.id || isNaN(item.id)) {
-                    console.error(`cart_items[${index}][inventory_id] không hợp lệ:`, item.id);
-                    fstoast.error(`Sản phẩm tại vị trí ${index + 1} có ID không hợp lệ.`);
-                    hasError = true;
-                }
-            });
+        if (!Object.keys(ORDER_ADD_TO_CART.cart_items).length) {
+            console.error('Giỏ hàng trống');
+            hasError = true;
+        }
 
-            if (hasError) {
-                fstoast.error('Vui lòng điền đầy đủ các trường bắt buộc, chọn tùy chọn vận chuyển và thêm sản phẩm hợp lệ vào giỏ hàng.');
-                return;
+        Object.values(ORDER_ADD_TO_CART.cart_items).forEach((item, index) => {
+            if (!item.id || isNaN(item.id)) {
+                console.error(`cart_items[${index}][inventory_id] không hợp lệ:`, item.id);
+                fstoast.error(`Sản phẩm tại vị trí ${index + 1} có ID không hợp lệ.`);
+                hasError = true;
             }
+        });
 
-            const formData = $(this).serialize();
-            console.log('Dữ liệu gửi đi:', formData);
+        if (hasError) {
+            fstoast.error('Vui lòng điền đầy đủ các trường bắt buộc, chọn tùy chọn vận chuyển và thêm sản phẩm hợp lệ vào giỏ hàng.');
+            return;
+        }
 
-            const route = "{{ route('bo.web.orders.store') }}";
+        ORDER_ADD_TO_CART.elements.submit_btn.prop('disabled', true); // Vô hiệu hóa nút gửi
 
-            $.ajax({
-                url: route,
-                method: 'POST',
-                data: formData,
-                success: (response) => {
-                    console.log('Phản hồi thành công:', JSON.stringify(response, null, 2));
-                    let orderId = response?.data?.id || response?.id || response?.order?.id;
-                    if (orderId) {
+        const formData = $(this).serialize();
+        console.log('Dữ liệu gửi đi:', formData);
+
+        const route = "{{ route('bo.web.orders.store') }}";
+        const paymentOptionId = $('[name="payment_option_id"]').val();
+        const grandTotal = $('#input_grand_total').val();
+
+        $.ajax({
+            url: route,
+            method: 'POST',
+            data: formData,
+            success: (response) => {
+                console.log('Phản hồi thành công:', JSON.stringify(response, null, 2));
+                let orderId = response?.data?.id || response?.id || response?.order?.id;
+                if (orderId) {
+                    if (paymentOptionId === '2') { 
+                        const paymentUrl = "{{ route('bo.web.payment.create') }}";
+                        // Chuyển hướng đến route /payment với orderId và grandTotal
+                        window.location.href = `${paymentUrl}?order_id=${orderId}&amount=${grandTotal}`;
+                    } else {
                         const redirectUrl = "{{ route('bo.web.orders.edit', ['id' => ':id']) }}".replace(':id', orderId);
                         console.log('Chuyển hướng đến:', redirectUrl);
                         window.location.href = redirectUrl;
-                    } else {
-                        console.error('❌ Không tìm thấy ID đơn hàng trong phản hồi:', response);
-                        fstoast.error('Không lấy được ID đơn hàng từ phản hồi.');
                     }
-                    $('#form_create_order').find('[type="submit"]').prop('disabled', false);
-                },
-                error: (xhr, status, error) => {
-                    console.error('Lỗi AJAX:', { status: xhr.status, response: xhr.responseJSON || xhr.responseText, error });
-                    let errorMessage = 'Đã xảy ra lỗi khi lưu đơn hàng. Vui lòng kiểm tra lại.';
-                    if (xhr.status === 422 && xhr.responseJSON?.errors) {
-                        errorMessage = 'Dữ liệu không hợp lệ: ' + Object.values(xhr.responseJSON.errors).flat().join(', ');
-                    } else if (xhr.responseJSON?.message) {
-                        errorMessage = 'Lỗi: ' + xhr.responseJSON.message;
-                    } else if (xhr.responseText.includes('Sfdump')) {
-                        errorMessage = 'Lỗi server nội bộ. Vui lòng kiểm tra log server Laravel.';
-                    }
-                    fstoast.error(errorMessage);
-                    $('#form_create_order').find('[type="submit"]').prop('disabled', false);
-                },
-            });
+                } else {
+                    console.error('❌ Không tìm thấy ID đơn hàng trong phản hồi:', response);
+                    fstoast.error('Không lấy được ID đơn hàng từ phản hồi.');
+                }
+            },
+            error: (xhr, status, error) => {
+                console.error('Lỗi AJAX:', { status: xhr.status, response: xhr.responseJSON || xhr.responseText, error });
+                let errorMessage = 'Đã xảy ra lỗi khi lưu đơn hàng. Vui lòng kiểm tra lại.';
+                if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                    errorMessage = 'Dữ liệu không hợp lệ: ' + Object.values(xhr.responseJSON.errors).flat().join(', ');
+                } else if (xhr.responseJSON?.message) {
+                    errorMessage = 'Lỗi: ' + xhr.responseJSON.message;
+                } else if (xhr.responseText.includes('Sfdump')) {
+                    errorMessage = 'Lỗi server nội bộ. Vui lòng kiểm tra log server Laravel.';
+                }
+                fstoast.error(errorMessage);
+            },
+            complete: () => {
+                ORDER_ADD_TO_CART.elements.submit_btn.prop('disabled', false); // Kích hoạt lại nút gửi
+            }
         });
-    },
+    });
+},
 };
 
-// Quản lý địa chỉ (giữ nguyên, không cần sửa)
+// Quản lý địa chỉ (giữ nguyên)
 const ADDRESS_MANAGEMENT = {
     address_info: {
         province_code: null,
@@ -413,5 +421,78 @@ const ADDRESS_MANAGEMENT = {
 ADDRESS_MANAGEMENT.init();
 ORDER_ADD_TO_CART.init();
 
+// Áp dụng mã giảm giá
+$('#btn_apply_coupon').on('click', function() {
+    const option = $('select[name="coupon_id"] option:selected').attr('data-value');
+    if (!option) {
+        fstoast.error('Vui lòng chọn mã giảm giá hợp lệ.');
+        return;
+    }
+
+    let selectedCoupon;
+    try {
+        selectedCoupon = JSON.parse(option);
+        console.log('Coupon:', selectedCoupon);
+    } catch (err) {
+        console.error('Lỗi parse JSON coupon:', err, option);
+        fstoast.error('Dữ liệu coupon không hợp lệ.');
+        return;
+    }
+
+    if (!selectedCoupon.id || !selectedCoupon.discount_type || !selectedCoupon.discount_value) {
+        fstoast.error('Thông tin coupon không đầy đủ.');
+        return;
+    }
+
+    let discountType = null;
+    if (selectedCoupon.discount_type == 1) discountType = 'percent';
+    if (selectedCoupon.discount_type == 2) discountType = 'amount';
+    if (!discountType) {
+        fstoast.error('Loại giảm giá không hợp lệ.');
+        return;
+    }
+
+    const discountValue = parseFloat(selectedCoupon.discount_value);
+    if (isNaN(discountValue) || discountValue <= 0) {
+        fstoast.error('Giá trị giảm giá không hợp lệ.');
+        return;
+    }
+
+    // ✅ Tổng giỏ hàng
+    let totalPrice = Object.values(ORDER_ADD_TO_CART.cart_items).reduce((sum, item) => {
+        return sum + (parseFloat(item.changed.price) || 0);
+    }, 0);
+
+    if (totalPrice <= 0) {
+        fstoast.error('Giỏ hàng trống hoặc tổng giá không hợp lệ.');
+        return;
+    }
+
+    // ✅ Tính discount
+    let discount = (discountType === 'percent')
+        ? totalPrice * (discountValue / 100)
+        : discountValue;
+
+    discount = Math.min(discount, totalPrice);
+    const grandTotal = totalPrice - discount;
+
+    // ✅ Cập nhật giao diện
+    $('[data-name="total_price"]').val(fscommon.formatPrice(grandTotal));
+    $('#input_total_price').val(totalPrice);
+    $('#input_grand_total').val(grandTotal);
+
+    // ✅ Cập nhật coupon_id (để backend lấy đúng)
+    $('[name="coupon_id"]').val(selectedCoupon.id).trigger('change');
+
+    // ✅ Thêm input hidden để backend biết discount_amount (nếu chưa có thì tạo mới)
+    let discountInput = $('#input_discount_amount');
+    if (!discountInput.length) {
+        $('#form_create_order').append('<input type="hidden" id="input_discount_amount" name="discount_amount">');
+        discountInput = $('#input_discount_amount');
+    }
+    discountInput.val(discount);
+
+    fstoast.success(`Áp dụng coupon thành công. Giảm ${fscommon.formatPrice(discount)}`);
+});
 
 </script>

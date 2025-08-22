@@ -1,11 +1,11 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Quản lý Nhóm Danh mục');
+    $title = __('Quản lý nhóm danh mục');
     $breadcrumbs = [
         ['label' => __('Sản phẩm')],
         ['label' => __('Danh mục')],
-        ['label' => __('Quản lý Nhóm Danh mục')],
+        ['label' => __('Quản lý nhóm danh mục')],
     ];
 @endphp
 

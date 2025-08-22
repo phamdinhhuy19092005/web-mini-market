@@ -15,12 +15,13 @@ class CategoryController extends BaseController
         return $this->jsonResponse(true, CategoryResource::collection($categories));
     }
 
-    public function show($id): JsonResponse
+    public function show($slug): JsonResponse
     {
-        $category = Category::find($id);
+        $category = Category::where('slug', $slug)->first();
         if (!$category) {
             return $this->jsonResponse(false, null, 'Danh mục không tìm thấy', 404);
         }
         return $this->jsonResponse(true, new CategoryResource($category));
     }
+
 }

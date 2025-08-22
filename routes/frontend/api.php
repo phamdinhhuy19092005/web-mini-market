@@ -55,17 +55,10 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
 
     // Thêm sản phẩm vào giỏ
     Route::post('/carts/items', [CartController::class, 'addItem'])->name('carts.add-item');
-
-    // Cập nhật số lượng sản phẩm (tăng/giảm)
     Route::put('/carts/items/{item}', [CartController::class, 'updateItem'])->name('carts.update-item');
-
-    // Xóa sản phẩm khỏi giỏ
     Route::delete('/carts/items/{item}', [CartController::class, 'removeItem'])->name('carts.remove-item');
-
-    // Xóa toàn bộ giỏ hàng
     Route::delete('/carts/clear', [CartController::class, 'clearCart'])->name('carts.clear');
-
-    // Đồng bộ giỏ hàng
+    // Xóa merge giỏ hàng
     Route::post('/carts/sync-cart', [CartController::class, 'syncCart'])->name('carts.sync-cart');
 
     Route::post('/web-reviews/store', [WebsiteReviewController::class, 'store'])->name('web-reviews.store');
@@ -76,16 +69,22 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
     Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
 
+    // Áp mã giảm giá
+    Route::post('/orders/{uuid}/apply-coupon', [OrderController::class, 'applyCoupon']);
 
-    Route::post('/orders/{order}/apply-coupon', [OrderDiscountTestController::class, 'applyCoupon']);
-    Route::post('/orders/{orderId}/auto-apply-coupon', [OrderAutoDiscountTestController::class, 'autoApply']);
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    // Cái này dùng tạo 
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+
+    // Này lấy order từ user nha dô OrderStatusEnum để xen trạng thái 
+    Route::get('/orders/{uuid}', [OrderController::class, 'show'])->name('orders.show');
+
+    // Cái này là dùng để hủy đơn hàng
+    Route::patch('/orders/{uuid}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
 });
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
-
-// Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-// Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 
 Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
 Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
@@ -98,19 +97,19 @@ Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
 // ====================== Sản phẩm ======================
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
 
 // ====================== Danh mục nhóm ======================
 Route::get('/category-groups', [CategoryGroupController::class, 'index'])->name('category-groups.index');
-Route::get('/category-groups/{id}', [CategoryGroupController::class, 'show'])->name('category-groups.show');
+Route::get('/category-groups/{slug}', [CategoryGroupController::class, 'show'])->name('category-groups.show');
 
 // ====================== Danh mục chính ======================
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('categories.show');
+Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
 // ====================== Danh mục phụ ======================
 Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-categories.index');
-Route::get('/sub-categories/{id}', [SubCategoryController::class, 'show'])->name('sub-categories.show');
+Route::get('/sub-categories/{slug}', [SubCategoryController::class, 'show'])->name('sub-categories.show');
 
 // ====================== Banner ======================
 Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');
@@ -118,14 +117,14 @@ Route::get('/banners/{id}', [BannerController::class, 'show'])->name('banners.sh
 
 // ====================== Bài viết ======================
 Route::get('/post-categories', [PostCategoryController::class, 'index'])->name('post-categories.index');
-Route::get('/post-categories/{id}', [PostCategoryController::class, 'show'])->name('post-categories.show');
+Route::get('/post-categories/{slug}', [PostCategoryController::class, 'show'])->name('post-categories.show');
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/posts/{slug}', [PostController::class, 'show'])->name('posts.show');
 
 // ====================== Trang tĩnh ======================
 Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
-Route::get('/pages/{id}', [PageController::class, 'show'])->name('pages.show');
+// Route::get('/pages/{id}', [PageController::class, 'show'])->name('pages.show');
 Route::get('/pages/{slug}', [PageController::class, 'show'])->name('pages.show');
 
 // ====================== Câu hỏi thường gặp ======================
@@ -148,7 +147,7 @@ Route::get('/attribute-values/{id}', [AttributeValueController::class, 'show'])-
 
 // ====================== Kho hàng ======================
 Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
-Route::get('/inventories/{id}', [InventoryController::class, 'show'])->name('inventories.show');
+Route::get('/inventories/{slug}', [InventoryController::class, 'show'])->name('inventories.show');
 
 // Route::get('/shipping-zones', [ShippingZoneController::class, 'index'])->name('shipping-zones.index');
 // Route::get('/shipping-zones/{id}', [ShippingZoneController::class, 'show'])->name('shipping-zones.show');

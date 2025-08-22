@@ -16,12 +16,13 @@ class CategoryGroupController extends BaseController
         return $this->jsonResponse(true, BackofficeCategoryGroupResource::collection($categoryGroups));
     }
 
-    public function show($id): JsonResponse
+    public function showBySlug($slug): JsonResponse
     {
-        $categoryGroup = CategoryGroup::find($id);
+        $categoryGroup = CategoryGroup::where('slug', $slug)->first();
         if (!$categoryGroup) {
             return $this->jsonResponse(false, null, 'Nhóm danh mục không tìm thấy', 404);
         }
         return $this->jsonResponse(true, new CategoryGroupResource($categoryGroup));
     }
+
 }

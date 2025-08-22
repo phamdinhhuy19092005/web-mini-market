@@ -53,6 +53,20 @@ class Inventory extends Model
         'key_features' => 'array',
     ];
 
+    public function getFinalPriceAttribute()
+    {
+        $now = now();
+
+        if ($this->offer_price && 
+            (!$this->offer_start || $this->offer_start <= $now) && 
+            (!$this->offer_end || $this->offer_end >= $now)) {
+            return $this->offer_price;
+        }
+
+        return $this->sale_price;
+}
+
+
     public function setUnitPriceAttribute($value)
     {
         if ($value !== null) {

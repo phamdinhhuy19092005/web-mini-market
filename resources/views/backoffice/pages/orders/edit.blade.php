@@ -74,15 +74,16 @@
                 <div class="btns d-flex justify-content-end">
                     <button type="button" data-btn-change-order-status="update-to-delivery" class="btn btn-secondary ml-2" data-route="{{ route('bo.api.orders.delivery', $order->id) }}" {{ $order->canDelivery() ? '' : 'disabled' }}>{{ __('VẬN CHUYỂN') }}</button>
                     <button type="button" data-btn-change-order-status="update-to-complete" class="btn btn-success ml-2" data-route="{{ route('bo.api.orders.complete', $order->id) }}" {{ !$order->canComplete() ? 'disabled' : '' }}>{{ __('HOÀN THÀNH') }}</button>
-                    <button type="button" data-btn-change-order-status="update-to-refund" class="btn btn-warning ml-2" data-route="{{ route('bo.api.orders.refund', $order->id) }}" {{ !$order->canRefund() ? 'disabled' : '' }}>{{ __('HOÀN TIỀN') }}</button>
-                    <button type="button" 
-                            data-btn-change-order-status="update-to-processing" 
-                            class="btn btn-info ml-2" 
-                            data-route="{{ route('bo.api.orders.processing', $order->id) }}" 
-                            {{ !$order->canProcessing() ? 'disabled' : '' }}>
-                        {{ __('ĐANG XỬ LÍ') }}
-                    </button>
+                    {{-- <button type="button" data-btn-change-order-status="update-to-refund" class="btn btn-warning ml-2" data-route="{{ route('bo.api.orders.refund', $order->id) }}" {{ !$order->canRefund() ? 'disabled' : '' }}>{{ __('HOÀN TIỀN') }}</button> --}}
+                    <button type="button" data-btn-change-order-status="update-to-processing"  class="btn btn-info ml-2"  data-route="{{ route('bo.api.orders.processing', $order->id) }}"  {{ !$order->canProcessing() ? 'disabled' : '' }}> {{ __('ĐANG XỬ LÍ') }} </button>
                     <button type="button" data-btn-change-order-status="update-to-cancel" class="btn btn-danger ml-2" data-route="{{ route('bo.api.orders.cancel', $order->id) }}" {{ !$order->canCancel() ? 'disabled' : '' }}>{{ __('HỦY ĐƠN') }}</button>
+
+                    @if(!$order->deposit_transaction_id && $order->order_status === OrderStatusEnum::COMPLETED)
+                        <button type="button" id="btn-create-deposit" class="btn btn-info ml-2" data-route="{{ route('bo.api.orders.createDeposit', $order->id) }}">
+                            TẠO DEPOSIT
+                        </button>
+                    @endif
+
                 </div>
             </div>
         </div>
@@ -124,16 +125,34 @@
                         <div class="k-portlet__head-label">
                             <h3 class="k-portlet__head-title">
                                 <i class="la la-money mr-1" style="font-size: 23px; display: inline-block; transform: translateY(2px);"></i>
-                                <span>{{ $order->payment_status_name }}</span>
+                                <span>{{ $order->order_status_name }}</span>
                             </h3>
                         </div>
                     </div>
+
+                    @php
+                        $paidAmount = 0;
+
+                        $paymentCode = strtolower(data_get($order->paymentOption, 'code', ''));
+
+                        if ($paymentCode === 'cod') {
+                            $paidAmount = 0;
+                        } else {
+                            if ($order->payment_status === 'PAID' || $order->order_status === \App\Enum\OrderStatusEnum::COMPLETED) {
+                                $paidAmount = $order->grand_total;
+                            }
+                        }
+
+                        $remaining = $order->grand_total - $paidAmount;
+                    @endphp
+
+
                     <div class="k-portlet__body">
                         <div class="alert alert-outline-accent fade show p-3" role="alert">
                             <div class="d-flex justify-content-between w-100">
                                 <div style="color: #3d4465;">Khách phải trả: <b>{{ $order->getGrandTotalFormattedAttribute() }}</b></div>
-                                <div style="color: #3d4465;">Đã thanh toán: 0</div>
-                                <div style="color: #3d4465;">Còn phải trả: <b class="text-danger">{{ $order->getGrandTotalFormattedAttribute() }}</b></div>
+                                <div style="color: #3d4465;">Đã thanh toán: <b>{{ $orderService->formatPrice($paidAmount) }}</b></div>
+                                <div style="color: #3d4465;">Còn phải trả: <b class="text-danger">{{ $orderService->formatPrice($remaining) }}</b></div>
                             </div>
                         </div>
 
@@ -200,13 +219,15 @@
                                 <div class="d-flex justify-content-start">
                                     <div style="flex: 0 0 30%;" class="pt-2 pb-2">Vận chuyển bởi</div>
                                     <span class="pt-2 pb-2 mr-2">:</span>
-                                    <div style="flex: 1;" class="pt-2 bp-2">{{ data_get($order->latestUserOrderShippingHistory, ['shippingProvider', 'name']) }}</div>
+                                    <div class="pt-2 bp-2">Phạm Đình Huy (shipper)</div>
+                                    {{-- <div style="flex: 1;" class="pt-2 bp-2">{{ data_get($order->latestUserOrderShippingHistory, ['shippingProvider', 'name']) }}</div> --}}
                                 </div>
 
                                 <div class="d-flex justify-content-start">
                                     <div style="flex: 0 0 30%;" class="pt-2 pb-2">P.T vận chuyển</div>
                                     <span class="pt-2 pb-2 mr-2">:</span>
-                                    <div style="flex: 1;" class="pt-2 bp-2">{{ optional($order->shippingOption)->name ?? 'N/A' }}</div>
+                                    <div style="flex: 1;" class="pt-2 bp-2"> GHTK </div>
+                                    {{-- <div style="flex: 1;" class="pt-2 bp-2"> {{ optional($order->shippingOption)->name ?? 'N/A' }} </div> --}}
                                 </div>
 
                                 <div class="d-flex justify-content-start">
@@ -375,6 +396,31 @@
                     console.error('Lỗi khi gửi yêu cầu:', err);
                     alert('Đã xảy ra lỗi: ' + err.message);
                 });
+            });
+        });
+        document.getElementById('btn-create-deposit')?.addEventListener('click', function() {
+            const route = this.dataset.route;
+
+            fetch(route, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success){
+                    alert('Deposit đã được tạo thành công!');
+                    location.reload();
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Đã xảy ra lỗi khi tạo deposit!');
             });
         });
     </script>

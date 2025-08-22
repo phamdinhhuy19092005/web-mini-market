@@ -78,6 +78,12 @@ Route::prefix('v1')->group(function () {
     Route::get('/carts/{userId}', [CartController::class, 'userCarts'])->name('carts.user');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+
+    Route::get('/orders/{userId}', [OrderController::class, 'userOrders'])->name('orders.user');
+
+    Route::post('/orders/{id}/deposit', [OrderController::class, 'createDeposit'])->name('orders.createDeposit');
+
+    Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/order-status/{orderStatus}', [OrderController::class, 'statisticOrderStatus'])->name('orders.statistic.order-status');
     Route::get('/orders/{order}/items', [OrderController::class, 'items'])->name('orders.items');
 
@@ -87,7 +93,8 @@ Route::prefix('v1')->group(function () {
     Route::put('orders/{id}/refund', [OrderController::class, 'refund'])->name('orders.refund');
     Route::post('/orders/{id}/processing', [OrderController::class, 'updateToProcessing'])->name('orders.processing');
 
-    // routes/web.php hoặc routes/api.php
+    Route::post('/orders/{id}/apply-coupon', [OrderController::class, 'applyCoupon'])->name('orders.apply-coupon');
+
     Route::get('bo/api/orders/statistics', [OrderController::class, 'statistics'])->name('orders.statistics');
 
 

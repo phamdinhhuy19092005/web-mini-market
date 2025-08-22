@@ -28,6 +28,7 @@ class StoreOrderRequest extends BaseFormRequest implements StoreOrderRequestInte
             'phone' => ['required', 'string', 'max:20'],
             'company' => ['nullable', 'string', 'max:255'],
             'postal_code' => ['nullable', 'string', 'max:255'],
+            'coupon_id' => ['nullable', 'integer', Rule::exists('coupons', 'id')],
             'address_line' => ['nullable', 'string', 'max:255'],
             'province_code' => ['required', Rule::in(Province::query()->pluck('code')->toArray())],
             'district_code' => ['required', Rule::in(District::query()->pluck('code')->toArray())],

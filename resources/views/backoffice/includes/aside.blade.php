@@ -94,13 +94,7 @@
                                     <li class="k-menu__item {{ request()->routeIs('bo.web.coupons.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
                                         <a href="{{ route('bo.web.coupons.index') }}" class="k-menu__link">
                                             <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
-                                            <span class="k-menu__link-text">Mã giảm giá nhập tay</span>
-                                        </a>
-                                    </li>
-                                    <li class="k-menu__item {{ request()->routeIs('bo.web.auto-discounts.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
-                                        <a href="{{ route('bo.web.auto-discounts.index') }}" class="k-menu__link">
-                                            <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
-                                            <span class="k-menu__link-text">Giảm giá tự động</span>
+                                            <span class="k-menu__link-text">Mã giảm</span>
                                         </a>
                                     </li>
                                 </ul>

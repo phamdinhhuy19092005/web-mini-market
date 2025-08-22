@@ -196,3 +196,5 @@
         </script>
 
 @endpush
+
+@component('backoffice.partials.datatable')@endcomponent

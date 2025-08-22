@@ -127,13 +127,13 @@ License: You must have a valid license purchased only from https://themes.getboo
                     <div class="k-login-v1__body-wrapper">
                         <div class="k-login-v1__body-container">
                             <h3 class="k-login-v1__body-title">
-                                ĐĂNG NHẬP 
+                                ĐĂNG NHẬP
                             </h3>
                             {{-- {{ dd(csrf_token()) }} --}}
                             <!--begin::Form-->
                             <form class="k-login-v1__body-form k-form" action="{{ route('login') }}" method="POST" autocomplete="off">
                                @csrf
-                                <input type="hidden" name="_token_debug" value="{{ csrf_token() }}">
+                                {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
                                 <div class="form-group">
                                     <input class="form-control" type="email" placeholder="Email" name="email" autocomplete="off">
                                 </div>

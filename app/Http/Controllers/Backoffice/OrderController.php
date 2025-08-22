@@ -9,11 +9,13 @@ use App\Enum\AccessChannelOptions;
 use App\Enum\OrderStatusEnum;
 use App\Http\Requests\Backoffice\Interfaces\StoreOrderRequestInterface;
 use App\Http\Requests\Backoffice\Interfaces\UpdateOrderRequestInterface;
+use App\Models\Coupon;
 use App\Models\District;
 use App\Models\Inventory;
 use App\Models\PaymentOption;
 use App\Models\Province;
 use App\Models\ShippingOption;
+use App\Models\ShippingRate;
 use App\Models\User;
 use App\Models\Ward;
 use App\Services\InventoryService;
@@ -33,6 +35,7 @@ class OrderController extends BaseController
 
     public function index()
     {
+        // dd(11);
         $orderStatusEnumLabels = OrderStatusEnum::labels();
         return view('backoffice.pages.orders.index', compact('orderStatusEnumLabels'));
     }
@@ -47,8 +50,9 @@ class OrderController extends BaseController
         $wards = Ward::all(); 
         $shippingOptions = ShippingOption::all();
         $paymentOptions = PaymentOption::all();
+        $coupons = Coupon::all();
         
-        return view('backoffice.pages.orders.create', compact('users', 'accessChannelTypeLables', 'inventories', 'provinces', 'districts', 'wards', 'paymentOptions', 'shippingOptions'));
+        return view('backoffice.pages.orders.create', compact('users', 'accessChannelTypeLables', 'inventories', 'provinces', 'districts', 'wards', 'paymentOptions', 'shippingOptions', 'coupons'));
     }
 
     public function store(StoreOrderRequestInterface $request)
@@ -81,6 +85,7 @@ class OrderController extends BaseController
             'accessChannelTypeLables' => $accessChannelTypeLables,
         ]);
     }
+
 
 
     public function update(UpdateOrderRequestInterface $request, $id)

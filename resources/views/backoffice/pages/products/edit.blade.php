@@ -1,9 +1,9 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Chỉnh sửa Sản phẩm');
+    $title = __('Chỉnh sửa sản phẩm');
     $breadcrumbs = [
-        ['label' => __('Kho sản phẩm')],
+        ['label' => __('Quản lý sản phẩm')],
         ['label' => __('Sản phẩm')],
         ['label' => __('Chỉnh sửa Sản phẩm')],
     ];

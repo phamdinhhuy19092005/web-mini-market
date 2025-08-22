@@ -8,7 +8,7 @@
             'label' => __('Mã giảm giá'),
         ],
         [
-            'label' => __('Mã giảm giá nhập tay'),
+            'label' => __('Mã giảm giá '),
         ],
         [
             'label' => __('Chỉnh sửa mã giảm giá'),
@@ -28,7 +28,7 @@
                 <div class="k-portlet">
                     <div class="k-portlet__head">
                         <div class="k-portlet__head-label">
-                            <h3 class="k-portlet__head-title">Edit Post</h3>
+                            <h3 class="k-portlet__head-title">Chỉnh sửa mã giảm giá</h3>
                         </div>
                     </div>
 

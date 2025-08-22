@@ -3,22 +3,55 @@
 namespace App\Http\Controllers\Backoffice\Api;
 
 use App\Contracts\Responses\Backoffice\ListOrderResponseContract;
+use App\Enum\DepositStatusEnum;
 use App\Enum\OrderStatusEnum;
+use App\Enum\PaymentStatusEnum;
+use App\Models\Coupon;
 use App\Models\Order;
+use App\Services\DepositService;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends BaseApiController
 {
-    public function __construct(protected OrderService $orderService)
+
+    public function __construct(protected OrderService $orderService, protected DepositService $depositService)
     {
+
     }
 
     public function index(Request $request)
     {
         $orders = $this->orderService->searchByAdmin($request->all());
         return $this->responses(ListOrderResponseContract::class, $orders);
+    }
+
+    public function userOrders($userId)
+    {
+        $orders = $this->orderService->getOrderWithItemsByUserId($userId);
+
+        return $this->responses(ListOrderResponseContract::class, $orders);
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->all();
+
+        try {
+            $order = $this->orderService->create($data);
+            return response()->json([
+                'success' => true,
+                'message' => 'Tạo đơn hàng thành công',
+                'data' => $order
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error('Error creating order: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi tạo đơn hàng',
+            ], 500);
+        }
     }
 
     public function statisticOrderStatus(Request $request, $orderStatus)
@@ -35,13 +68,63 @@ class OrderController extends BaseApiController
             return response()->json(['message' => 'Order not found'], 404);
         }
 
-        return response()->json($order->items); 
+        return response()->json($order->items);
+    }
+
+    public function createDeposit($orderId)
+    {
+        $order = $this->orderService->find($orderId);
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+
+        if ($order->deposit_transaction_id) {
+            return response()->json(['success' => false, 'message' => 'Deposit đã tồn tại']);
+        }
+
+        Log::info('DEBUG createDeposit', [
+            'order_id' => $order->id,
+            'order_payment_option_id' => $order->payment_option_id,
+            'order_paymentOption_object' => $order->paymentOption,
+        ]);
+
+        $deposit = $this->depositService->deposit(
+            $order->user,
+            $order->grand_total,
+            $order->paymentOption,
+            ['order_id' => $order->id]
+        );
+
+        $order->deposit_transaction_id = $deposit->getKey();
+        $order->payment_status = $this->parseDepositStatusToOrderPaymentStatus($deposit->status);
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Deposit đã được tạo',
+            'deposit_id' => $deposit->getKey(),
+        ]);
+    }
+
+    protected function parseDepositStatusToOrderPaymentStatus(int $depositStatus): int
+    {
+        return match ($depositStatus) {
+            DepositStatusEnum::PENDING, 
+            DepositStatusEnum::WAIT_FOR_CONFIRMATION => PaymentStatusEnum::PENDING,
+            DepositStatusEnum::APPROVED => PaymentStatusEnum::APPROVED,
+            DepositStatusEnum::DECLINED => PaymentStatusEnum::DECLINED,
+            DepositStatusEnum::FAILED => PaymentStatusEnum::FAILED,
+            DepositStatusEnum::CANCELED => PaymentStatusEnum::CANCELED,
+
+            default => PaymentStatusEnum::PENDING,
+        };
     }
 
     // ==============================
     // Thêm các hành động thay đổi trạng thái
     // ==============================
-    
+
     public function delivery($orderId)
     {
         $order = $this->orderService->find($orderId);
@@ -147,5 +230,51 @@ class OrderController extends BaseApiController
         return response()->json($orders);
     }
 
+    public function applyCoupon(Request $request, $orderId)
+    {
+        $order = $this->orderService->find($orderId);
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
 
+        $code = $request->input('code');
+        $coupon = Coupon::where('code', $code)->first();
+
+        if (!$coupon) {
+            return response()->json(['success' => false, 'message' => 'Coupon không hợp lệ'], 404);
+        }
+
+        // Kiểm tra ngày sử dụng
+        $now = now();
+        if (($coupon->start_date && $coupon->start_date > $now) ||
+            ($coupon->end_date && $coupon->end_date < $now)) {
+            return response()->json(['success' => false, 'message' => 'Coupon chưa đến hạn sử dụng hoặc đã hết hạn'], 400);
+        }
+
+        // Kiểm tra số lần sử dụng
+        if ($coupon->usage_limit && $coupon->used >= $coupon->usage_limit) {
+            return response()->json(['success' => false, 'message' => 'Coupon đã đạt giới hạn sử dụng'], 400);
+        }
+
+        // Tính toán giảm giá
+        if ($coupon->discount_type === 'percent') {
+            $discountAmount = $order->total_price * ($coupon->discount_value / 100);
+        } else {
+            $discountAmount = $coupon->discount_value;
+        }
+
+        // Lưu thông tin coupon và tổng tiền giảm giá
+        $order->coupon_id = $coupon->id;
+        $order->discount_amount = $discountAmount;
+        $order->grand_total = $order->total_price - $discountAmount;
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'order_id' => $order->id,
+            'coupon' => $coupon,
+            'discount_amount' => $discountAmount,
+            'grand_total' => $order->grand_total,
+        ]);
+    }
 }

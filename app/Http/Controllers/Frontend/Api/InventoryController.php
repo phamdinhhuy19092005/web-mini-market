@@ -15,12 +15,13 @@ class InventoryController extends BaseController
         return $this->jsonResponse(true, InventoryResource::collection($inventories));
     }
 
-    public function show($id): JsonResponse
+   public function show($slug): JsonResponse
     {
-        $inventory = Inventory::find($id);
+        $inventory = Inventory::where('slug', $slug)->first();
         if (!$inventory) {
             return $this->jsonResponse(false, null, 'Kho hàng không tìm thấy', 404);
         }
         return $this->jsonResponse(true, new InventoryResource($inventory));
     }
+
 }

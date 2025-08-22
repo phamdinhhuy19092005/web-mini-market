@@ -26,5 +26,10 @@ class ShippingRate extends Model
         return $this->belongsTo(ShippingZone::class);
     }
 
+    public function shippingOption()
+    {
+        return $this->belongsTo(ShippingOption::class);
+    }
+
 }
 

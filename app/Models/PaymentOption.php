@@ -7,6 +7,7 @@ use App\Enum\PaymentOptionTypeEnum;
 use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use PhpParser\Node\Expr\FuncCall;
 
 class PaymentOption extends Model
 {
@@ -33,6 +34,16 @@ class PaymentOption extends Model
     public function paymentProvider()
     {
         return $this->belongsTo(PaymentProvider::class);
+    }
+
+    public function isThirdParty()
+    {
+        return $this->type == PaymentOptionTypeEnum::PAYMENT_PROVIDER;
+    }
+
+    public function isCOD()
+    {
+        return $this->type == PaymentOptionTypeEnum::COD;
     }
 
     // public function getTypeNameAttribute(): string

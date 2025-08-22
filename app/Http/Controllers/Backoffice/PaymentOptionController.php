@@ -38,8 +38,9 @@ class PaymentOptionController extends BaseController
 
     public function store(StorePaymentOptionRequestInterface $request)
     {
-        $payment_provider = $this->paymentOptionService->create($request->validated());
-        return $this->responses(StorePaymentOptionResponseContract::class, $payment_provider);
+        // dd($request->validated());
+        $paymentProvider = $this->paymentOptionService->create($request->validated());
+        return $this->responses(StorePaymentOptionResponseContract::class, $paymentProvider);
     }
 
     public function show($id)
@@ -62,6 +63,7 @@ class PaymentOptionController extends BaseController
 
     public function update(UpdatePaymentOptionRequestInterface $request, string $id)
     {
+        // dd($request->validated());
         $payment_option = $this->paymentOptionService->update($id, $request->validated());
         return $this->responses(UpdatePaymentOptionResponseContract::class, $payment_option);
     }

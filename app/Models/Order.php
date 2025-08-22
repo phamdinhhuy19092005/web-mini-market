@@ -26,6 +26,7 @@ class Order extends Model
         'shipping_rate_id',
         'payment_option_id',
         'deposit_transaction_id',
+        'coupon_id',
         'total_item',
         'total_quantity',
         'shipping_weight',
@@ -44,7 +45,6 @@ class Order extends Model
         'log',
         'order_channel',
     ];
-
 
     protected $casts = [
         'order_channel' => 'array',
@@ -99,6 +99,11 @@ class Order extends Model
     public function usedDiscounts()
     {
         return $this->hasMany(usedDiscount::class);
+    }
+
+    public function discounts()
+    {
+        return $this->hasMany(OrderDiscount::class, 'order_id');
     }
 
     public function cart()

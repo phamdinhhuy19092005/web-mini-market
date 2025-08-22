@@ -15,12 +15,13 @@ class PostCategoryController extends BaseController
         return $this->jsonResponse(true, PostCategoryResource::collection($postCategories));
     }
 
-    public function show($id): JsonResponse
+    public function showBySlug($slug): JsonResponse
     {
-        $postCategory = PostCategory::with('posts')->find($id); 
+        $postCategory = PostCategory::with('posts')->where('slug', $slug)->first(); 
         if (!$postCategory) {
             return $this->jsonResponse(false, null, 'Danh mục bài viết không tìm thấy', 404);
         }
         return $this->jsonResponse(true, new PostCategoryResource($postCategory));
     }
+
 }

@@ -31,10 +31,12 @@ use App\Repositories\BrandRepository;
 use App\Repositories\CartRepository;
 use App\Repositories\CategoryGroupRepository;
 use App\Repositories\CategoryRepository;
+use App\Repositories\Contracts\DepositTransactionRepositoryContract;
 use App\Repositories\FaqTopicRepository;
 use App\Repositories\CountryRepository;
 use App\Repositories\CouponRepository;
 use App\Repositories\CurrencyRepository;
+use App\Repositories\DepositTransactionRepository;
 use App\Repositories\FaqRepository;
 use App\Repositories\Interfaces\AddressRepositoryInterface;
 use App\Repositories\Interfaces\AttributeRepositoryInterface;
@@ -43,6 +45,7 @@ use App\Repositories\Interfaces\AutoDiscountRepositoryInterface;
 use App\Repositories\Interfaces\BrandRepositoryInterface;
 use App\Repositories\Interfaces\CartRepositoryInterface;
 use App\Repositories\Interfaces\CouponRepositoryInterface;
+use App\Repositories\Interfaces\DepositTransactionRepositoryInterface;
 use App\Repositories\Interfaces\InventoryRepositoryInterface;
 use App\Repositories\Interfaces\OrderItemRepositoryInterface;
 use App\Repositories\Interfaces\OrderRepositoryInterface;
@@ -302,5 +305,13 @@ class BackofficeRepositoryServiceProvider extends ServiceProvider
         */
 
         OrderItemRepositoryInterface::class => OrderItemRepository::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Deposit Transaction
+        |--------------------------------------------------------------------------
+        */
+
+        DepositTransactionRepositoryInterface::class => DepositTransactionRepository::class,
     ];
 }

@@ -1,17 +1,17 @@
 @extends('backoffice.layouts.master')
 
 @php
-    $title = __('Manage Category Groups');
+    $title = __('Chỉnh sửa nhóm danh mục');
 
     $breadcrumbs = [
-        [
-            'label' => __('Products'),
-        ],
         [
             'label' => __('Danh mục'),
         ],
         [
-            'label' => __('Manage Category Groups'),
+            'label' => __('Nhóm Danh Mục'),
+        ],
+        [
+            'label' => __('Chỉnh sửa nhóm danh mục'),
         ],
     ];
 @endphp

@@ -3,8 +3,8 @@
 @php
     $title = __('Tạo nhóm danh mục');
     $breadcrumbs = [
-        ['label' => __('Kho sản phẩm')],
-        ['label' => __('Danh mục')],
+        ['label' => __('Danh muc')],
+        ['label' => __('Nhóm danh mục')],
         ['label' => __('Tạo nhóm danh mục')],
     ];
 @endphp

@@ -15,9 +15,9 @@ class SubCategoryController extends BaseController
         return $this->jsonResponse(true, SubCategoryResource::collection($subCategories));
     }
 
-    public function show($id): JsonResponse
+    public function show($slug): JsonResponse
     {
-        $subCategory = SubCategory::find($id);
+        $subCategory = SubCategory::where('slug', $slug)->first();
         if (!$subCategory) {
             return $this->jsonResponse(false, null, 'Danh mục con không tìm thấy', 404);
         }

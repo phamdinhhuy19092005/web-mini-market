@@ -2,21 +2,41 @@
 
 namespace App\Services;
 
+use App\Enum\DepositStatusEnum;
+use App\Enum\DiscountTypeEnum;
 use App\Enum\OrderStatusEnum;
+use App\Enum\PaymentStatusEnum;
 use App\Models\Coupon;
+use App\Models\DepositTransaction;
 use App\Repositories\Interfaces\OrderRepositoryInterface;
-use App\Models\Inventory; // Thêm để lấy giá sản phẩm
+use App\Models\Inventory;
+use App\Models\Order;
+use App\Models\OrderDiscount;
 use App\Models\Province;
+use App\Models\UsedDiscount;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OrderService extends BaseService
 {
-    protected OrderRepositoryInterface $orderRepository;
+    public $orderRepository;
+    public $depositService;
+    public $paymentOptionService;
+    public $shippingOptionService;
+    public $userService;
 
-    public function __construct(OrderRepositoryInterface $orderRepository)
-    {
+    public function __construct(
+        OrderRepositoryInterface $orderRepository, 
+        DepositService $depositService, 
+        PaymentOptionService $paymentOptionService, 
+        ShippingOptionService $shippingOptionService,
+        UserService $userService
+    ) {
         $this->orderRepository = $orderRepository;
+        $this->depositService = $depositService;
+        $this->paymentOptionService = $paymentOptionService;
+        $this->shippingOptionService = $shippingOptionService;
+        $this->userService = $userService;
     }
 
     public function searchByAdmin($data = [])
@@ -34,7 +54,22 @@ class OrderService extends BaseService
             ->paginate($perPage);
     }
 
-   public function statisticOrderStatus($status, $data = [])
+    public function getOrderWithItemsByUserId(int $userId)
+    {
+        return Order::with([
+                'items.inventory',
+                'user',
+                'paymentOption',
+                'coupon',
+                'shippingOption',
+                'usedDiscounts',
+            ])
+            ->where('user_id', $userId)
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    public function statisticOrderStatus($status, $data = [])
     {
         $query = $this->orderRepository->model()::query()->where('order_status', $status);
 
@@ -49,53 +84,105 @@ class OrderService extends BaseService
         return $query->count();
     }
 
+    public function applyCoupon(int $orderId, string $couponCode): Order
+    {
+        return DB::transaction(function () use ($orderId, $couponCode) {
+            $order = Order::findOrFail($orderId);
+            $coupon = Coupon::where('code', $couponCode)->firstOrFail();
+
+            if ($order->usedDiscounts()->where('coupon_id', $coupon->id)->exists()) {
+                throw new \Exception('Coupon đã được sử dụng cho đơn hàng này');
+            }
+
+            $discountAmount = 0;
+
+            if ($coupon->type === DiscountTypeEnum::PERCENTAGE->value) {
+                $discountAmount = $order->grand_total * ($coupon->value / 100);
+            } elseif ($coupon->type === DiscountTypeEnum::FIXED->value) {
+                $discountAmount = $coupon->value;
+            }
+
+            // Lưu vào order_discounts
+            $order->discounts()->create([
+                'discountable_id'   => $coupon->id,
+                'discountable_type' => Coupon::class,
+                'discount_value'    => $discountAmount,
+                'discount_type'     => $coupon->type, // lưu type nếu muốn
+            ]);
+            $order->usedDiscounts()->create([
+                'user_id'   => $order->user_id,
+                'coupon_id' => $coupon->id,
+                'order_id'  => $order->id,
+                'used_at'   => now(),
+            ]);
+
+            $order->grand_total = max(0, $order->grand_total - $discountAmount);
+            $order->save();
+
+            return $order->fresh();
+        });
+    }
 
     public function create(array $attributes = [])
     {
-        return DB::transaction(function () use ($attributes) {
+        $userId = data_get($attributes, 'user_id');
+        $paymentOptionId = data_get($attributes, 'payment_option_id');
+        $shippingOptionId = data_get($attributes, 'shipping_option_id');
+
+        /** @var PaymentOption */
+        $paymentOption = $this->paymentOptionService->show($paymentOptionId);
+
+        // dd($paymentOption);
+
+        /** @var ShippingOption */
+        $shippingOption = $this->shippingOptionService->show($shippingOptionId);
+
+        /** @var User */
+        $user = $this->userService->show($userId);
+
+        return DB::transaction(function () use ($attributes, $user, $paymentOption) {
             $admin = auth('admin')->user();
 
-            $cartItems = data_get($attributes, 'cart_items', []);
-            $totalPrice = 0;
+            Log::info('=== BẮT ĐẦU TẠO ĐƠN HÀNG ===', [
+                'admin_id' => $admin?->id,
+                'attributes' => $attributes
+            ]);
 
+            $cartItems = data_get($attributes, 'cart_items', []);
+            if (empty($cartItems)) {
+                Log::error('Giỏ hàng rỗng');
+                throw new \Exception('Giỏ hàng rỗng. Vui lòng thêm sản phẩm.');
+            }
+
+            // Kiểm tra đơn hàng trùng lặp
+            $uuid = data_get($attributes, 'uuid');
+            if ($uuid && Order::where('uuid', $uuid)->exists()) {
+                Log::error('Đơn hàng với UUID đã tồn tại:', ['uuid' => $uuid]);
+                throw new \Exception('Đơn hàng này đã được tạo trước đó.');
+            }
+
+            // Tính tổng giá
+            $calculatedTotalPrice = 0;
             foreach ($cartItems as $item) {
                 $inventory = Inventory::find($item['inventory_id']);
-                $totalPrice += ($inventory->final_price ?? 0) * $item['quantity'];
-            }
-
-            // --- Xử lý coupon ---
-            $couponCode = data_get($attributes, 'coupon_code');
-            $discountAmount = 0;
-            $couponId = null;
-
-            if ($couponCode) {
-                $coupon = Coupon::where('code', $couponCode)
-                    ->where('status', 1)
-                    ->whereDate('start_date', '<=', now())
-                    ->whereDate('end_date', '>=', now())
-                    ->first();
-
-                if ($coupon) {
-                    if ($coupon->discount_type === 'percent') {
-                        $discountAmount = $totalPrice * ($coupon->discount_value / 100);
-                    } else {
-                        $discountAmount = $coupon->discount_value;
-                    }
-
-                    $discountAmount = min($discountAmount, $totalPrice);
-                    $couponId = $coupon->id;
-                } else {
-                    throw new \Exception("Mã giảm giá không hợp lệ");
+                if (!$inventory) {
+                    Log::error('Sản phẩm không tồn tại', $item);
+                    throw new \Exception('Sản phẩm không tồn tại: ' . $item['inventory_id']);
                 }
+                $calculatedTotalPrice += ($inventory->final_price ?? 0) * ($item['quantity'] ?? 0);
             }
 
-            $grandTotal = $totalPrice - $discountAmount;
+            $totalPrice = data_get($attributes, 'total_price', $calculatedTotalPrice);
 
-            // --- Dữ liệu order ---
+            // Lấy thông tin tỉnh/thành phố
             $province = Province::where('code', data_get($attributes, 'province_code'))->first();
+            if (!$province) {
+                throw new \Exception('Tỉnh/Thành phố không hợp lệ.');
+            }
 
+            // Chuẩn bị dữ liệu order
             $orderData = [
-                'user_id' => data_get($attributes, 'user_id'),
+                'user_id' => $user->id,
                 'order_channel' => json_encode([
                     'type' => data_get($attributes, 'order_channel.type'),
                     'reference_id' => data_get($attributes, 'order_channel.reference_id'),
@@ -110,14 +197,14 @@ class OrderService extends BaseService
                 'address_line' => data_get($attributes, 'address_line'),
                 'user_note' => data_get($attributes, 'user_note'),
                 'admin_note' => data_get($attributes, 'admin_note'),
-                'city_name' => optional($province)->name,
+                'city_name' => $province->name,
                 'shipping_option_id' => data_get($attributes, 'shipping_option_id'),
                 'shipping_rate_id' => data_get($attributes, 'shipping_rate_id'),
                 'payment_option_id' => data_get($attributes, 'payment_option_id'),
                 'total_price' => $totalPrice,
-                'grand_total' => $grandTotal,
-                'coupon_id' => $couponId,
-                'order_status' => 1,
+                'grand_total' => $totalPrice,
+                'order_status' => OrderStatusEnum::WAITING_FOR_PAYMENT,
+                'payment_status' => 'waiting_for_payment',
                 'created_by_type' => get_class($admin),
                 'created_by_id' => $admin->id,
                 'updated_by_type' => get_class($admin),
@@ -129,13 +216,218 @@ class OrderService extends BaseService
                 'total_quantity' => collect($cartItems)->sum('quantity'),
             ];
 
-            Log::debug('Dữ liệu đơn hàng trước khi tạo:', $orderData);
+            /**
+             * data -> temp
+             * DB::commit() temp -> main
+             * DB::rollback() remove temp
+             */
 
             $order = $this->orderRepository->create($orderData);
 
+            if ($couponId = data_get($attributes, 'coupon_id')) {
+                $coupon = Coupon::find($couponId);
+                if ($coupon) {
+                    $discountAmount = data_get($attributes, 'discount_amount', 0);
+
+                    $order->update([
+                        'coupon_id' => $coupon->id,
+                        'discount_amount' => $discountAmount,
+                        'grand_total' => $order->total_price - $discountAmount,
+                    ]);
+
+                    $order->discounts()->create([
+                        'discountable_id'   => $coupon->id,
+                        'discountable_type' => Coupon::class,
+                        'discount_value'    => $discountAmount,
+                    ]);
+
+                    $coupon->usedDiscounts()->create([
+                        'user_id'   => $order->user_id,
+                        'order_id'  => $order->id,
+                    ]);
+
+                    $coupon->increment('used');
+                }
+            }
+
+
+            // Deposit
+            /** @var DepositTransaction */
+            $deposit = $this->depositService->deposit(
+                $user,
+                $order->grand_total,
+                $paymentOption,
+                $user,
+                array_merge($attributes, ['order_id' => $order->getKey()])
+            );
+
+            // dd($deposit);
+
+            $order->payment_status = $this->parseDepositStatusToOrderPaymentStatus($deposit->status);
+            $order->deposit_transaction_id = $deposit->getKey();
+            $order->save();
+
+            $order = $order->fresh();
+
+            // Lưu order items
             foreach ($cartItems as $item) {
                 $inventory = Inventory::findOrFail($item['inventory_id']);
-                $price = $inventory->sale_price ?? $inventory->offer_price;
+                $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->final_price;
+
+                $order->items()->create([
+                    'inventory_id' => $item['inventory_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $price,
+                    'total_price' => $price * $item['quantity'],
+                    'user_id' => $order->user_id,
+                    'currency_code' => $order->currency_code,
+                ]);
+            }
+            
+            return $order;
+        });
+    }
+
+    public function createUser(array $attributes = [])
+    {
+        $userId = data_get($attributes, 'user_id');
+        $paymentOptionId = data_get($attributes, 'payment_option_id');
+        $shippingOptionId = data_get($attributes, 'shipping_option_id');
+
+        /** @var PaymentOption */
+        $paymentOption = $this->paymentOptionService->show($paymentOptionId);
+
+        /** @var ShippingOption */
+        $shippingOption = $this->shippingOptionService->show($shippingOptionId);
+
+        /** @var User */
+        $user = $this->userService->show($userId);
+
+        return DB::transaction(function () use ($attributes, $user, $paymentOption) {
+            $creator = $user; // người tạo là user
+
+            Log::info('=== BẮT ĐẦU TẠO ĐƠN HÀNG ===', [
+                'user_id' => $creator->id,
+                'attributes' => $attributes
+            ]);
+
+            $cartItems = data_get($attributes, 'cart_items', []);
+            if (empty($cartItems)) {
+                Log::error('Giỏ hàng rỗng');
+                throw new \Exception('Giỏ hàng rỗng. Vui lòng thêm sản phẩm.');
+            }
+
+            // Kiểm tra đơn hàng trùng lặp
+            $uuid = data_get($attributes, 'uuid');
+            if ($uuid && Order::where('uuid', $uuid)->exists()) {
+                Log::error('Đơn hàng với UUID đã tồn tại:', ['uuid' => $uuid]);
+                throw new \Exception('Đơn hàng này đã được tạo trước đó.');
+            }
+
+            // Tính tổng giá
+            $calculatedTotalPrice = 0;
+            foreach ($cartItems as $item) {
+                $inventory = Inventory::find($item['inventory_id']);
+                if (!$inventory) {
+                    Log::error('Sản phẩm không tồn tại', $item);
+                    throw new \Exception('Sản phẩm không tồn tại: ' . $item['inventory_id']);
+                }
+                $calculatedTotalPrice += ($inventory->final_price ?? 0) * ($item['quantity'] ?? 0);
+            }
+
+            $totalPrice = data_get($attributes, 'total_price', $calculatedTotalPrice);
+
+            // Lấy thông tin tỉnh/thành phố
+            $province = Province::where('code', data_get($attributes, 'province_code'))->first();
+            if (!$province) {
+                throw new \Exception('Tỉnh/Thành phố không hợp lệ.');
+            }
+
+            // Chuẩn bị dữ liệu order
+            $orderData = [
+                'user_id' => $user->id,
+                'order_channel' => json_encode([
+                    'type' => data_get($attributes, 'order_channel.type'),
+                    'reference_id' => data_get($attributes, 'order_channel.reference_id'),
+                ]),
+                'fullname' => data_get($attributes, 'fullname'),
+                'email' => data_get($attributes, 'email'),
+                'phone' => data_get($attributes, 'phone'),
+                'company' => data_get($attributes, 'company'),
+                'province_code' => data_get($attributes, 'province_code'),
+                'district_code' => data_get($attributes, 'district_code'),
+                'ward_code' => data_get($attributes, 'ward_code'),
+                'address_line' => data_get($attributes, 'address_line'),
+                'user_note' => data_get($attributes, 'user_note'),
+                'admin_note' => data_get($attributes, 'admin_note'),
+                'city_name' => $province->name,
+                'shipping_option_id' => data_get($attributes, 'shipping_option_id'),
+                'shipping_rate_id' => data_get($attributes, 'shipping_rate_id'),
+                'payment_option_id' => data_get($attributes, 'payment_option_id'),
+                'total_price' => $totalPrice,
+                'grand_total' => $totalPrice,
+                'order_status' => OrderStatusEnum::WAITING_FOR_PAYMENT,
+                'payment_status' => 'waiting_for_payment',
+                'created_by_type' => get_class($creator),
+                'created_by_id' => $creator->id,
+                'updated_by_type' => get_class($creator),
+                'updated_by_id' => $creator->id,
+                'order_code' => strtoupper(uniqid(dechex(random_int(10, 99)))),
+                'uuid' => \Illuminate\Support\Str::uuid(),
+                'currency_code' => 'VND',
+                'total_item' => count($cartItems),
+                'total_quantity' => collect($cartItems)->sum('quantity'),
+            ];
+
+            $order = $this->orderRepository->create($orderData);
+
+            if ($couponId = data_get($attributes, 'coupon_id')) {
+                $coupon = Coupon::find($couponId);
+                if ($coupon) {
+                    $discountAmount = data_get($attributes, 'discount_amount', 0);
+
+                    $order->update([
+                        'coupon_id' => $coupon->id,
+                        'discount_amount' => $discountAmount,
+                        'grand_total' => $order->total_price - $discountAmount,
+                    ]);
+
+                    $order->discounts()->create([
+                        'discountable_id'   => $coupon->id,
+                        'discountable_type' => Coupon::class,
+                        'discount_value'    => $discountAmount,
+                    ]);
+
+                    $coupon->usedDiscounts()->create([
+                        'user_id'   => $order->user_id,
+                        'order_id'  => $order->id,
+                    ]);
+
+                    $coupon->increment('used');
+                }
+            }
+
+            // Deposit
+            /** @var DepositTransaction */
+            $deposit = $this->depositService->deposit(
+                $user,
+                $order->grand_total,
+                $paymentOption,
+                $user,
+                array_merge($attributes, ['order_id' => $order->getKey()])
+            );
+
+            $order->payment_status = $this->parseDepositStatusToOrderPaymentStatus($deposit->status);
+            $order->deposit_transaction_id = $deposit->getKey();
+            $order->save();
+
+            $order = $order->fresh();
+
+            // Lưu order items
+            foreach ($cartItems as $item) {
+                $inventory = Inventory::findOrFail($item['inventory_id']);
+                $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->final_price;
+
                 $order->items()->create([
                     'inventory_id' => $item['inventory_id'],
                     'quantity' => $item['quantity'],
@@ -146,10 +438,25 @@ class OrderService extends BaseService
                 ]);
             }
 
-            Log::debug('Đơn hàng đã tạo:', ['order_id' => $order->id, 'cart_items' => $cartItems]);
-
             return $order;
         });
+    }
+
+
+    public function parseDepositStatusToOrderPaymentStatus($depositStatus, $throwIfNotFound = true)
+    {
+        $mappers = [
+            DepositStatusEnum::DECLINED => PaymentStatusEnum::DECLINED,
+            DepositStatusEnum::PENDING  => PaymentStatusEnum::PENDING,
+            DepositStatusEnum::WAIT_FOR_CONFIRMATION => PaymentStatusEnum::PENDING,
+            DepositStatusEnum::APPROVED => PaymentStatusEnum::APPROVED,
+            DepositStatusEnum::CANCELED => PaymentStatusEnum::CANCELED,
+            DepositStatusEnum::FAILED   => PaymentStatusEnum::FAILED,
+        ];
+
+        $status = $mappers[$depositStatus] ?? null;
+
+        return $status;
     }
 
     public function find($id)
@@ -178,21 +485,21 @@ class OrderService extends BaseService
         }
 
         return \Carbon\Carbon::parse($datetime)->format($format);
-    }   
+    }
 
     public function updateStatus($order, string $status)
     {
         return DB::transaction(function () use ($order, $status) {
             $admin = auth('admin')->user();
 
-            $oldStatus = $order->order_status; 
+            $oldStatus = $order->order_status;
 
             switch ($status) {
                 case 'processing':
                     $order->order_status = OrderStatusEnum::PROCESSING;
                     break;
                 case 'delivery':
-                    $order->order_status = OrderStatusEnum::DELIVERY; 
+                    $order->order_status = OrderStatusEnum::DELIVERY;
                     break;
                 case 'complete':
                     $order->order_status = OrderStatusEnum::COMPLETED;
@@ -232,12 +539,11 @@ class OrderService extends BaseService
         });
     }
 
-
-
     public function update($id, array $attributes = [])
     {
         return DB::transaction(function () use ($id, $attributes) {
             $model = $this->orderRepository->findOrFail($id);
+
 
             $admin = auth('admin')->user();
             $attributes['updated_by_type'] = get_class($admin);
@@ -254,6 +560,7 @@ class OrderService extends BaseService
                 // Thêm các mục mới
                 foreach ($attributes['cart_items'] as $item) {
                     $inventory = Inventory::findOrFail($item['inventory_id']);
+
                     $model->items()->create([
                         'inventory_id' => $item['inventory_id'],
                         'quantity' => $item['quantity'],
@@ -272,10 +579,17 @@ class OrderService extends BaseService
     {
         return DB::transaction(function () use ($id) {
             $order = $this->orderRepository->findOrFail($id);
-            $order->order_status = 'canceled';
-            $order->updated_by_type = get_class(auth('admin')->user());
-            $order->updated_by_id = auth('admin')->id();
+
+            $order->order_status = OrderStatusEnum::CANCELED;
+
+            $user = auth('admin')->user() ?? auth('sanctum')->user(); 
+            if ($user) {
+                $order->updated_by_type = get_class($user);
+                $order->updated_by_id = $user->id;
+            }
+
             $order->save();
+
             return $order;
         });
     }
@@ -284,7 +598,7 @@ class OrderService extends BaseService
     {
         return DB::transaction(function () use ($id) {
             $order = $this->orderRepository->findOrFail($id);
-            $order->items()->delete(); 
+            $order->items()->delete();
             return $this->orderRepository->delete($id);
         });
     }

@@ -4,22 +4,15 @@ namespace App\Enum;
 
 class PaymentOptionTypeEnum extends BaseEnum
 {
-    public const LOCAL_BANK = 1;
     public const PAYMENT_PROVIDER = 2;
-    public const NONE_AMOUNT = 3;
+    public const COD = 3;
 
     public static function all(): array
     {
         return [
-            self::LOCAL_BANK,
             self::PAYMENT_PROVIDER,
-            self::NONE_AMOUNT
+            self::COD
         ];
-    }
-
-    public static function isLocalBank($key)
-    {
-        return $key == self::LOCAL_BANK;
     }
 
     public static function isThirdParty($key)
@@ -29,15 +22,14 @@ class PaymentOptionTypeEnum extends BaseEnum
 
     public static function isNoneAmount($key)
     {
-        return $key == self::NONE_AMOUNT;
+        return $key == self::COD;
     }
 
     public static function labels(): array
     {
         return [
-            self::LOCAL_BANK => 'Chuyển khoản ngân hàng',
             self::PAYMENT_PROVIDER => 'Cổng thanh toán',
-            self::NONE_AMOUNT => 'Không yêu cầu số tiền',
+            self::COD => 'COD',
         ];
     }
 }

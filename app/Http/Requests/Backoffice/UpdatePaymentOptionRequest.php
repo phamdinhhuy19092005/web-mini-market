@@ -11,7 +11,6 @@ class UpdatePaymentOptionRequest extends BaseFormRequest implements UpdatePaymen
 {
     public function rules(): array
     {
-        // dd($this->all());
         return [
             'name' => ['required', 'string', 'max:255'],
             'payment_provider_id' => ['nullable', 'exists:payment_providers,id'],
@@ -21,8 +20,8 @@ class UpdatePaymentOptionRequest extends BaseFormRequest implements UpdatePaymen
             'order' => ['nullable', 'integer', 'min:0'],
             'currency_code' => ['required', 'string', 'max:50'],
             'min_amount' => ['nullable', 'numeric', 'min:0'],
-            'max_amount' => ['nullable', 'numeric', 'min:0'],
-            'payment_type' => ['required', Rule::in(PaymentOptionTypeEnum::all())],     
+            'max_amount' => ['nullable', 'numeric', 'gt:min_amount'],
+            'type' => ['required', Rule::in(PaymentOptionTypeEnum::all())],     
             'status' => ['required', Rule::in(ActivationStatus::all())],
             'display_on_frontend' => ['required', Rule::in(ActivationStatus::all())],
         ];

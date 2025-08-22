@@ -24,7 +24,17 @@ class PaymentProvider extends Model
 
     public function paymentOptions()
     {
-        return $this->hasMany(PaymentOption::class);
+        return $this->hasMany(PaymentOption::class, 'payment_provider_id');
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 1;
+    }
+
+     public function isDeposit(): bool
+    {
+        return $this->payment_type === PaymentTypeEnum::DEPOSIT;
     }
 
     public function getTypeNameAttribute(): string

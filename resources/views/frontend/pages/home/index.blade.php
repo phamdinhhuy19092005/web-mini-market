@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="{{ asset('assets/media/logos/download.png') }}" type="image/x-icon">
-    <link rel="stylesheet" href="flaticon.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
@@ -64,6 +64,7 @@
         .nav {
             display: flex; align-items: center; gap: 14px;
             padding: 14px 0; border-bottom: 1px solid var(--line);
+            max-width: 1200px; margin: 0 auto;
         }
 
         .brand {
@@ -83,10 +84,11 @@
         .spacer { flex: 1; }
 
         .btn {
+            width: 7%;
             display: inline-flex; align-items: center; gap: 8px;
-            /* border: 1px solid var(--line); background: var(--bg-soft); */
-            padding: 10px 100px; border-radius: 14px; cursor: pointer;
+            padding: 10px 20px; border-radius: 14px; cursor: pointer;
             transition: all 0.3s ease; position: relative; overflow: hidden;
+            border: none; background: none;
         }
 
         .btn::before {
@@ -187,10 +189,16 @@
             animation: floatIcon 6s ease-in-out infinite alternate;
         }
 
-        .food-icon:nth-child(2) { animation-delay: 1s; }
-        .food-icon:nth-child(3) { animation-delay: 2s; }
-        .food-icon:nth-child(4) { animation-delay: 3s; }
-        .food-icon:nth-child(5) { animation-delay: 4s; }
+        .food-icon:nth-child(2) { animation-delay: 0.5s; }
+        .food-icon:nth-child(3) { animation-delay: 1s; }
+        .food-icon:nth-child(4) { animation-delay: 1.5s; }
+        .food-icon:nth-child(5) { animation-delay: 2s; }
+        .food-icon:nth-child(6) { animation-delay: 2.5s; }
+        .food-icon:nth-child(7) { animation-delay: 3s; }
+        .food-icon:nth-child(8) { animation-delay: 3.5s; }
+        .food-icon:nth-child(9) { animation-delay: 4s; }
+        .food-icon:nth-child(10) { animation-delay: 4.5s; }
+        .food-icon:nth-child(11) { animation-delay: 5s; }
 
         @keyframes floatIcon {
             0% { transform: translateY(0) rotate(0deg); }
@@ -208,7 +216,6 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideInLeft { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes slideInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes fadeInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.15); opacity: 0.35; } }
 
         /* Responsive */
@@ -216,39 +223,37 @@
             .hero { padding: 60px 20px; }
             .hero h1 { font-size: 40px; }
             .hero p { font-size: 16px; }
-            .feature-item { flex-direction: column !important; text-align: center; }
-            .feature-image { max-width: 100%; }
+            .hero img { width: 300px; }
+            .food-icon { width: 40px; height: 40px; }
         }
     </style>
 </head>
 <body>
     <main class="container">
         <section class="hero full-screen">
+            <button id="modeBtn" class="btn"><i class="fas fa-moon"></i> Mode</button>
             <div class="floating-icons">
                 <!-- Existing icons -->
-                <img src="https://cdn-icons-png.flaticon.com/512/415/415734.png" class="food-icon" style="--x:20%;--y:25%;" />
-                <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" class="food-icon" style="--x:80%;--y:30%;" />
-                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" class="food-icon" style="--x:20%;--y:70%;" />
-                <img src="https://cdn-icons-png.flaticon.com/512/135/135620.png" class="food-icon" style="--x:70%;--y:75%;" />
-                <img src="https://cdn-icons-png.flaticon.com/512/415/415733.png" class="food-icon" style="--x:50%;--y:10%;" />
+                <img src="https://cdn-icons-png.flaticon.com/512/415/415734.png" class="food-icon" style="--x:20%;--y:25%;" alt="Apple" />
+                <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" class="food-icon" style="--x:80%;--y:30%;" alt="Banana" />
+                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" class="food-icon" style="--x:20%;--y:70%;" alt="Orange" />
+                <img src="https://cdn-icons-png.flaticon.com/512/135/135620.png" class="food-icon" style="--x:70%;--y:75%;" alt="Watermelon" />
+                <img src="https://cdn-icons-png.flaticon.com/512/415/415733.png" class="food-icon" style="--x:50%;--y:10%;" alt="Strawberry" />
 
-                <!-- New icons -->
-                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046786.png" class="food-icon" style="--x:30%;--y:15%;" /> 
-                <img src="https://cdn-icons-png.flaticon.com/512/415/415686.png" class="food-icon" style="--x:60%;--y:25%;" /> 
-                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046788.png" class="food-icon" style="--x:40%;--y:80%;" /> 
-                <img src="https://cdn-icons-png.flaticon.com/512/135/135621.png" class="food-icon" style="--x:75%;--y:50%;" /> 
-                <img src="https://cdn-icons-png.flaticon.com/512/415/415684.png" class="food-icon" style="--x:25%;--y:80%;" /> 
+                <!-- New fruit icons -->
+                <img src="https://cdn-icons-png.flaticon.com/512/1625/1625128.png" class="food-icon" style="--x:30%;--y:15%;" alt="Mango" />
+                <img src="https://cdn-icons-png.flaticon.com/512/415/415731.png" class="food-icon" style="--x:60%;--y:25%;" alt="Pineapple" />
+                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046766.png" class="food-icon" style="--x:40%;--y:80%;" alt="Grapes" />
+                <img src="https://cdn-icons-png.flaticon.com/512/135/135615.png" class="food-icon" style="--x:75%;--y:50%;" alt="Cherry" />
+                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046774.png" class="food-icon" style="--x:25%;--y:80%;" alt="Peach" />
+                <img src="https://cdn-icons-png.flaticon.com/512/415/415737.png" class="food-icon" style="--x:65%;--y:15%;" alt="Kiwi" />
             </div>
 
             <div class="hero-content">
                 <img alt="Logo" src="{{ asset('assets/media/logos/logo-uchimart.png') }}" 
                      style="width: 450px; animation: float 3s ease-in-out infinite;" />
-                <h1>Quản lý cửa hàng dễ dàng</h1>
+                <h1> Quản lý cửa hàng dễ dàng</h1>
                 <p>Hệ thống quản trị thông minh, giúp bạn kiểm soát sản phẩm, đơn hàng và khách hàng một cách hiệu quả và nhanh chóng.</p>
-            </div>
-
-            <div class="">
-                <a style="text-decoration: none" class="btn" href="http://127.0.0.1:8000/backoffice/login">Bắt đầu ngay</a>
             </div>
         </section>
     </main>
@@ -260,7 +265,7 @@
         const applyTheme = (t) => {
             document.documentElement.classList.toggle('light', t === 'light');
             localStorage.setItem('theme', t);
-            modeBtn.textContent = t === 'light' ? '☀️ Mode' : '🌙 Mode';
+            modeBtn.innerHTML = t === 'light' ? '<i class="fas fa-sun"></i> Mode' : '<i class="fas fa-moon"></i> Mode';
         };
 
         const saved = localStorage.getItem('theme') || 'dark';

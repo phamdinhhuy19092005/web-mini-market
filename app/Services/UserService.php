@@ -81,8 +81,12 @@ class UserService extends BaseService
         return $this->userRepository->find($id);
     }
 
-    public function show(int $id): Model
+    public function show($id): Model
     {
+        if ($id instanceof Model) {
+            return $id;
+        }
+
         return $this->userRepository->findOrFail($id);
     }
 

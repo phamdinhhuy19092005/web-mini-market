@@ -92,10 +92,13 @@ class AuthController extends BaseController
 
     public function login(Request $request)
     {
+        // dd(222);
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
+
+        // dd(1);
 
         $user = User::where('email', $request->email)->first();
 

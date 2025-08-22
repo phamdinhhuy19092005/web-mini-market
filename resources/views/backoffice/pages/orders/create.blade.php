@@ -113,7 +113,8 @@
                                                 </td>
                                                 <td>
                                                     <input data-name="total_price" type="text" disabled class="form-control">
-                                                    <input type="hidden" name="total_price" id="input_total_price" />
+                                                    <input type="hidden" name="total_price" id="input_total_price" /> 
+                                                    <input type="hidden" name="grand_total" id="input_grand_total" /> 
                                                 </td>
                                             </tr>
                                         </tfoot>
@@ -234,7 +235,39 @@
                     <div class="k-portlet">
                         <div class="k-portlet__head">
                             <div class="k-portlet__head-label">
-                                <h3 class="k-portlet__head-title">6. {{ __('Thông tin thanh toán') }}</h3>
+                                <h3 class="k-portlet__head-title">6. {{ __('Mã giảm giá') }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="k-portlet__body">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <select name="coupon_id" class="form-control k_selectpicker">
+                                        <option value="">-- Chọn mã giảm giá --</option>
+                                        @foreach($coupons as $coupon)
+                                            <option value="{{ $coupon->id }}" 
+                                                    data-value="{{ json_encode([
+                                                        'id' => $coupon->id,
+                                                        'code' => $coupon->code,
+                                                        'discount_type' => $coupon->discount_type,
+                                                        'discount_value' => $coupon->discount_value
+                                                    ]) }}">
+                                                {{ $coupon->code }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6 d-flex align-items-end">
+                                    <button type="button" class="btn btn-success" id="btn_apply_coupon">{{ __('Áp dụng') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="k-portlet">
+                        <div class="k-portlet__head">
+                            <div class="k-portlet__head-label">
+                                <h3 class="k-portlet__head-title">7. {{ __('Thông tin thanh toán') }}</h3>
                             </div>
                         </div>
 
@@ -255,26 +288,6 @@
                             <div class="k-form__actions">
                                 <button type="submit" class="btn btn-primary">{{ __('Lưu') }}</button>
                                 <button type="redirect" class="btn btn-secondary">{{ __('Huỷ') }}</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="k-portlet">
-                        <div class="k-portlet__head">
-                            <div class="k-portlet__head-label">
-                                <h3 class="k-portlet__head-title">7. {{ __('Mã giảm giá') }}</h3>
-                            </div>
-                        </div>
-
-                        <div class="k-portlet__body">
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="coupon_code">{{ __('Nhập mã giảm giá') }}</label>
-                                    <input type="text" class="form-control" name="coupon_code" id="coupon_code" placeholder="{{ __('VD: SALE10') }}">
-                                    <small class="form-text text-muted">{{ __('Nếu có mã giảm giá, nhập vào đây') }}</small>
-                                </div>
-                                <div class="form-group col-md-6 d-flex align-items-end">
-                                    <button type="button" class="btn btn-success" id="btn_apply_coupon">{{ __('Áp dụng') }}</button>
-                                </div>
                             </div>
                         </div>
                     </div>

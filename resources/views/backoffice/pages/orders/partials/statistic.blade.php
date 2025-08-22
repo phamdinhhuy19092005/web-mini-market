@@ -86,18 +86,4 @@
             </div>
         </div>
     </div>
-
-    <div class="col-md-3 col-xl-3 order-lg-1 order-xl-1">
-        <div class="k-portlet k-portlet--height-fluid statistic text-light bg-danger p-4 pb-5 pt-5" style="cursor: pointer;" onclick="reloadTable({{ OrderStatusEnum::REFUNDED }})">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <h4>{{ __('Đã hoàn tiền') }}</h4>
-                    <small>{{ __('Đã hoàn tiền trong tháng') }}</small>
-                </div>
-                <div>
-                    <h1 data-order-status="{{ OrderStatusEnum::REFUNDED }}" data-api="{{ route('bo.api.orders.statistic.order-status', OrderStatusEnum::REFUNDED) }}"></h1>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

@@ -15,12 +15,13 @@ class PostController extends BaseController
         return $this->jsonResponse(true, PostResource::collection($posts));
     }
 
-    public function show($id): JsonResponse
+    public function showBySlug($slug): JsonResponse
     {
-        $post = Post::find($id);
+        $post = Post::where('slug', $slug)->first();
         if (!$post) {
             return $this->jsonResponse(false, null, 'Bài viết không tìm thấy', 404);
         }
         return $this->jsonResponse(true, new PostResource($post));
     }
+
 }
