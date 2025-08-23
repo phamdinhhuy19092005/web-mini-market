@@ -36,8 +36,8 @@
                                 <th data-property="name" scope="col">{{ __('Tên') }}</th>
                                 <th data-property="slug" scope="col">{{ __('Đường dẫn') }}</th>
                                 <th data-property="image" data-render-callback="renderImageColumn" scope="col">{{ __('Ảnh') }}</th>
-                                <th data-property="order" scope="col">{{ __('Thứ tự') }}</th>
-                                <th data-property="code" scope="col">{{ __('Mã') }}</th>
+                                <th class="none" data-property="order" scope="col">{{ __('Thứ tự') }}</th>
+                                <th class="none" data-property="code" scope="col">{{ __('Mã') }}</th>
                                 <th class="none" data-property="author" scope="col">{{ __('Tác giả') }}</th>
                                 <th data-property="post_category_name" style="width: 15%" data-render-callback="renderCallbackCategoryGroups" scope="col">{{ __('Danh mục') }}</th>
                                 <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>

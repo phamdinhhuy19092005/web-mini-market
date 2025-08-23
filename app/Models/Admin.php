@@ -16,12 +16,17 @@ class Admin extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'last_login_at',
         'password',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    protected $dates = [
+        'last_login_at',
     ];
 
     public function getDisplayNameAttribute()

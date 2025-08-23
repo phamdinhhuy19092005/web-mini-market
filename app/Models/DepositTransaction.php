@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Enum\DepositStatusEnum;
+use App\Models\Traits\Activatable;
 use Illuminate\Database\Eloquent\Model;
 
 class DepositTransaction extends Model
 {
+    use Activatable;
+
     protected $fillable = [
         'user_id',
         'order_id',
@@ -21,6 +25,19 @@ class DepositTransaction extends Model
         'updated_by_id',
         'updated_by_type',
     ];
+
+    public function getStatusNameAttribute(): string
+    {
+        return match ($this->status) {
+            DepositStatusEnum::DECLINED => 'Từ chối',
+            DepositStatusEnum::PENDING => 'Chờ xử lý',
+            DepositStatusEnum::APPROVED => 'Đã duyệt',
+            DepositStatusEnum::CANCELED => 'Hủy',
+            DepositStatusEnum::FAILED => 'Thất bại',
+            DepositStatusEnum::WAIT_FOR_CONFIRMATION => 'Chờ xác nhận',
+            default => 'Không xác định',
+        };
+    }
 
     public function user()
     {

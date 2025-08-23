@@ -15,12 +15,14 @@ class BrandController extends BaseController
         return $this->jsonResponse(true, BrandResource::collection($brands));
     }
 
-    public function show($id): JsonResponse
+    public function show($slug): JsonResponse
     {
-        $brand = Brand::find($id);
+        $brand = Brand::where('slug', $slug)->first();
+
         if (!$brand) {
             return $this->jsonResponse(false, null, 'Thương hiệu không tìm thấy', 404);
         }
+
         return $this->jsonResponse(true, new BrandResource($brand));
     }
 }

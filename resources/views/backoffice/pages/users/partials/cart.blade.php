@@ -16,7 +16,7 @@
                     <thead>
                         <tr>
                             <th data-property="id" scope="col">{{ __('ID') }}</th>
-                            <th data-property="ip_address" scope="col">{{ __('Địa chỉ IP)') }}</th>
+                            <th data-property="ip_address" scope="col">{{ __('Địa chỉ IP') }}</th>
                             <th data-property="total_item" scope="col">{{ __('Số lượng sản phẩm') }}</th>
                             <th data-property="total_quantity" scope="col">{{ __('Tổng số lượng') }}</th>
                             <th data-property="total_price" scope="col">{{ __('Tổng giá trị') }}</th>

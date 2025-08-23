@@ -39,10 +39,11 @@
                                 <th data-property="order_code">{{ __('Mã đơn hàng') }}</th>
                                 <th data-property="fullname">{{ __('Tên KH') }}</th>
                                 <th data-property="email">{{ __('Email') }}</th>
-                                <th data-property="phone">{{ __('Phone') }}</th>
+                                <th class="none" data-property="phone">{{ __('Phone') }}</th>
                                 <th data-property="total_item">{{ __('Tổng sản phẩm') }}</th>
                                 <th data-property="total_quantity">{{ __('Tổng số lượng') }}</th>
                                 <th data-property="total_price">{{ __('Tổng') }}</th>
+                                <th data-property="order_status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
                                 <th class="none" data-property="created_at">{{ __('Ngày tạo') }}</th>
                                 <th class="none" data-property="updated_at">{{ __('Ngày cập nhật') }}</th>
                                 <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>

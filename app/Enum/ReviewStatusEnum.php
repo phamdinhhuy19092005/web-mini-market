@@ -11,9 +11,9 @@ enum ReviewStatusEnum: int
     public function label(): string
     {
         return match ($this) {
-            self::DECLINED => 'Declined',
-            self::PENDING => 'Pending',
-            self::APPROVED => 'Approved',
+            self::DECLINED => 'Từ chối',
+            self::PENDING  => 'Chờ duyệt',
+            self::APPROVED => 'Đã duyệt',
         };
     }
 

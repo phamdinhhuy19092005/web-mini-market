@@ -74,35 +74,4 @@ class AdminController extends BaseController
         return redirect()->route('login');
     }
 
-    public function updateProfile(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
-        $admin = Auth::guard('admin')->user();
-        $admin->name = $request->input('name');
-        $admin->save();
-
-        return redirect()->back()->with('success', 'Hồ sơ đã được cập nhật.');
-    }
-
-    public function updatePassword(Request $request)
-    {
-        $request->validate([
-            'password' => 'required|string',
-            'new_password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $admin = Auth::guard('admin')->user();
-
-        if (!Hash::check($request->input('password'), $admin->password)) {
-            return redirect()->back()->withErrors(['password' => 'Mật khẩu hiện tại không đúng.']);
-        }
-
-        $admin->password = Hash::make($request->input('new_password'));
-        $admin->save();
-
-        return redirect()->back()->with('success', 'Mật khẩu đã được cập nhật.');
-    }
 }

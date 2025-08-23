@@ -43,7 +43,7 @@
                                 </div>
 
                                 <!-- Roles -->
-                               <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label>Roles * <div class="invalid-feedback">Chọn role</div></label>
                                     <div class="k-checkbox-list">
                                         @foreach($roles as $role)
@@ -54,8 +54,7 @@
                                             </label>
                                         @endforeach
                                     </div>
-                                </div>
-
+                                </div> --}}
 
                                 <!-- Password -->
                                 <div class="form-group">
@@ -65,7 +64,7 @@
                                         <input type="hidden" class="form-control" name="password" id="password" placeholder="Nhập password" value="{{ $admin->password }}" required>
                                         <div class="input-group-append">
                                             <button class="btn btn-primary" id="toggle-password" type="button"><i class="fa fa-eye"></i></button>
-                                            <button class="btn btn-primary" id="random-password" type="button">Random Password</button>
+                                            <button class="btn btn-primary" id="random-password" type="button">Ngẫu nhiên</button>
                                         </div>
                                     </div>
                                     <span class="form-text text-muted">{{ __('Để trống trường mật khẩu để giữ mật khẩu hiện tại của bạn.') }}</span>

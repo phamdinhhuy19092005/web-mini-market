@@ -74,16 +74,8 @@
                 <div class="btns d-flex justify-content-end">
                     <button type="button" data-btn-change-order-status="update-to-delivery" class="btn btn-secondary ml-2" data-route="{{ route('bo.api.orders.delivery', $order->id) }}" {{ $order->canDelivery() ? '' : 'disabled' }}>{{ __('VẬN CHUYỂN') }}</button>
                     <button type="button" data-btn-change-order-status="update-to-complete" class="btn btn-success ml-2" data-route="{{ route('bo.api.orders.complete', $order->id) }}" {{ !$order->canComplete() ? 'disabled' : '' }}>{{ __('HOÀN THÀNH') }}</button>
-                    {{-- <button type="button" data-btn-change-order-status="update-to-refund" class="btn btn-warning ml-2" data-route="{{ route('bo.api.orders.refund', $order->id) }}" {{ !$order->canRefund() ? 'disabled' : '' }}>{{ __('HOÀN TIỀN') }}</button> --}}
                     <button type="button" data-btn-change-order-status="update-to-processing"  class="btn btn-info ml-2"  data-route="{{ route('bo.api.orders.processing', $order->id) }}"  {{ !$order->canProcessing() ? 'disabled' : '' }}> {{ __('ĐANG XỬ LÍ') }} </button>
                     <button type="button" data-btn-change-order-status="update-to-cancel" class="btn btn-danger ml-2" data-route="{{ route('bo.api.orders.cancel', $order->id) }}" {{ !$order->canCancel() ? 'disabled' : '' }}>{{ __('HỦY ĐƠN') }}</button>
-
-                    @if(!$order->deposit_transaction_id && $order->order_status === OrderStatusEnum::COMPLETED)
-                        <button type="button" id="btn-create-deposit" class="btn btn-info ml-2" data-route="{{ route('bo.api.orders.createDeposit', $order->id) }}">
-                            TẠO DEPOSIT
-                        </button>
-                    @endif
-
                 </div>
             </div>
         </div>

@@ -27,6 +27,24 @@ class DepositTransactionService extends BaseService
         $this->userService = $userService;
     }
 
+   public function searchByAdmin($data = [])
+    {
+        $query = data_get($data, 'query');
+        $status = data_get($data, 'status'); 
+        $perPage = data_get($data, 'per_page', 10);
+
+        return $this->depositTransactionRepository->model()::query()
+            ->when($query, function ($q) use ($query) {
+                $q->where('id', $query)
+                    ->orWhere('user_id', 'like', "%$query%");
+            })
+            ->when($status !== null && $status !== '', function ($q) use ($status) {
+                $q->where('status', $status);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($perPage);
+    }
+
     public function show($id)
     {
         return $this->depositTransactionRepository->findOrFail($id);

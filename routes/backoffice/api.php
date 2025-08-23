@@ -13,6 +13,7 @@ use App\Http\Controllers\Backoffice\Api\CategoryGroupController;
 use App\Http\Controllers\Backoffice\Api\CountryController;
 use App\Http\Controllers\Backoffice\Api\CouponController;
 use App\Http\Controllers\Backoffice\Api\CurrencyController;
+use App\Http\Controllers\Backoffice\Api\DepositTransactionController;
 use App\Http\Controllers\Backoffice\Api\FaqController;
 use App\Http\Controllers\Backoffice\Api\FaqTopicController;
 use App\Http\Controllers\Backoffice\Api\InventoryController;
@@ -95,10 +96,11 @@ Route::prefix('v1')->group(function () {
 
     Route::post('/orders/{id}/apply-coupon', [OrderController::class, 'applyCoupon'])->name('orders.apply-coupon');
 
-    Route::get('bo/api/orders/statistics', [OrderController::class, 'statistics'])->name('orders.statistics');
-
-
     Route::put('orders/{id}/update-shipping', [OrderController::class, 'updateShipping'])->name('orders.update-shipping');
     
     Route::get('/order-items', [OrderItemController::class, 'index'])->name('order-items.index');
+
+    Route::get('/deposit-transactions', [DepositTransactionController::class, 'index'])->name('deposit-transactions.index');
+
+
 });

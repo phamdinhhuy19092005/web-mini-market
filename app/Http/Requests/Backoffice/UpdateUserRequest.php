@@ -3,21 +3,19 @@
 namespace App\Http\Requests\Backoffice;
 
 use App\Http\Requests\Backoffice\Interfaces\UpdateUserRequestInterface;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends BaseFormRequest implements UpdateUserRequestInterface
 {
     public function rules(): array
     {
+        $ignoreId = $this->route('id');
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email'],
-            'phone_number' => [
-                'nullable',
-                'string',
-                'max:20',
-                Rule::unique('users', 'phone_number')->ignore($this->user?->id ?? $this->route('user'))
-            ],
+            'phone_number' => ['nullable','string','max:20',Rule::unique('users', 'phone_number')->ignore($ignoreId)],
             'access_channel_type' => ['required', 'string'],
             'allow_login' => ['required', 'boolean'],
             'birthday' => ['nullable', 'date', 'before:tomorrow'],
@@ -49,9 +47,12 @@ class UpdateUserRequest extends BaseFormRequest implements UpdateUserRequestInte
     protected function prepareForValidation()
     {
         if ($this->has('birthday') && $this->birthday) {
-            $this->merge([
-                'birthday' => \Carbon\Carbon::createFromFormat('m/d/Y', $this->birthday)->format('Y-m-d')
-            ]);
+            try {
+                $birthday = \Carbon\Carbon::createFromFormat('m/d/Y', $this->birthday)->format('Y-m-d');
+                $this->merge(['birthday' => $birthday]);
+            } catch (\Exception $e) {
+                $this->merge(['birthday' => null]);
+            }
         }
     }
 

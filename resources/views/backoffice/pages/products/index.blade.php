@@ -39,8 +39,8 @@
                                 <th data-property="brand.name" data-name="brand_id" data-link="brand.actions.update" data-link-target="_blank">{{ __('Thương hiệu') }}</th>
                                 <th data-property="type_name">{{ __('Loại') }}</th>
                                 <th data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
-                                <th data-property="created_at">{{ __('Ngày tạo') }}</th>
-                                <th data-property="updated_at">{{ __('Ngày cập nhật') }}</th>
+                                <th class="none" data-property="created_at">{{ __('Ngày tạo') }}</th>
+                                <th class="none" data-property="updated_at">{{ __('Ngày cập nhật') }}</th>
                                 <th class="none" data-property="created_by.name" data-name="created_by_id">{{ __('Người tạo') }}</th>
                                 <th class="none" data-property="updated_by.name" data-name="updated_by_id">{{ __('Người cập nhật') }}</th>
                                 <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>

@@ -41,7 +41,6 @@
                                     <th data-property="id">ID</th>
                                     <th data-orderable="false" data-property="name">Tên</th>
                                     <th data-orderable="false" data-property="slug">Slug</th>
-                                    <th data-orderable="false" data-render-callback="renderImageColumn" data-property="image">Hình ảnh</th>
                                     <th data-orderable="false" data-property="order">Thứ tự</th>
                                     <th data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
                                     <th data-orderable="false" data-property="created_at">Ngày tạo</th>

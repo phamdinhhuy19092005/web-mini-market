@@ -36,7 +36,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-    'status' => \App\Enum\UserActionEnum::class, // ✅ Đúng namespace
+        'status' => UserActionEnum::class, 
     ];
 
     protected function casts(): array
@@ -45,7 +45,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'access_channel_type' => AccessChannelEnum::class,
-            'status' => UserActionEnum::class, // enum cast
+            'status' => UserActionEnum::class, 
         ];
     }
 

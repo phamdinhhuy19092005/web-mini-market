@@ -48,8 +48,13 @@
 <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
 
 <style>
-        .datatable th,
-        .datatable td {
-            color: #000000 !important;
-        }
-    </style>
+    .datatable th,
+    .datatable td {
+        color: #000000 !important;
+    }
+
+    input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px white inset;
+        -webkit-text-fill-color: #000;
+    }
+</style>

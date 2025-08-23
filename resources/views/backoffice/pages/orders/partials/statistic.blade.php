@@ -18,21 +18,7 @@
     </div>
 
     <div class="col-md-3 col-xl-3 order-lg-1 order-xl-1">
-        <div class="k-portlet k-portlet--height-fluid statistic text-light bg-warning p-4 pb-5 pt-5" style="cursor: pointer;" onclick="reloadTable({{ OrderStatusEnum::PAYMENT_ERROR }})">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <h4>{{ __('Thanh toán lỗi') }}</h4>
-                    <small>{{ __('Thanh toán lỗi tháng này') }}</small>
-                </div>
-                <div>
-                    <h1 data-order-status="{{ OrderStatusEnum::PAYMENT_ERROR }}" data-api="{{ route('bo.api.orders.statistic.order-status', OrderStatusEnum::PAYMENT_ERROR) }}"></h1>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 col-xl-3 order-lg-1 order-xl-1">
-        <div class="k-portlet k-portlet--height-fluid statistic text-light bg-primary p-4 pb-5 pt-5" style="cursor: pointer;" onclick="reloadTable({{ OrderStatusEnum::PROCESSING }})">
+        <div class="k-portlet k-portlet--height-fluid statistic text-light bg-warning p-4 pb-5 pt-5" style="cursor: pointer;" onclick="reloadTable({{ OrderStatusEnum::PROCESSING }})">
             <div class="d-flex justify-content-between">
                 <div>
                     <h4>{{ __('Đang chờ xử lí') }}</h4>

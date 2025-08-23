@@ -41,8 +41,9 @@
                                     <th data-property="id" scope="col">{{ __('ID') }}</th>
                                     <th data-property="name" scope="col">{{ __('Tên') }}</th>
                                     <th data-property="email" scope="col">{{ __('Email') }}</th>
-                                    <th data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
-                                    <th data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>
+                                    <th data-property="last_login_at" scope="col">{{ __('Đã đăng nhập') }}</th>
+                                    <th class="none" data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
+                                    <th class="none" data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>
                                     <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                                 </tr>
                             </thead>

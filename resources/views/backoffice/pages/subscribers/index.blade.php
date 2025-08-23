@@ -35,7 +35,7 @@
                                 <tr>
                                     <th data-property="id">{{ __('ID') }}</th>
                                     <th data-orderable="false" data-property="email">{{ __('E-mail') }}</th>
-                                    <th data-orderable="false" data-property="type_name">{{ __('Loại') }}</th>
+                                    <th data-orderable="false" data-render-callback="renderStatusColumn" data-property="type_name">{{ __('Loại') }}</th>
                                     <th data-orderable="false" data-property="created_at">{{ __('Đã đăng ký lúc') }}</th>
                                 </tr>
                             </thead>

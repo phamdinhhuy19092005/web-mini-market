@@ -18,8 +18,8 @@ class ActivationStatus extends BaseEnum
     public static function labels(): array
     {
         return [
-            self::INACTIVE => 'Inactive',
-            self::ACTIVE => 'Active',
+            self::INACTIVE => 'Không hoạt động',
+            self::ACTIVE => 'Hoạt động',
         ];
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backoffice\Api;
 use App\Contracts\Responses\Backoffice\ListOrderResponseContract;
 use App\Enum\DepositStatusEnum;
 use App\Enum\OrderStatusEnum;
+use App\Enum\PaymentOptionTypeEnum;
 use App\Enum\PaymentStatusEnum;
 use App\Models\Coupon;
 use App\Models\Order;
@@ -148,20 +149,68 @@ class OrderController extends BaseApiController
 
     public function complete($orderId)
     {
-        $order = $this->orderService->find($orderId);
+        try {
+            $order = $this->orderService->find($orderId);
+            Log::debug('DEBUG: order loaded', ['order' => $order]);
 
-        if (!$order) {
-            return response()->json(['message' => 'Không tìm thấy đơn hàng'], 404);
+            if (!$order) {
+                Log::warning('Order not found', ['order_id' => $orderId]);
+                return response()->json(['message' => 'Không tìm thấy đơn hàng'], 404);
+            }
+
+            $order->load('paymentOption');
+            Log::debug('DEBUG: paymentOption loaded', ['paymentOption' => $order->paymentOption]);
+
+            if (!$order->canComplete()) {
+                Log::warning('Order cannot complete', ['order_id' => $order->id, 'order_status' => $order->order_status]);
+                return response()->json(['message' => 'Không thể hoàn thành đơn hàng này'], 403);
+            }
+
+            $this->orderService->updateStatus($order, 'complete');
+            $order->refresh();
+            Log::debug('DEBUG: order status updated', ['order_status' => $order->order_status]);
+
+            $paymentType = (int) data_get($order->paymentOption, 'type');
+            Log::debug('DEBUG: paymentType', ['paymentType' => $paymentType]);
+
+            $deposit = $order->depositTransaction;
+            if (!$deposit && PaymentOptionTypeEnum::isNoneAmount($paymentType)) {
+                Log::debug('DEBUG: creating new deposit', ['order_id' => $order->id]);
+
+                $deposit = $this->depositService->deposit(
+                    $order->user,
+                    $order->grand_total,
+                    $order->paymentOption,
+                    ['order_id' => $order->id]
+                );
+            }
+
+            // Nếu là COD thì luôn đảm bảo deposit APPROVED
+            if ($deposit && PaymentOptionTypeEnum::isNoneAmount($paymentType)) {
+                $deposit->status = DepositStatusEnum::APPROVED;
+                $deposit->save();
+                Log::debug('DEBUG: deposit status updated', ['deposit_status' => $deposit->status]);
+
+                // Cập nhật order
+                $order->deposit_transaction_id = $deposit->getKey();
+                $order->payment_status = $this->parseDepositStatusToOrderPaymentStatus($deposit->status);
+                $order->save();
+                Log::debug('DEBUG: order updated with deposit', [
+                    'deposit_transaction_id' => $order->deposit_transaction_id,
+                    'payment_status' => $order->payment_status
+                ]);
+            }
+
+            Log::debug('DEBUG COMPLETE FLOW END', ['order_id' => $order->id]);
+
+            return response()->json(['message' => 'Đơn hàng đã được hoàn thành và deposit đã xử lý nếu là COD']);
+        } catch (\Exception $e) {
+            Log::error('Error in complete method', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Có lỗi xảy ra khi hoàn thành đơn hàng'], 500);
         }
-
-        if (!$order->canComplete()) {
-            return response()->json(['message' => 'Không thể hoàn thành đơn hàng này'], 403);
-        }
-
-        $this->orderService->updateStatus($order, 'complete');
-
-        return response()->json(['message' => 'Đơn hàng đã được hoàn thành']);
     }
+
+
 
     public function refund($orderId)
     {

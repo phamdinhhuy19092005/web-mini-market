@@ -37,11 +37,19 @@ class AdminService extends BaseService
                 $attributes['password'] = Hash::make($attributes['password']);
             }
 
+            // Set default last_login_at nếu muốn
+            if (!isset($attributes['last_login_at'])) {
+                $attributes['last_login_at'] = null; 
+            }
+
+            // Lấy roleIds rồi xóa khỏi attributes
             $roleIds = array_keys($attributes['roles'] ?? []);
             unset($attributes['roles']);
 
+            // Tạo admin
             $admin = $this->adminRepository->create($attributes);
 
+            // Sync roles nếu có
             if (!empty($roleIds)) {
                 $roles = Role::whereIn('id', $roleIds)->get();
                 $admin->syncRoles($roles);
@@ -51,55 +59,32 @@ class AdminService extends BaseService
         });
     }
 
-    /**
-     * Find admin by ID with roles.
-     *
-     * @param int $id
-     * @return \Illuminate\Database\Eloquent\Model
-     */
     public function find($id)
     {
         return $this->adminRepository->model()::with('roles')->findOrFail($id);
     }
 
-    /**
-     * Show admin details (alias of find).
-     *
-     * @param int $id
-     * @return \Illuminate\Database\Eloquent\Model
-     */
     public function show($id)
     {
         return $this->find($id);
     }
 
-    /**
-     * Update an existing admin.
-     *
-     * @param int $id
-     * @param array $attributes
-     * @return \Illuminate\Database\Eloquent\Model
-     */
     public function update($id, array $attributes = [])
     {
         return DB::transaction(function () use ($id, $attributes) {
             $model = $this->adminRepository->findOrFail($id);
 
-            // Hash password if provided
             if (!empty($attributes['password'])) {
                 $attributes['password'] = Hash::make($attributes['password']);
             } else {
                 unset($attributes['password']);
             }
 
-            // Handle roles
             $roleIds = array_keys($attributes['roles'] ?? []);
             unset($attributes['roles']);
 
-            // Update admin
             $this->adminRepository->update($id, $attributes);
 
-            // Sync roles if provided
             if (!empty($roleIds)) {
                 $roles = Role::whereIn('id', $roleIds)->get();
                 $model->syncRoles($roles);
@@ -109,12 +94,6 @@ class AdminService extends BaseService
         });
     }
 
-    /**
-     * Delete an admin by ID.
-     *
-     * @param int $id
-     * @return bool
-     */
     public function delete($id)
     {
         return DB::transaction(function () use ($id) {

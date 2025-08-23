@@ -7,6 +7,7 @@
     <meta name="description" content="Latest updates and statistic charts">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ auth('admin')->user()->name ?? 'admin' }} | Không phận sự cấm vào</title>
+    
 
     <!-- Web Fonts -->
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
@@ -28,6 +29,22 @@
     @yield('style_datatable')
     @stack('style_pages')
 </head>
+<style>
+    input:-webkit-autofill,
+    input:-moz-autofill,
+    input:-ms-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+        -webkit-text-fill-color: #000 !important;
+        box-shadow: 0 0 0px 1000px white inset !important;
+        color: #000 !important;
+        background-color: transparent !important;
+    }
+
+    .k-form .form-control:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+        -webkit-text-fill-color: #000 !important;
+    }
+</style>
 <body class="k-header--fixed k-header-mobile--fixed k-aside--enabled k-aside--fixed">
     <div class="k-grid k-grid--hor k-grid--root">
         <div class="k-grid__item k-grid__item--fluid k-grid k-grid--ver k-page">

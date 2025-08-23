@@ -9,14 +9,14 @@ class SubscriberTypeEnum extends BaseEnum
     public static function all(): array
     {
         return [
-            self::NEWSLETTER,
+            self::NEWSLETTER =>  'Đang xử lý',
         ];
     }
 
     public static function getName(int|string|null $value): string
     {
         return match ($value) {
-            self::NEWSLETTER => __('Newsletter'),
+            self::NEWSLETTER => __('Bản tin'),
             default => __('Không xác định'),
         };
     }

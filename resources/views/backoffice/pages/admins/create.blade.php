@@ -19,7 +19,7 @@
             <div class="k-portlet k-portlet--tabs">
                 <div class="k-portlet__head">
                     <div class="k-portlet__head-label">
-                        <h3 class="k-portlet__head-title">Administrator information</h3>
+                        <h3 class="k-portlet__head-title">Thêm quản trị viên</h3>
                     </div>
                 </div>
 
@@ -43,7 +43,7 @@
                                 <!-- Email -->
                                 <div class="form-group">
                                     <label>Email *</label>
-                                    <input type="text" class="form-control" name="email" placeholder="Enter email" value="" required>
+                                    <input type="text" class="form-control" name="email" placeholder="Nhập email" value="" required >
                                 </div>
 
                                 <!-- Name -->
@@ -53,7 +53,7 @@
                                 </div>
 
                                 <!-- Roles -->
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label>Roles * <div class="invalid-feedback">Chọn role</div></label>
                                     <div class="k-checkbox-list">
                                          @foreach($roles as $role)
@@ -63,16 +63,16 @@
                                             </label>
                                         @endforeach
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <!-- Password -->
                                 <div class="form-group">
-                                    <label>Password *</label>
+                                    <label>Mật khẩu *</label>
                                     <div class="input-group">
                                         <input type="password" class="form-control" name="password" id="password" placeholder="Nhập password" required>
                                         <div class="input-group-append">
                                             <button class="btn btn-primary" id="toggle-password" type="button"><i class="fa fa-eye"></i></button>
-                                            <button class="btn btn-primary" id="random-password" type="button">Random Password</button>
+                                            <button class="btn btn-primary" id="random-password" type="button">Ngẫu nhiên</button>
                                         </div>
                                     </div>
                                 </div>

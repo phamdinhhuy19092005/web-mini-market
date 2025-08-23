@@ -18,6 +18,7 @@ use App\Contracts\Responses\Backoffice\ListCategoryResponseContract;
 use App\Contracts\Responses\Backoffice\ListCountryResponseContract;
 use App\Contracts\Responses\Backoffice\ListCouponResponseContract;
 use App\Contracts\Responses\Backoffice\ListCurrencyResponseContract;
+use App\Contracts\Responses\Backoffice\ListDepositTransactionResponseContract;
 use App\Contracts\Responses\Backoffice\ListFaqResponseContract;
 use App\Contracts\Responses\Backoffice\ListFaqTopicResponseContract;
 use App\Contracts\Responses\Backoffice\ListInventoryResponseContract;
@@ -107,6 +108,7 @@ use App\Http\Responses\Backoffice\ListCategoryResponse;
 use App\Http\Responses\Backoffice\ListCountryResponse;
 use App\Http\Responses\Backoffice\ListCouponResponse;
 use App\Http\Responses\Backoffice\ListCurrencyResponse;
+use App\Http\Responses\Backoffice\ListDepositTransactionResponse;
 use App\Http\Responses\Backoffice\ListFaqResponse;
 use App\Http\Responses\Backoffice\ListFaqTopicResponse;
 use App\Http\Responses\Backoffice\ListInventoryResponse;
@@ -466,5 +468,12 @@ class BackofficeResponseServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         ListOrderItemResponseContract::class          => ListOrderItemResponse::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Desposit Transactions
+        |--------------------------------------------------------------------------
+        */
+        ListDepositTransactionResponseContract::class          => ListDepositTransactionResponse::class,
     ];
 }

@@ -7,8 +7,9 @@ use App\Actions\Fortify\UpdateUserPassword;
 use App\Providers\FortifyServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
+use Illuminate\Http\Request;
 use Laravel\Fortify\Fortify;
+use Illuminate\Support\Facades\Auth;
 
 class BackofficeAuthenticationServiceProvider extends ServiceProvider
 {
@@ -20,16 +21,31 @@ class BackofficeAuthenticationServiceProvider extends ServiceProvider
     public function boot()
     {
         Fortify::createUsersUsing(CreateNewUser::class);
-        Fortify::updateUserProfileInformationUsing(UpdatesUserProfileInformation::class);
+        Fortify::updateUserProfileInformationUsing(UpdateUserPassword::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetPassword::class);
 
-        Fortify::loginView(function (){
+        Fortify::loginView(function () {
             return view('backoffice.auth.login');
         });
 
-        Fortify::registerView(function (){
+        Fortify::registerView(function () {
             return view('backoffice.auth.login');
+        });
+
+        Fortify::authenticateUsing(function (Request $request) {
+            $credentials = $request->only('email', 'password');
+
+            if (Auth::guard('admin')->attempt($credentials)) {
+                $admin = Auth::guard('admin')->user();
+                
+                $admin->last_login_at = now();
+                $admin->save();
+
+                return $admin;
+            }
+
+            return null;
         });
     }
 }

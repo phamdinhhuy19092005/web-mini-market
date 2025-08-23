@@ -51,11 +51,10 @@
                                         <th data-property="id">{{ __('ID') }}</th>
                                         <th data-orderable="false" data-property="desktop_image" data-render-callback="renderImageColumn">{{ __('Hình ảnh trên Desktop') }}</th>
                                         <th data-property="name">{{ __('Tên') }}</th>
-                                        <th data-property="cta_label">{{ __('Nhãn CTA') }}</th>
-                                        <th data-property="redirect_url">{{ __('URL') }}</th>
+                                        <th class="none" data-property="cta_label">{{ __('Nhãn CTA') }}</th>
+                                        <th class="none" data-property="redirect_url">{{ __('URL') }}</th>
                                         <th data-property="order">{{ __('Thứ tự') }}</th>
                                         <th data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
-                                        <th data-property="color">{{ __('Màu sắc') }}</th>
                                         <th data-property="start_at">{{ __('Ngày bắt đầu') }}</th>
                                         <th data-property="end_at">{{ __('Ngày kết thúc') }}</th>
                                         <th class="none" data-property="created_at">{{ __('Ngày tạo') }}</th>

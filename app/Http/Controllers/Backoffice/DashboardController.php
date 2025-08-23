@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Backoffice;
 
 use App\Enum\ReviewStatusEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Inventory;
 use App\Models\WebsiteReview;
@@ -135,11 +137,42 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $expiringCoupons = Coupon::select('id','title', 'code', 'end_date')
+            ->where('status', 1)
+            ->whereDate('end_date', '>=', Carbon::today())
+            ->whereDate('end_date', '<=', Carbon::today()->addDays(7))
+            ->orderBy('end_date', 'asc')
+            ->get()
+            ->map(function ($coupon) {
+                $daysLeft = Carbon::today()->diffInDays(Carbon::parse($coupon->end_date), false);
+                $coupon->days_left = $daysLeft;
+                $coupon->formatted_end_date = Carbon::parse($coupon->end_date)->format('d/m/Y');
+                return $coupon;
+            });
+
+        $expiringBanner = Banner::select('id','name', 'desktop_image', 'end_at')
+            ->where('status', 1)
+            ->whereDate('end_at', '>=', Carbon::today())
+            ->whereDate('end_at', '<=', Carbon::today()->addDays(7))
+            ->orderBy('end_at', 'asc')
+            ->get()
+            ->map(function ($banner) {
+                $daysLeft = Carbon::today()->diffInDays(Carbon::parse($banner->end_at), false);
+                $banner->days_left = $daysLeft;
+                $banner->formatted_end_date = Carbon::parse($banner->end_at)->format('d/m/Y');
+                return $banner;
+            });
+
+        $pendingOrders = Order::select('id','order_code','fullname','grand_total','created_at')
+            ->where('order_status', 1)
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
         return view('backoffice.pages.dashboard.index', compact(
             'dailyRevenue',
             'totalRevenue',
             'totalOrders',
-            // 'totalCustomers',
             'averageOrderValue',
             'topProducts',
             'newOrders',
@@ -149,6 +182,9 @@ class DashboardController extends Controller
             'inventoryAlerts',
             'recentTransactions',
             'recentReviews',
+            'expiringCoupons',
+            'expiringBanner',
+            'pendingOrders',
             'timeRange'
         ));
     }

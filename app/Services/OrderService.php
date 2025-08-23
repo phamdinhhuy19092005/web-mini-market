@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enum\DepositStatusEnum;
 use App\Enum\DiscountTypeEnum;
 use App\Enum\OrderStatusEnum;
+use App\Enum\PaymentOptionTypeEnum;
 use App\Enum\PaymentStatusEnum;
 use App\Models\Coupon;
 use App\Models\DepositTransaction;
@@ -26,9 +27,9 @@ class OrderService extends BaseService
     public $userService;
 
     public function __construct(
-        OrderRepositoryInterface $orderRepository, 
-        DepositService $depositService, 
-        PaymentOptionService $paymentOptionService, 
+        OrderRepositoryInterface $orderRepository,
+        DepositService $depositService,
+        PaymentOptionService $paymentOptionService,
         ShippingOptionService $shippingOptionService,
         UserService $userService
     ) {
@@ -180,7 +181,22 @@ class OrderService extends BaseService
                 throw new \Exception('Tỉnh/Thành phố không hợp lệ.');
             }
 
-            // Chuẩn bị dữ liệu order
+            $paymentOptionType = $paymentOption->type ?? null;
+
+            $orderStatus = OrderStatusEnum::WAITING_FOR_PAYMENT;
+            $paymentStatus = 'waiting_for_payment';
+
+            if (PaymentOptionTypeEnum::isThirdParty($paymentOptionType)) {
+                $orderStatus = OrderStatusEnum::PROCESSING;
+                $paymentStatus = 'processing';
+            }
+
+            // Nếu là COD
+            if (PaymentOptionTypeEnum::isNoneAmount($paymentOptionType)) {
+                $orderStatus = OrderStatusEnum::WAITING_FOR_PAYMENT;
+                $paymentStatus = 'waiting_for_payment';
+            }
+
             $orderData = [
                 'user_id' => $user->id,
                 'order_channel' => json_encode([
@@ -203,8 +219,8 @@ class OrderService extends BaseService
                 'payment_option_id' => data_get($attributes, 'payment_option_id'),
                 'total_price' => $totalPrice,
                 'grand_total' => $totalPrice,
-                'order_status' => OrderStatusEnum::WAITING_FOR_PAYMENT,
-                'payment_status' => 'waiting_for_payment',
+                'order_status' => $orderStatus,
+                'payment_status' => $paymentStatus,
                 'created_by_type' => get_class($admin),
                 'created_by_id' => $admin->id,
                 'updated_by_type' => get_class($admin),
@@ -228,12 +244,6 @@ class OrderService extends BaseService
                 $coupon = Coupon::find($couponId);
                 if ($coupon) {
                     $discountAmount = data_get($attributes, 'discount_amount', 0);
-
-                    $order->update([
-                        'coupon_id' => $coupon->id,
-                        'discount_amount' => $discountAmount,
-                        'grand_total' => $order->total_price - $discountAmount,
-                    ]);
 
                     $order->discounts()->create([
                         'discountable_id'   => $coupon->id,
@@ -283,7 +293,7 @@ class OrderService extends BaseService
                     'currency_code' => $order->currency_code,
                 ]);
             }
-            
+
             return $order;
         });
     }
@@ -582,7 +592,7 @@ class OrderService extends BaseService
 
             $order->order_status = OrderStatusEnum::CANCELED;
 
-            $user = auth('admin')->user() ?? auth('sanctum')->user(); 
+            $user = auth('admin')->user() ?? auth('sanctum')->user();
             if ($user) {
                 $order->updated_by_type = get_class($user);
                 $order->updated_by_id = $user->id;

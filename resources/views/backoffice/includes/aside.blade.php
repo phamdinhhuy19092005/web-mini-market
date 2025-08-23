@@ -185,12 +185,6 @@
                                 <span class="k-menu__link-text">Danh sách đơn hàng</span>
                             </a>
                         </li>
-                        <li class="k-menu__item {{ request()->routeIs('bo.web.carts.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
-                            <a href="{{ route('bo.web.carts.index') }}" class="k-menu__link">
-                                <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
-                                <span class="k-menu__link-text">Danh sách giỏ hàng</span>
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </li>
@@ -213,7 +207,7 @@
                                 <span class="k-menu__link-text">Cài đặt Banner</span>
                             </a>
                         </li>
-                        <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.menu-groups.*') ? 'k-menu__item--open' : '' }}"
+                        {{-- <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.menu-groups.*') ? 'k-menu__item--open' : '' }}"
                             aria-haspopup="true"
                             data-kmenu-submenu-toggle="hover">
                             <a href="javascript:;" class="k-menu__link k-menu__toggle">
@@ -232,7 +226,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
             </li>
@@ -315,7 +309,7 @@
             </li>
 
             <!-- Regions -->
-            <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.countries.*', 'bo.web.currencies.*') ? 'k-menu__item--open k-menu__item--active' : '' }}"
+            {{-- <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.countries.*', 'bo.web.currencies.*') ? 'k-menu__item--open k-menu__item--active' : '' }}"
                 aria-haspopup="true"
                 data-kmenu-submenu-toggle="hover">
                 <a href="javascript:;" class="k-menu__link k-menu__toggle">
@@ -340,7 +334,7 @@
                         </li>
                     </ul>
                 </div>
-            </li>
+            </li> --}}
 
             <!-- Customer Support -->
             <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.subscribers.*') ? 'k-menu__item--open k-menu__item--active' : '' }}"
@@ -423,7 +417,7 @@
                     <span class="k-menu__arrow"></span>
                     <ul class="k-menu__subnav">
                         <li class="k-menu__item {{ request()->routeIs('bo.web.shipping-zones.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
-                            <a href="{{ route('bo.web.shipping-zones.index') }}" class="k-menu__link">
+                            <a href="{{ route('bo.web.deposit-transactions.index') }}" class="k-menu__link">
                                 <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
                                 <span class="k-menu__link-text">Giao dịch gửi tiền</span>
                             </a>
@@ -458,23 +452,6 @@
                 </div>
             </li>
 
-            <!-- System -->
-            <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.system*') ? 'k-menu__item--open k-menu__item--active' : '' }}"
-                aria-haspopup="true"
-                data-kmenu-submenu-toggle="hover">
-                <a href="javascript:;" class="k-menu__link k-menu__toggle">
-                    <i class="k-menu__link-icon flaticon2-settings"></i>
-                    <span class="k-menu__link-text">Hệ thống</span>
-                    <i class="k-menu__ver-arrow la la-angle-right"></i>
-                </a>
-                <div class="k-menu__submenu">
-                    <span class="k-menu__arrow"></span>
-                    <ul class="k-menu__subnav">
-                        <!-- Add system configuration items here if needed -->
-                    </ul>
-                </div>
-            </li>
-
             <!-- Administration -->
             <li class="k-menu__item k-menu__item--submenu {{ request()->routeIs('bo.web.admins.*', 'bo.web.roles.*') ? 'k-menu__item--open k-menu__item--active' : '' }}"
                 aria-haspopup="true"
@@ -493,12 +470,12 @@
                                 <span class="k-menu__link-text">Quản trị viên</span>
                             </a>
                         </li>
-                        <li class="k-menu__item {{ request()->routeIs('bo.web.roles.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
+                        {{-- <li class="k-menu__item {{ request()->routeIs('bo.web.roles.*') ? 'k-menu__item--active' : '' }}" aria-haspopup="true">
                             <a href="{{ route('bo.web.roles.index') }}" class="k-menu__link">
                                 <i class="k-menu__link-bullet k-menu__link-bullet--dot"><span></span></i>
                                 <span class="k-menu__link-text">Quyền truy cập</span>
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
             </li>
@@ -506,3 +483,5 @@
     </div>
 </div>
 <!-- end:: Aside Menu -->
+
+

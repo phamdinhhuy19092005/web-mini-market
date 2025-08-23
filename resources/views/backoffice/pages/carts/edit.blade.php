@@ -51,25 +51,12 @@
                                             <span class="k-form__error">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    <div class="col-md-6 form-group">
-                                        <label for="address_id">{{ __('Địa chỉ giao hàng') }}</label>
-                                        <input type="number" name="address_id" id="address_id" class="form-control"
-                                               value="{{ old('address_id', $cart->address_id) }}" min="0">
-                                        @error('address_id')
-                                            <span class="k-form__error">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- Thông tin đơn hàng -->
-                            <div class="k-portlet__body-section">
-                                <h4 class="k-portlet__body-title">{{ __('Thông tin đơn hàng') }}</h4>
-                                <div class="row">
-                                    <div class="col-md-4 form-group">
+                                    <!-- Thông tin đơn hàng -->
+                                    <div class="col-md-6 form-group">
                                         <label for="currency_code">{{ __('Mã tiền tệ') }} <span class="text-danger">*</span></label>
                                         <select name="currency_code" id="currency_code" class="form-control k_selectpicker" required>
-                                            @foreach (['VND', 'USD', 'EUR'] as $currency)
+                                            @foreach (['VND'] as $currency)
                                                 <option value="{{ $currency }}"
                                                         {{ old('currency_code', $cart->currency_code) == $currency ? 'selected' : '' }}>
                                                     {{ $currency }}
@@ -77,14 +64,6 @@
                                             @endforeach
                                         </select>
                                         @error('currency_code')
-                                            <span class="k-form__error">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="order_id">{{ __('Mã đơn hàng liên kết') }}</label>
-                                        <input type="number" name="order_id" id="order_id" class="form-control"
-                                               value="{{ old('order_id', $cart->order_id) }}" min="0">
-                                        @error('order_id')
                                             <span class="k-form__error">{{ $message }}</span>
                                         @enderror
                                     </div>

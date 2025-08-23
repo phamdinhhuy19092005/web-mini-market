@@ -14,7 +14,36 @@ window.renderStatusColumn = function(data) {
         'Approved': 'k-badge--success',
         'Default': 'k-badge--success',
         'Normal': 'k-badge--danger',
+
+        'Chờ xử lý': 'k-badge--warning',
+        'Đã duyệt': 'k-badge--success',
+        'Từ chối': 'k-badge--danger',
+        'Hủy': 'k-badge--danger',
+        'Thất bại': 'k-badge--danger',
+        'Chờ xác nhận': 'k-badge--warning',
+        'Không xác định': 'k-badge--default',
+
+        // Thêm trạng thái order
+        'Chờ thanh toán': 'k-badge--warning',
+        'Thanh toán không thành công': 'k-badge--danger',
+        'Đang xử lí': 'k-badge--warning',
+        'Đang vận chuyển': 'k-badge--info',
+        'Đã hoàn thành': 'k-badge--success',
+        'Đã huỷ': 'k-badge--danger',
+        'Hoàn tiền': 'k-badge--default',           
+
+        'Hoạt động': 'k-badge--success',
+        'Vô hiệu hóa': 'k-badge--danger',
+        'Đang xử lý': 'k-badge--warning',
+        'Không hoạt động': 'k-badge--danger',
+
+        'Chờ duyệt': 'k-badge--warning',
+        'Từ chối': 'k-badge--danger',
+        'Đã duyệt': 'k-badge--success',
+
+        'Bản tin': 'k-badge--success',
     };
+
     const badgeClass = classMap[data] || 'k-badge--secondary';
     return `<span class="k-badge k-badge--inline k-badge--pill ${badgeClass}">${data}</span>`;
 };

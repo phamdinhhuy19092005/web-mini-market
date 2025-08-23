@@ -19,30 +19,30 @@
             <div class="k-portlet">
                 <div class="k-portlet__head">
                     <div class="k-portlet__head-label">
-                        <h3 class="k-portlet__head-title">Create Post</h3>
+                        <h3 class="k-portlet__head-title">Tạo trang</h3>
                     </div>
                 </div>
 
                 <form action="{{ route('bo.web.pages.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    
+
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Tên</label>
-                            <input type="text" name="name" id="name" class="form-control" 
+                            <input type="text" name="name" id="name" class="form-control"
                                    placeholder="Nhập tên" autocomplete="off" value="{{ old('name') }}">
                         </div>
 
                         <div class="form-group">
                             <label>Hiển thị tại *</label>
-                            <select name="display_in[]" 
-                                    title="-- {{ __('Chọn trang để hiển thị') }} --" 
-                                    class="form-control k_selectpicker" 
-                                    multiple 
-                                    data-actions-box="true" 
-                                    data-size="5" 
-                                    data-live-search="true" 
-                                    data-selected-text-format="count > 5" 
+                            <select name="display_in[]"
+                                    title="-- {{ __('Chọn trang để hiển thị') }} --"
+                                    class="form-control k_selectpicker"
+                                    multiple
+                                    data-actions-box="true"
+                                    data-size="5"
+                                    data-live-search="true"
+                                    data-selected-text-format="count > 5"
                                     required>
                                 @foreach($pageDisplayInEnumLabels as $key => $label)
                                     <option value="{{ $key }}"
@@ -56,19 +56,19 @@
 
                         <div class="form-group">
                             <label for="slug">Đường dẫn</label>
-                            <input type="text" name="slug" id="slug" class="form-control" 
+                            <input type="text" name="slug" id="slug" class="form-control"
                                    placeholder="Nhập đường dẫn" autocomplete="off" value="{{ old('slug') }}">
                         </div>
 
                         <div class="form-group">
                             <label for="title">Tiêu đề *</label>
-                            <input type="text" name="title" id="title" class="form-control" 
+                            <input type="text" name="title" id="title" class="form-control"
                                    placeholder="Nhập tiêu đề" value="{{ old('title') }}" required>
                         </div>
 
                         <div class="form-group">
                             <label for="order">Thứ tự hiển thị</label>
-                            <input type="number" min="1" name="order" id="order" class="form-control" 
+                            <input type="number" min="1" name="order" id="order" class="form-control"
                                    value="{{ old('order') }}">
                         </div>
 
@@ -92,13 +92,13 @@
 
                         <div class="form-group">
                             <label for="seo_title">[SEO] Tiêu đề</label>
-                            <input type="text" name="meta_title" id="seo_title" class="form-control" 
+                            <input type="text" name="meta_title" id="seo_title" class="form-control"
                                    placeholder="Nhập [SEO] Tiêu đề" autocomplete="off" value="{{ old('meta_title') }}">
                         </div>
 
                         <div class="form-group">
                             <label for="seo_description">[SEO] Mô tả</label>
-                            <input type="text" name="meta_description" id="seo_description" class="form-control" 
+                            <input type="text" name="meta_description" id="seo_description" class="form-control"
                                    placeholder="Nhập [SEO] Mô tả" autocomplete="off" value="{{ old('meta_description') }}">
                         </div>
 

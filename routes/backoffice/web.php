@@ -22,7 +22,6 @@ use App\Http\Controllers\Backoffice\FileManagerController;
 use App\Http\Controllers\Backoffice\InventoryController;
 use App\Http\Controllers\Backoffice\MenuGroupController;
 use App\Http\Controllers\Backoffice\OrderController;
-// use App\Http\Controllers\Backoffice\MenuSubGroupController;
 use App\Http\Controllers\Backoffice\PageController;
 use App\Http\Controllers\Backoffice\PaymentController;
 use App\Http\Controllers\Backoffice\PaymentOptionController;
@@ -49,17 +48,17 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 |--------------------------------------------------------------------------
 */
 
-Route::get('/admins', [AdminController::class, 'index'])->name('admins.index')->middleware(['can:admins.index']);
-Route::get('/admins/create', [AdminController::class, 'create'])->name('admins.create')->middleware(['can:admins.store']);
-Route::post('/admins', [AdminController::class, 'store'])->name('admins.store')->middleware(['can:admins.store']);
-Route::get('/admins/{id}', [AdminController::class, 'show'])->name('admins.show')->middleware(['can:admins.show']);
-Route::get('/admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit')->middleware(['can:admins.update']);
-Route::put('/admins/{id}', [AdminController::class, 'update'])->name('admins.update')->middleware(['can:admins.update']);
-Route::delete('/admins/{id}', [AdminController::class, 'destroy'])->name('admins.destroy')->middleware(['can:admins.delete']);
-Route::post('/admins/logout', [AdminController::class, 'logout'])->name('admin.logout')->middleware('auth:admin');
+Route::get('/admins', [AdminController::class, 'index'])->name('admins.index');
+Route::get('/admins/create', [AdminController::class, 'create'])->name('admins.create');
+Route::post('/admins', [AdminController::class, 'store'])->name('admins.store');
+Route::get('/admins/{id}', [AdminController::class, 'show'])->name('admins.show');
+Route::get('/admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit');
+Route::put('/admins/{id}', [AdminController::class, 'update'])->name('admins.update');
+Route::delete('/admins/{id}', [AdminController::class, 'destroy'])->name('admins.destroy');
+Route::post('/admins/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-Route::put('/admins/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update')->middleware('auth:admin');
-Route::put('/admins/password', [AdminController::class, 'updatePassword'])->name('admin.password.update')->middleware('auth:admin');
+Route::put('/admins/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+Route::put('/admins/password', [AdminController::class, 'updatePassword'])->name('admin.password.update');
 
 /*
 |--------------------------------------------------------------------------
@@ -81,13 +80,13 @@ Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.de
 |--------------------------------------------------------------------------
 */
 
-Route::get('/category-groups', [CategoryGroupController::class, 'index'])->name('category-groups.index')->middleware(['can:category-groups.index']);
-Route::get('/category-groups/create', [CategoryGroupController::class, 'create'])->name('category-groups.create')->middleware(['can:category-groups.store']);
-Route::post('/category-groups', [CategoryGroupController::class, 'store'])->name('category-groups.store')->middleware(['can:category-groups.store']);
-Route::get('/category-groups/{id}', [CategoryGroupController::class, 'show'])->name('category-groups.show')->middleware(['can:category-groups.show']);
-Route::get('/category-groups/{id}/edit', [CategoryGroupController::class, 'edit'])->name('category-groups.edit')->middleware(['can:category-groups.update']);
-Route::put('/category-groups/{id}', [CategoryGroupController::class, 'update'])->name('category-groups.update')->middleware(['can:category-groups.update']);
-Route::delete('/category-groups/{id}', [CategoryGroupController::class, 'destroy'])->name('category-groups.destroy')->middleware(['can:category-groups.delete']);
+Route::get('/category-groups', [CategoryGroupController::class, 'index'])->name('category-groups.index');
+Route::get('/category-groups/create', [CategoryGroupController::class, 'create'])->name('category-groups.create');
+Route::post('/category-groups', [CategoryGroupController::class, 'store'])->name('category-groups.store');
+Route::get('/category-groups/{id}', [CategoryGroupController::class, 'show'])->name('category-groups.show');
+Route::get('/category-groups/{id}/edit', [CategoryGroupController::class, 'edit'])->name('category-groups.edit');
+Route::put('/category-groups/{id}', [CategoryGroupController::class, 'update'])->name('category-groups.update');
+Route::delete('/category-groups/{id}', [CategoryGroupController::class, 'destroy'])->name('category-groups.destroy');
 
 Route::get('/category-groups/trash', [CategoryGroupController::class, 'trash'])->name('category-groups.trash');
 Route::post('/category-groups/{id}/restore', [CategoryGroupController::class, 'restore'])->name('category-groups.restore');
@@ -98,13 +97,13 @@ Route::post('/category-groups/{id}/restore', [CategoryGroupController::class, 'r
 |--------------------------------------------------------------------------
 */
 
-Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index')->middleware(['can:categories.index']);
-Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create')->middleware(['can:categories.store']);
-Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store')->middleware(['can:categories.store']);
-Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('categories.show')->middleware(['can:categories.show']);
-Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit')->middleware(['can:categories.update']);
-Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update')->middleware(['can:categories.update']);
-Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy')->middleware(['can:categories.delete']);
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('categories.show');
+Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
 Route::get('/categories/trash', [CategoryController::class, 'trash'])->name('categories.trash');
 Route::post('/categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
@@ -115,13 +114,13 @@ Route::post('/categories/{id}/restore', [CategoryController::class, 'restore'])-
 |--------------------------------------------------------------------------
 */
 
-Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-categories.index')->middleware(['can:categories.index']);
-Route::get('/sub-categories/create', [SubCategoryController::class, 'create'])->name('sub-categories.create')->middleware(['can:categories.store']);
-Route::post('/sub-categories', [SubCategoryController::class, 'store'])->name('sub-categories.store')->middleware(['can:categories.store']);
-Route::get('/sub-categories/{id}', [SubCategoryController::class, 'show'])->name('sub-categories.show')->middleware(['can:categories.show']);
-Route::get('/sub-categories/{id}/edit', [SubCategoryController::class, 'edit'])->name('sub-categories.edit')->middleware(['can:categories.update']);
-Route::put('/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('sub-categories.update')->middleware(['can:categories.update']);
-Route::delete('/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('sub-categories.destroy')->middleware(['can:categories.delete']);
+Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-categories.index');
+Route::get('/sub-categories/create', [SubCategoryController::class, 'create'])->name('sub-categories.create');
+Route::post('/sub-categories', [SubCategoryController::class, 'store'])->name('sub-categories.store');
+Route::get('/sub-categories/{id}', [SubCategoryController::class, 'show'])->name('sub-categories.show');
+Route::get('/sub-categories/{id}/edit', [SubCategoryController::class, 'edit'])->name('sub-categories.edit');
+Route::put('/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('sub-categories.update');
+Route::delete('/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('sub-categories.destroy');
 
 Route::get('/sub-categories/trash', [SubCategoryController::class, 'trash'])->name('sub-categories.trash');
 Route::post('/sub-categories/{id}/restore', [SubCategoryController::class, 'restore'])->name('sub-categories.restore');
@@ -167,20 +166,6 @@ Route::get('/menu-groups/{id}', [MenuGroupController::class, 'show'])->name('men
 Route::get('/menu-groups/{id}/edit', [MenuGroupController::class, 'edit'])->name('menu-groups.edit')->middleware(['can:menu-groups.update']);
 Route::put('/menu-groups/{id}', [MenuGroupController::class, 'update'])->name('menu-groups.update')->middleware(['can:menu-groups.update']);
 Route::delete('/menu-groups/{id}', [MenuGroupController::class, 'destroy'])->name('menu-groups.destroy')->middleware(['can:menu-groups.delete']);
-
-/*
-|--------------------------------------------------------------------------
-| Menu Sub Groups
-|--------------------------------------------------------------------------
-*/
-
-// Route::get('/menu-sub-groups', [MenuSubGroupController::class, 'index'])->name('menu-sub-groups.index')->middleware(['can:menu-sub-groups.index']);
-// Route::get('/menu-sub-groups/create', [MenuSubGroupController::class, 'create'])->name('menu-sub-groups.create')->middleware(['can:menu-sub-groups.store']);
-// Route::post('/menu-sub-groups', [MenuSubGroupController::class, 'store'])->name('menu-sub-groups.store')->middleware(['can:menu-sub-groups.store']);
-// Route::get('/menu-sub-groups/{id}', [MenuSubGroupController::class, 'show'])->name('menu-sub-groups.show')->middleware(['can:menu-sub-groups.show']);
-// Route::get('/menu-sub-groups/{id}/edit', [MenuSubGroupController::class, 'edit'])->name('menu-sub-groups.edit')->middleware(['can:menu-sub-groups.update']);
-// Route::put('/menu-sub-groups/{id}', [MenuSubGroupController::class, 'update'])->name('menu-sub-groups.update')->middleware(['can:menu-sub-groups.update']);
-// Route::delete('/menu-sub-groups/{id}', [MenuSubGroupController::class, 'destroy'])->name('menu-sub-groups.destroy')->middleware(['can:menu-sub-groups.delete']);
 
 /*
 |--------------------------------------------------------------------------

@@ -17,9 +17,10 @@
                         <tr>
                             <th data-property="id" scope="col">{{ __('ID') }}</th>
                             <th data-property="order_code">{{ __('Mã đơn hàng') }}</th>
-                            <th data-property="total_item">{{ __('Tổng sản phẩm') }}</th>
+                            <th class="none" data-property="total_item">{{ __('Tổng sản phẩm') }}</th>
                             <th data-property="total_quantity">{{ __('Tổng số lượng') }}</th>
                             <th data-property="total_price">{{ __('Tổng') }}</th>
+                            <th data-property="order_status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
                             <th class="none" data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
                             <th class="none" data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>
                             <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>

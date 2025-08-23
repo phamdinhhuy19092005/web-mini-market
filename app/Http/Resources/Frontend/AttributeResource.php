@@ -13,8 +13,9 @@ class AttributeResource extends BaseResource
             'name' => $this->name,
             'attribute_type' => $this->attribute_type,
             'order' => $this->order,
-            'supported_categories' => $this->supported_categories,
-            'supported_categories_names' => $this->categories->map(fn($item) => ['name' => $item->name]),
+            'supported_categories' => $this->supported_categories ?? " ",
+            'supported_categories_names' => $this->categories->pluck('name')->toArray(),
+
         ];
     }
 }

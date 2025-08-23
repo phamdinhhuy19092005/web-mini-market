@@ -2,16 +2,20 @@
 
 namespace App\Http\Resources\Backoffice;;
 
-class AdminResource extends BaseResource
+class DepositTransactionResource extends BaseResource
 {
     public function toArray($request): array
     {
         return array_merge(
             [
                 'id' => $this->id,
-                'name' => $this->name,
-                'email' => $this->email,
-                'last_login_at' => $this->last_login_at ?? " ",
+                'user_id' => $this->user_id,
+                'order_id' => $this->order_id,
+                'user_name' => $this->user?->name,
+                'amount' => number_format($this->amount, 0, ',', '.') ,
+                'payment_option_id' => $this->payment_option_id,
+                'status' => $this->status,
+                'status_name' => $this->status_name,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
             ], $this->generateActionPermissions()
@@ -22,7 +26,7 @@ class AdminResource extends BaseResource
     {
         return array_filter([
             'actions' => array_filter([
-                'update' => route('bo.web.admins.edit', $this->id),
+                'update' => route('bo.web.categories.edit', $this->id),
             ]),
         ]);
     }

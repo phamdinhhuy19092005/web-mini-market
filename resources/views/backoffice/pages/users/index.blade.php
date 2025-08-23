@@ -35,8 +35,8 @@
                                     <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
                                     <th data-property="access_channel_type_name" data-render-callback="" scope="col">{{ __('Kênh đăng nhập') }}</th>
                                     <th data-property="last_logged_in_at" scope="col">{{ __('Đăng nhập lần cuối') }}</th>
-                                    <th data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
-                                    <th data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>
+                                    <th class="none" data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
+                                    <th class="none" data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>
                                     <th data-property="actions" class="datatable-action" data-render-callback="renderActions" aria-label="Hành động">{{ __('Hành động') }}</th>
                                 </tr>
                             </thead>
