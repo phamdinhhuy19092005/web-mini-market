@@ -62,32 +62,11 @@ $breadcrumbs = [
         </div>
 
         <!-- Daily Revenue -->
-        <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
+        <div class="col-lg-3 col-xl-3 order-lg-1 order-xl-1">
             <div class="k-portlet k-portlet--height-fluid">
                 <div class="k-portlet__head k-portlet__head--noborder">
                     <div class="k-portlet__head-label">
                         <h3 class="k-portlet__head-title">Doanh thu ngày</h3>
-                    </div>
-                    <div class="k-portlet__head-toolbar">
-                        <div class="k-portlet__head-toolbar-wrapper">
-                            <div class="dropdown dropdown-inline">
-                                <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="flaticon-more-1"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="k-nav">
-                                        <li class="k-nav__section k-nav__section--first">
-                                            <span class="k-nav__section-text">Export Tools</span>
-                                        </li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-print"></i><span class="k-nav__link-text">Print</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-copy"></i><span class="k-nav__link-text">Copy</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-file-excel-o"></i><span class="k-nav__link-text">Excel</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-file-text-o"></i><span class="k-nav__link-text">CSV</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-file-pdf-o"></i><span class="k-nav__link-text">PDF</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="k-portlet__body k-portlet__body--fluid">
@@ -102,32 +81,11 @@ $breadcrumbs = [
         </div>
 
         <!-- Total Revenue -->
-        <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
+        <div class="col-lg-3 col-xl-3 order-lg-1 order-xl-1">
             <div class="k-portlet k-portlet--height-fluid">
                 <div class="k-portlet__head k-portlet__head--noborder">
                     <div class="k-portlet__head-label">
                         <h3 class="k-portlet__head-title">Tổng doanh thu</h3>
-                    </div>
-                    <div class="k-portlet__head-toolbar">
-                        <div class="k-portlet__head-toolbar-wrapper">
-                            <div class="dropdown dropdown-inline">
-                                <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="flaticon-more-1"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="k-nav">
-                                        <li class="k-nav__section k-nav__section--first">
-                                            <span class="k-nav__section-text">Export Tools</span>
-                                        </li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-print"></i><span class="k-nav__link-text">Print</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-copy"></i><span class="k-nav__link-text">Copy</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-file-excel-o"></i><span class="k-nav__link-text">Excel</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-file-text-o"></i><span class="k-nav__link-text">CSV</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-file-pdf-o"></i><span class="k-nav__link-text">PDF</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="k-portlet__body k-portlet__body--fluid">
@@ -142,38 +100,36 @@ $breadcrumbs = [
         </div>
 
         <!-- Total Orders -->
-        <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
+        <div class="col-lg-3 col-xl-3 order-lg-1 order-xl-1">
             <div class="k-portlet k-portlet--height-fluid">
                 <div class="k-portlet__head k-portlet__head--noborder">
                     <div class="k-portlet__head-label">
                         <h3 class="k-portlet__head-title">Tổng đơn hàng</h3>
-                    </div>
-                    <div class="k-portlet__head-toolbar">
-                        <div class="k-portlet__head-toolbar-wrapper">
-                            <div class="dropdown dropdown-inline">
-                                <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="flaticon-more-1"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="k-nav">
-                                        <li class="k-nav__section k-nav__section--first">
-                                            <span class="k-nav__section-text">Export Tools</span>
-                                        </li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-print"></i><span class="k-nav__link-text">Print</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-copy"></i><span class="k-nav__link-text">Copy</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-file-excel-o"></i><span class="k-nav__link-text">Excel</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-file-text-o"></i><span class="k-nav__link-text">CSV</span></a></li>
-                                        <li class="k-nav__item"><a href="#" class="k-nav__link"><i class="k-nav__link-icon la la-file-pdf-o"></i><span class="k-nav__link-text">PDF</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="k-portlet__body k-portlet__body--fluid">
                     <div class="k-widget-20">
                         <div class="k-widget-20__title">
                             <div class="k-widget-20__label">{{ number_format($totalOrders) }}</div>
+                            <img class="k-widget-20__bg" src="{{ asset('assets/media/misc/iconbox_bg.png') }}" alt="bg" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Products -->
+        <div class="col-lg-3 col-xl-3 order-lg-1 order-xl-1">
+            <div class="k-portlet k-portlet--height-fluid">
+                <div class="k-portlet__head k-portlet__head--noborder">
+                    <div class="k-portlet__head-label">
+                        <h3 class="k-portlet__head-title">Tổng số lượng sản phẩm</h3>
+                    </div>
+                </div>
+                <div class="k-portlet__body k-portlet__body--fluid">
+                    <div class="k-widget-20">
+                        <div class="k-widget-20__title">
+                            <div class="k-widget-20__label">{{ number_format($totalProducts) }}</div>
                             <img class="k-widget-20__bg" src="{{ asset('assets/media/misc/iconbox_bg.png') }}" alt="bg" />
                         </div>
                     </div>
@@ -233,120 +189,98 @@ $breadcrumbs = [
             </div>
         </div>
 
-        <!-- Top Products -->
-        <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
+        <!-- Combined Widget -->
+        <div class="col-lg-12">
             <div class="k-portlet k-portlet--height-fluid">
-                <div class="k-portlet__head k-portlet__head--noborder">
+                <div class="k-portlet__head">
                     <div class="k-portlet__head-label">
-                        <h3 class="k-portlet__head-title">Sản phẩm bán chạy</h3>
+                        <h3 class="k-portlet__head-title">Thống kê & Cảnh báo</h3>
                     </div>
                 </div>
                 <div class="k-portlet__body">
-                    <ul class="list-group">
-                        @foreach($topProducts->take(5) as $product)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ $product->name }}
-                                <span class="badge badge-primary badge-pill">{{ $product->sold }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
-
-                    @if($topProducts->count() > 5)
-                        <div class="text-center mt-2">
-                            <a href="{{ route('bo.web.products.index') }}" class="btn btn-link">Xem tất cả</a>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        <!-- Inventory Alerts -->
-        <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
-            <div class="k-portlet k-portlet--height-fluid k-widget-13">
-                <div class="k-portlet__body">
-                    <div id="k-widget-slider-inventory" class="k-slider carousel slide" data-ride="carousel" data-interval="8000">
-                        <div class="k-slider__head">
-                            <div class="k-slider__label">Cảnh báo tồn kho</div>
-                            <div class="k-slider__nav">
-                                <a class="k-slider__nav-prev carousel-control-prev" href="#k-widget-slider-inventory" role="button" data-slide="prev">
-                                    <i class="fa fa-angle-left"></i>
-                                </a>
-                                <a class="k-slider__nav-next carousel-control-next" href="#k-widget-slider-inventory" role="button" data-slide="next">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
+                    <div class="row">
+                        <!-- Left: Top Products -->
+                        <div class="col-lg-8 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Sản phẩm bán chạy</h5>
+                                </div>
+                                <div class="card-body" style="height:350px"">
+                                    <canvas id="topProductsChart" style="width:700px"></canvas>
+                                </div>
                             </div>
                         </div>
-                        <div class="carousel-inner">
-                            @foreach($inventoryAlerts as $index => $alert)
-                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }} k-slider__body">
-                                    <div class="k-widget-13">
-                                        <div class="k-widget-13__body">
-                                            <a class="k-widget-13__title" href="{{ route('bo.web.inventories.edit', $alert->id) }}">{{ $alert->product_name }}</a>
-                                            <div class="k-widget-13__desc">
-                                                Số lượng: {{ $alert->quantity }} <br>
-                                                Trạng thái: {{ $alert->status }}
-                                            </div>
+
+                        <!-- Right: Alerts + Transactions -->
+                        <div class="col-lg-4">
+                            <!-- Inventory Alerts -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Cảnh báo kho</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="k-widget-slider-inventory" class="carousel slide" data-ride="carousel" data-interval="6000">
+                                        <div class="carousel-inner">
+                                            @foreach($inventoryAlerts as $index => $alert)
+                                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                                    <div>
+                                                        <h6 class="mb-2">{{ $alert->product_name }}</h6>
+                                                        <p class="mb-1">Số lượng: <b>{{ $alert->quantity }}</b></p>
+                                                        <p class="mb-2">
+                                                            <span class="badge badge-danger">{{ $alert->status }}</span>
+                                                        </p>
+                                                        <a href="{{ route('bo.web.inventories.edit', $alert->id) }}" class="btn btn-sm btn-outline-primary">Xem</a>
+                                                    </div>
+                                                </div>
+                                            @endforeach
                                         </div>
-                                        <div class="k-widget-13__foot">
-                                            <div class="k-widget-13__label">
-                                                <div class="btn btn-sm btn-danger">{{ $alert->status }}</div>
-                                            </div>
-                                            <div class="k-widget-13__toolbar">
-                                                <a href="{{ route('bo.web.inventories.edit', $alert->id) }}" class="btn btn-default btn-sm btn-bold btn-upper">Xem</a>
-                                            </div>
-                                        </div>
+                                        <a class="carousel-control-prev" href="#k-widget-slider-inventory" role="button" data-slide="prev">
+                                            <i class="fa fa-angle-left"></i>
+                                        </a>
+                                        <a class="carousel-control-next" href="#k-widget-slider-inventory" role="button" data-slide="next">
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
                                     </div>
                                 </div>
-                            @endforeach
+                            </div>
+
+                            <!-- Recent Transactions -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Giao dịch gần đây</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="k-widget-slider-transactions" class="carousel slide" data-ride="carousel" data-interval="6000">
+                                        <div class="carousel-inner">
+                                            @foreach($recentTransactions as $index => $transaction)
+                                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                                    <div>
+                                                        <h6 class="mb-2">Mã đơn: {{ $transaction->order_code }}</h6>
+                                                        <p class="mb-1">Khách hàng: <b>{{ $transaction->customer }}</b></p>
+                                                        <p class="mb-1">Số tiền: 
+                                                            <b>{{ number_format($transaction->amount, 0, ',', '.') }} VND</b>
+                                                        </p>
+                                                        <p class="mb-2"><span class="badge badge-secondary">{{ $transaction->date }}</span></p>
+                                                        <a href="{{ route('bo.web.orders.show', $transaction->id) }}" class="btn btn-sm btn-outline-primary">Xem</a>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <a class="carousel-control-prev" href="#k-widget-slider-transactions" role="button" data-slide="prev">
+                                            <i class="fa fa-angle-left"></i>
+                                        </a>
+                                        <a class="carousel-control-next" href="#k-widget-slider-transactions" role="button" data-slide="next">
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             </div>
         </div>
 
-        <!-- Recent Transactions -->
-        <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
-            <div class="k-portlet k-portlet--height-fluid k-widget-13">
-                <div class="k-portlet__body">
-                    <div id="k-widget-slider-transactions" class="k-slider carousel slide" data-ride="carousel" data-interval="8000">
-                        <div class="k-slider__head">
-                            <div class="k-slider__label">Giao dịch gần đây</div>
-                            <div class="k-slider__nav">
-                                <a class="k-slider__nav-prev carousel-control-prev" href="#k-widget-slider-transactions" role="button" data-slide="prev">
-                                    <i class="fa fa-angle-left"></i>
-                                </a>
-                                <a class="k-widget-slider-nav-next carousel-control-next" href="#k-widget-slider-transactions" role="button" data-slide="next">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="carousel-inner">
-                            @foreach($recentTransactions as $index => $transaction)
-                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }} k-slider__body">
-                                    <div class="k-widget-13">
-                                        <div class="k-widget-13__body">
-                                            <a class="k-widget-13__title" href="#">{{ $transaction->order_code }}</a>
-                                            <div class="k-widget-13__desc">
-                                                Khách hàng: {{ $transaction->customer }} <br>
-                                                Số tiền: {{ number_format($transaction->amount, 0, ',', '.') }} VND
-                                            </div>
-                                        </div>
-                                        <div class="k-widget-13__foot">
-                                            <div class="k-widget-13__label">
-                                                <div class="btn btn-sm btn-label btn-bold">{{ $transaction->date }}</div>
-                                            </div>
-                                            <div class="k-widget-13__toolbar">
-                                                <a href="{{ route('bo.web.orders.show', $transaction->id) }}" class="btn btn-default btn-sm btn-bold btn-upper">Xem</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Recent Reviews -->
         <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
@@ -377,7 +311,7 @@ $breadcrumbs = [
                                         </div>
                                         <div class="k-widget-13__foot">
                                             <div class="k-widget-13__label">
-                                                <div class="btn btn-sm btn-label btn-bold">{{ $review->status }}</div>
+                                                <div class="btn btn-sm btn-label btn-bold">---</div>
                                             </div>
                                             <div class="k-widget-13__toolbar">
                                                 <a href="{{ route('bo.web.website-reviews.edit', $review->id) }}" class="btn bg-warning btn-sm btn-bold btn-upper" style="color: #ffff">Chờ duyệt</a>
@@ -397,9 +331,9 @@ $breadcrumbs = [
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <div id="k-widget-slider-reviews" class="k-slider carousel slide" data-ride="carousel" data-interval="8000">
-                        <div class="k-slider__head">
-                            <div class="k-slider__label">Banner sắp hết hạn</div>
-                        </div>
+                            <div class="k-slider__head">
+                                <div class="k-slider__label">Banner sắp hết hạn</div>
+                            </div>
                         </div>
                         <!-- Swiper Slider -->
                         <div class="swiper coupon-slider">
@@ -438,36 +372,33 @@ $breadcrumbs = [
         </div>
 
         <!-- Revenue Chart -->
-        <div class="col-lg-12 col-xl-6 order-lg-1 order-xl-1">
+        <div class="col-lg-6 col-xl-6">
             <div class="k-portlet k-portlet--height-fluid">
                 <div class="k-portlet__head k-portlet__head--noborder">
                     <div class="k-portlet__head-label">
                         <h3 class="k-portlet__head-title">Biểu đồ doanh thu</h3>
                     </div>
                 </div>
-                <div class="k-portlet__body k-portlet__body--fluid">
-                    <div class="k-widget-20__chart">
-                        <canvas id="revenueChart"></canvas>
-                    </div>
+                <div class="k-portlet__body">
+                    <canvas id="revenueChart"></canvas>
                 </div>
             </div>
         </div>
 
         <!-- New Orders Chart -->
-        <div class="col-lg-12 col-xl-6 order-lg-1 order-xl-1">
+        <div class="col-lg-6 col-xl-6">
             <div class="k-portlet k-portlet--height-fluid">
                 <div class="k-portlet__head k-portlet__head--noborder">
                     <div class="k-portlet__head-label">
                         <h3 class="k-portlet__head-title">Biểu đồ đơn hàng mới</h3>
                     </div>
                 </div>
-                <div class="k-portlet__body k-portlet__body--fluid">
-                    <div class="k-widget-20__chart">
-                        <canvas id="newOrdersChart"></canvas>
-                    </div>
+                <div class="k-portlet__body">
+                    <canvas id="newOrdersChart"></canvas>
                 </div>
             </div>
         </div>
+
 
     </div>
     <!--end::Row-->
@@ -478,97 +409,124 @@ $breadcrumbs = [
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
     // Revenue Chart
-    new Chart(document.getElementById('revenueChart'), {
-        type: 'bar',
-        data: {
-            labels: @json($revenueData->keys()),
-            datasets: [{
-                label: 'Doanh thu',
-                data: @json($revenueData->values()),
-                backgroundColor: '#007bff',
-                borderColor: '#0056b3',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Doanh thu (VND)'
-                    }
+    const revenueChartEl = document.getElementById('revenueChart');
+    if (revenueChartEl) {
+        new Chart(revenueChartEl, {
+            type: 'bar',
+            data: {
+                labels: @json($revenueData->keys() ?? []),
+                datasets: [{
+                    label: 'Doanh thu (VND)',
+                    data: @json($revenueData->values() ?? []),
+                    backgroundColor: '#007bff',
+                    borderColor: '#0056b3',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw.toLocaleString() + ' VND';
+                            }
+                        }
+                    },
+                    legend: { display: false }
                 },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Ngày'
-                    }
+                scales: {
+                    y: { beginAtZero: true }
                 }
             }
-        }
-    });
+        });
+    }
 
     // New Orders Chart
-    new Chart(document.getElementById('newOrdersChart'), {
-        type: 'line',
-        data: {
-            labels: @json($newOrdersData->keys()),
-            datasets: [{
-                label: 'Số đơn hàng mới',
-                data: @json($newOrdersData->values()),
-                backgroundColor: 'rgba(40, 167, 69, 0.2)',
-                borderColor: '#28a745',
-                borderWidth: 2,
-                fill: true
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Số đơn hàng'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Ngày'
+    const newOrdersChartEl = document.getElementById('newOrdersChart');
+    if (newOrdersChartEl) {
+        new Chart(newOrdersChartEl, {
+            type: 'line',
+            data: {
+                labels: @json($newOrdersData->keys() ?? []),
+                datasets: [{
+                    label: 'Số đơn hàng mới',
+                    data: @json($newOrdersData->values() ?? []),
+                    backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                    borderColor: '#28a745',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+
+    // Top Products Chart
+    const topProductsChartEl = document.getElementById('topProductsChart');
+    if (topProductsChartEl) {
+        new Chart(topProductsChartEl, {
+            type: 'pie',
+            data: {
+                labels: @json($topProducts->take(5)->pluck('name')), 
+                datasets: [{
+                    data: @json($topProducts->take(5)->pluck('sold')), 
+                    backgroundColor: [
+                        '#E1E1EF', 
+                        '#FEB822',
+                        '#5867DD',
+                        '#1EC9B7',
+                        '#FD397A'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                return label + ': ' + value;
+                            }
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+    }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const swiper = new Swiper('.coupon-slider', {
+    // Swiper
+    const swiperEl = document.querySelector('.coupon-slider');
+    if (swiperEl) {
+        new Swiper(swiperEl, {
             slidesPerView: 1,
             spaceBetween: 10,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
+            pagination: { el: '.swiper-pagination', clickable: true },
             breakpoints: {
-                640: {
-                    slidesPerView: 2,
-                    spaceBetween: 15,
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 20,
-                },
+                640: { slidesPerView: 2, spaceBetween: 15 },
+                1024: { slidesPerView: 3, spaceBetween: 20 },
             },
             loop: true,
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
+            autoplay: { delay: 5000, disableOnInteraction: false },
         });
-    });
+    }
+
+});
 
 </script>
 
@@ -595,4 +553,5 @@ $breadcrumbs = [
     }
 </style>
 @endpush
+
 @endsection

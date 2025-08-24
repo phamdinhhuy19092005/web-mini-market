@@ -38,6 +38,8 @@ use App\Http\Controllers\Backoffice\SubscriberController;
 use App\Http\Controllers\Backoffice\SystemSettingController;
 use App\Http\Controllers\Backoffice\UserController;
 use App\Http\Controllers\Backoffice\WebsiteReviewController;
+use App\Mail\TestQueueMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -530,3 +532,7 @@ Route::resource('deposit-transactions', DepositTransactionController::class)->na
 
 
 
+Route::get('/test-mail', function () {
+    Mail::to('b2bhuy@gmail.com')->queue(new TestQueueMail());
+    return 'Mail đã được đưa vào queue!';
+});

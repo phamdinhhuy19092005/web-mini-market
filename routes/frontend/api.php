@@ -82,12 +82,14 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     // Cái này là dùng để hủy đơn hàng
     Route::patch('/orders/{uuid}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
+    // Này dành cho thanh toán VNPay 
+    Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+    Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
+
 });
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
-Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
-Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
 
 // ====================== Đánh giá website ======================
 Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');

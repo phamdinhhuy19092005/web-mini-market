@@ -83,7 +83,7 @@ class OrderController extends Controller
         try {
             $order = Order::where('uuid', $uuid)->firstOrFail();
 
-            $order->update(['order_status' => OrderStatusEnum::CANCELLED]);
+            $order->update(['order_status' => OrderStatusEnum::CANCELED]);
 
             return response()->json([
                 'success' => true,
