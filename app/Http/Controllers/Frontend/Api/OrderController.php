@@ -29,7 +29,7 @@ class OrderController extends Controller
         $status = $request->query('order_status');
 
          $orders = Order::with([
-            'orderItems.inventory.product' 
+            'orderItems.inventory.product'
         ])
         ->where('user_id', $user->id)
         ->latest()
@@ -51,7 +51,7 @@ class OrderController extends Controller
 
             $data = $request->all();
             $data['user_id'] = $user->id;
-            
+
             $order = $this->orderService->createUserWithCoupon($data);
 
             return response()->json([
@@ -69,12 +69,16 @@ class OrderController extends Controller
         }
     }
 
-
-
-
     public function show($uuid): JsonResponse
     {
-        $order = Order::where('uuid', $uuid)->first();
+        $order = Order::with([
+            'orderItems.inventory.product',
+            'paymentOption',
+            'shippingRate',
+            'coupon'
+        ])
+        ->where('uuid', $uuid)
+        ->first();
 
         if (!$order) {
             return response()->json([
@@ -88,6 +92,7 @@ class OrderController extends Controller
             'data' => $order,
         ]);
     }
+
 
     public function cancel($uuid): JsonResponse
     {
@@ -108,7 +113,7 @@ class OrderController extends Controller
             ], 400);
         }
     }
-    
+
     public function applyCoupon(Request $request, $uuid): JsonResponse
     {
         $request->validate([
@@ -126,7 +131,7 @@ class OrderController extends Controller
 
         try {
             $couponCode = $request->input('coupon_code');
-            
+
             // Gọi service để áp dụng coupon
             $updatedOrder = $this->orderService->applyCoupon($order->id, $couponCode);
 

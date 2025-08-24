@@ -9,7 +9,7 @@ class SubscriberTypeEnum extends BaseEnum
     public static function all(): array
     {
         return [
-            self::NEWSLETTER =>  'Đang xử lý',
+            self::NEWSLETTER =>  'Bản tin',
         ];
     }
 

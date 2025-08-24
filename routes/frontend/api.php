@@ -32,13 +32,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Frontend\Api\OrderAutoDiscountTestController;
 use App\Http\Controllers\Frontend\Api\OrderDiscountTestController;
+use App\Http\Controllers\Frontend\Api\SubscriberController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
-// Route::middleware('auth:sanctum', 'force.json')->group(function () {
+Route::middleware('auth:sanctum', 'force.json')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -68,9 +69,6 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     // Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
     // Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
 
-    // Áp mã giảm giá
-    Route::post('/orders/{uuid}/apply-coupon', [OrderController::class, 'applyCoupon']);
-
     // =========== ============
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 
@@ -80,23 +78,23 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
     //=========== =============
 
-    // Cái này dùng tạo 
+    // Cái này dùng tạo
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
-    // Này lấy order từ user nha dô OrderStatusEnum để xen trạng thái 
+    // Này lấy order từ user nha dô OrderStatusEnum để xen trạng thái
     Route::get('/orders/{uuid}', [OrderController::class, 'show'])->name('orders.show');
 
     // Cái này là dùng để hủy đơn hàng
     Route::patch('/orders/{uuid}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
-    // Này dành cho thanh toán VNPay 
-    Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+    // Tạo session VNPAY (chưa tạo order, trả về URL cho FE)
+    Route::post('/payment/create-session', [PaymentController::class, 'createSession'])->name('payment.create-session');
+
+    // Callback từ VNPAY trả về → tạo order thật
     Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
 
-// });
 
-Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
-Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.show');
+});
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
@@ -185,6 +183,10 @@ Route::get('/wards', [WardController::class, 'index'])->name('wards.index');
 Route::get('/wards/{id}', [WardController::class, 'show'])->name('wards.show');
 
 Route::get('/districts/{provinceCode}', [AddressController::class, 'getDistrictsByProvince']);
+
+//  ================== Đăng ký nhận bản tin ======================
+
+Route::post('/subscribers', [SubscriberController::class, 'store'])->name('subscribers.store');
 
 // ================== Tạo tài khoản và xác thực email ======================
 Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
