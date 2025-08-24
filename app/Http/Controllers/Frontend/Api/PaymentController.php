@@ -112,7 +112,8 @@ class PaymentController extends Controller
         $vnp_TmnCode = config('services.vnpay.tmn_code');
         $vnp_HashSecret = config('services.vnpay.hash_secret');
         $vnp_Url = config('services.vnpay.payment_url');
-        $vnp_ReturnUrl = route('payment.return');
+        $vnp_ReturnUrl = config('services.vnpay.return_url');
+
 
         $vnp_TxnRef = $orderInfo['uuid'];
         $vnp_OrderInfo = json_encode($orderInfo);

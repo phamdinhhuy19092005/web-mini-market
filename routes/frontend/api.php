@@ -83,7 +83,6 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
     // Này lấy order từ user nha dô OrderStatusEnum để xen trạng thái
-    Route::get('/orders/{uuid}', [OrderController::class, 'show'])->name('orders.show');
 
     // Cái này là dùng để hủy đơn hàng
     Route::patch('/orders/{uuid}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
@@ -96,6 +95,7 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
 
 
 });
+Route::get('/orders/{uuid}', [OrderController::class, 'show'])->name('orders.show');
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
