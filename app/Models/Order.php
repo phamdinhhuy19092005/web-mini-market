@@ -79,7 +79,12 @@ class Order extends Model
 
     public function items()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'order_id', 'id');
+    }
+
+    public function orderItems()
+    {
+        return $this->items();
     }
 
     public function paymentOption()

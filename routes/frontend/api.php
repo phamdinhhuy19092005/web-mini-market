@@ -72,7 +72,15 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     // Áp mã giảm giá
     Route::post('/orders/{uuid}/apply-coupon', [OrderController::class, 'applyCoupon']);
 
+    // =========== ============
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+
+    // Như này để lấy theo trạng thái
+    //api/orders?order_status=PROCESSING => đang xử lý
+    // Dô OrderStatusEnum để xem trạng thái
+
+    //=========== =============
+
     // Cái này dùng tạo 
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 

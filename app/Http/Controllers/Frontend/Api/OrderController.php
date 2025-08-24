@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Enum\OrderStatusEnum;
+use App\Http\Resources\Frontend\OrderResource;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -19,23 +20,20 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $user = auth('sanctum')->user();
 
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn chưa đăng nhập',
-            ], 401);
-        }
-
-        $perPage = $request->get('per_page', 10);
-        $orders = $this->orderService->create($user->id, $perPage);
+         $orders = Order::with([
+            'orderItems.inventory.product' 
+        ])
+        ->where('user_id', $user->id)
+        ->latest()
+        ->get();
 
         return response()->json([
             'success' => true,
-            'data' => $orders
+            'data' => OrderResource::collection($orders),
         ]);
     }
 

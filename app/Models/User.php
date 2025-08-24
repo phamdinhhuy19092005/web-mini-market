@@ -39,6 +39,11 @@ class User extends Authenticatable
         'status' => UserActionEnum::class, 
     ];
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
     protected function casts(): array
     {
         return [
