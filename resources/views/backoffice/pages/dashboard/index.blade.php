@@ -137,58 +137,6 @@ $breadcrumbs = [
             </div>
         </div>
 
-        <!-- Average Order Value -->
-        <div class="col-12 order-lg-1 order-xl-1">
-            <div class="k-portlet k-portlet--height-fluid">
-                <div class="k-portlet__head k-portlet__head--noborder">
-                    <div class="k-portlet__head-label">
-                        <h3 class="k-portlet__head-title">Đơn hàng chờ xử lý</h3>
-                    </div>
-                    <div class="k-portlet__head-toolbar">
-                        <div class="k-portlet__head-toolbar-wrapper">
-                            <a href="{{ route('bo.web.orders.index') }}" class="btn btn-sm btn-light">
-                                Xem tất cả
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="k-portlet__body k-portlet__body--fluid">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered table-hover">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>Mã đơn</th>
-                                    <th>Khách hàng</th>
-                                    <th>Số tiền</th>
-                                    <th>Ngày đặt</th>
-                                    <th>Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($pendingOrders as $order)
-                                    <tr>
-                                        <td>{{ $order->order_code }}</td>
-                                        <td>{{ $order->fullname }}</td>
-                                        <td>{{ number_format($order->grand_total, 0, ',', '.') }} VND</td>
-                                        <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i') }}</td>
-                                        <td>
-                                            <a href="{{ route('bo.web.orders.show', $order->id) }}" class="btn btn-sm btn-primary">
-                                                Xử lý
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted">Không có đơn hàng chờ xử lý</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Combined Widget -->
         <div class="col-lg-12">
             <div class="k-portlet k-portlet--height-fluid">
@@ -228,59 +176,82 @@ $breadcrumbs = [
 
                         <!-- Top Products -->
                         <div class="tab-pane fade show active" id="tab-top-products" role="tabpanel">
-                            <div style="height:350px">
-                                <canvas id="topProductsChart"></canvas>
+                            <div class="row">
+                            <!-- Chart bên trái -->
+                            <div class="col-md-6">
+                                <div style="height:350px">
+                                    <canvas id="topProductsChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Danh sách sản phẩm bên phải -->
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Top 5 Sản phẩm bán chạy</h5>
+                                <ul class="list-group">
+                                    @foreach($topProducts as $product)
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ $product->name }}
+                                            <span class="badge badge-primary badge-pill">{{ $product->sold_quantity }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </div>
 
-                        <!-- Inventory Alerts -->
+                        </div>
+
+                        <!-- Inventory Alerts (dạng danh sách) -->
                         <div class="tab-pane fade" id="tab-inventory-alerts" role="tabpanel">
-                            <div id="k-widget-slider-inventory" class="carousel slide" data-ride="carousel" data-interval="6000">
-                                <div class="carousel-inner">
-                                    @foreach($inventoryAlerts as $index => $alert)
-                                        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                            <div class="p-3 border rounded">
-                                                <h6 class="mb-2">{{ $alert->product_name }}</h6>
-                                                <p class="mb-1">Số lượng: <b>{{ $alert->quantity }}</b></p>
-                                                <p class="mb-2">Trạng thái: <span class="badge badge-danger">{{ $alert->status }}</span></p>
-                                                <a href="{{ route('bo.web.inventories.edit', $alert->id) }}" class="btn btn-sm btn-outline-primary">Xem</a>
-                                            </div>
+                            <div class="row">
+                                @forelse($inventoryAlerts as $alert)
+                                    <div class="col-md-4 mb-3">
+                                        <div class="p-3 border badge-danger rounded h-100">
+                                            <h6 class="mb-2">{{ $alert->product_name }}</h6>
+                                            <p class="mb-1">Số lượng: <b>{{ $alert->quantity }}</b></p>
+                                            <p class="mb-2">Trạng thái: <span class="badge badge-danger">{{ $alert->status }}</span></p>
+                                            <a href="{{ route('bo.web.inventories.edit', $alert->id) }}" style="color: #ffff; border:1px solid #ffff" class="btn btn-sm ">Xem</a>
                                         </div>
-                                    @endforeach
-                                </div>
-                                <a class="carousel-control-prev" href="#k-widget-slider-inventory" role="button" data-slide="prev">
-                                    <i class="fa fa-angle-left"></i>
-                                </a>
-                                <a class="carousel-control-next" href="#k-widget-slider-inventory" role="button" data-slide="next">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
+                                    </div>
+                                @empty
+                                    <div class="col-12 text-center text-muted">Không có cảnh báo kho</div>
+                                @endforelse
                             </div>
                         </div>
 
-                        <!-- Recent Transactions -->
+                        <!-- Recent Transactions (dạng table) -->
                         <div class="tab-pane fade" id="tab-recent-transactions" role="tabpanel">
-                            <div id="k-widget-slider-transactions" class="carousel slide" data-ride="carousel" data-interval="6000">
-                                <div class="carousel-inner">
-                                    @foreach($recentTransactions as $index => $transaction)
-                                        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                            <div class="p-3 border rounded">
-                                                <h6 class="mb-2">Mã đơn: {{ $transaction->order_code }}</h6>
-                                                <p class="mb-1">Khách hàng: <b>{{ $transaction->customer }}</b></p>
-                                                <p class="mb-1">Số tiền: <b>{{ number_format($transaction->amount, 0, ',', '.') }} VND</b></p>
-                                                <p class="mb-2"><span class="badge badge-secondary">{{ $transaction->date }}</span></p>
-                                                <a href="{{ route('bo.web.orders.show', $transaction->id) }}" class="btn btn-sm btn-outline-primary">Xem</a>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                                <a class="carousel-control-prev" href="#k-widget-slider-transactions" role="button" data-slide="prev">
-                                    <i class="fa fa-angle-left"></i>
-                                </a>
-                                <a class="carousel-control-next" href="#k-widget-slider-transactions" role="button" data-slide="next">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered table-hover">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Mã đơn</th>
+                                            <th>Khách hàng</th>
+                                            <th>Số tiền</th>
+                                            <th>Ngày</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($recentTransactions as $transaction)
+                                            <tr>
+                                                <td>{{ $transaction->order_code }}</td>
+                                                <td>{{ $transaction->customer }}</td>
+                                                <td>{{ number_format($transaction->amount, 0, ',', '.') }} VND</td>
+                                                <td>{{ $transaction->date }}</td>
+                                                <td>
+                                                    <a href="{{ route('bo.web.orders.show', $transaction->id) }}" class="btn btn-sm btn-outline-primary">Xem</a>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted">Không có giao dịch gần đây</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+
 
                         <!-- Pending Orders -->
                         <div class="tab-pane fade" id="tab-pending-orders" role="tabpanel">
@@ -327,8 +298,6 @@ $breadcrumbs = [
                 </div>
             </div>
         </div>
-
-
 
         <!-- Recent Reviews -->
         <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
@@ -527,11 +496,11 @@ $breadcrumbs = [
         new Chart(topProductsChartEl, {
             type: 'pie',
             data: {
-                labels: @json($topProducts->take(5)->pluck('name')), 
+                labels: @json($topProducts->take(5)->pluck('name')),
                 datasets: [{
-                    data: @json($topProducts->take(5)->pluck('sold')), 
+                    data: @json($topProducts->take(5)->pluck('sold')),
                     backgroundColor: [
-                        '#E1E1EF', 
+                        '#E1E1EF',
                         '#FEB822',
                         '#5867DD',
                         '#1EC9B7',

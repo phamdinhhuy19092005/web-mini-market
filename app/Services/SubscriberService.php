@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Enum\SubscriberTypeEnum;
 use App\Repositories\Interfaces\SubscriberRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -25,6 +26,14 @@ class SubscriberService extends BaseService
             })
             ->orderBy('id', 'desc')
             ->paginate($perPage);
+    }
+
+    public function create(array $data)
+    {
+        return $this->subscriberRepository->create([
+            'email' => $data['email'],
+            'type'  => $data['type'] ?? SubscriberTypeEnum::NEWSLETTER,
+        ]);
     }
 
     public function delete($id)

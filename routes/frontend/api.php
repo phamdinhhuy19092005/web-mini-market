@@ -32,6 +32,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Frontend\Api\OrderAutoDiscountTestController;
 use App\Http\Controllers\Frontend\Api\OrderDiscountTestController;
+use App\Http\Controllers\Frontend\Api\SubscriberController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -183,6 +184,10 @@ Route::get('/wards', [WardController::class, 'index'])->name('wards.index');
 Route::get('/wards/{id}', [WardController::class, 'show'])->name('wards.show');
 
 Route::get('/districts/{provinceCode}', [AddressController::class, 'getDistrictsByProvince']);
+
+//  ================== Đăng ký nhận bản tin ======================
+
+Route::post('/subscribers', [SubscriberController::class, 'store'])->name('subscribers.store');
 
 // ================== Tạo tài khoản và xác thực email ======================
 Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
