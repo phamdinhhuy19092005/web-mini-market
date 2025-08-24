@@ -21,32 +21,30 @@ class OrderController extends Controller
     }
 
     public function index(Request $request): JsonResponse
-{
-    $user = auth('sanctum')->user();
+    {
+        $user = auth('sanctum')->user();
 
-    // Lấy trạng thái từ query ?status=...
-    $status = $request->query('order_status');
+        $status = $request->query('order_status');
 
-    // Query cơ bản
-    $ordersQuery = Order::with([
-        'orderItems.inventory.product'
-    ])->where('user_id', $user->id);
+        $ordersQuery = Order::with([
+            'orderItems.inventory.product'
+        ])->where('user_id', $user->id);
 
-    // Nếu có filter trạng thái thì thêm vào
-    if ($status) {
-        $ordersQuery->where('order_status', $status);
+        if ($status) {
+            $ordersQuery->where('order_status', $status);
+        }
+
+        $orders = $ordersQuery->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => OrderResource::collection($orders),
+        ]);
     }
 
-    $orders = $ordersQuery->latest()->get();
-
-    return response()->json([
-        'success' => true,
-        'data' => OrderResource::collection($orders),
-    ]);
-}
 
 
-   public function store(Request $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         try {
             $user = auth('sanctum')->user();
@@ -77,7 +75,7 @@ class OrderController extends Controller
     public function show($uuid): JsonResponse
     {
         $order = Order::with([
-            'orderItems.inventory.product',
+            'orderItems.inventory',
             'paymentOption',
             'shippingRate',
             'coupon'
@@ -97,7 +95,6 @@ class OrderController extends Controller
             'data' => $order,
         ]);
     }
-
 
     public function cancel($uuid): JsonResponse
     {

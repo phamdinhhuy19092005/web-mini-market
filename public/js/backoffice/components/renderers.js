@@ -30,7 +30,7 @@ window.renderStatusColumn = function(data) {
         'Đang vận chuyển': 'k-badge--info',
         'Đã hoàn thành': 'k-badge--success',
         'Đã huỷ': 'k-badge--danger',
-        'Hoàn tiền': 'k-badge--default',           
+        'Hoàn tiền': 'k-badge--default',
 
         'Hoạt động': 'k-badge--success',
         'Vô hiệu hóa': 'k-badge--danger',
@@ -42,6 +42,9 @@ window.renderStatusColumn = function(data) {
         'Đã duyệt': 'k-badge--success',
 
         'Bản tin': 'k-badge--success',
+
+        'Simple': 'k-badge--success',
+        'Variable': 'k-badge--warning',
     };
 
     const badgeClass = classMap[data] || 'k-badge--secondary';

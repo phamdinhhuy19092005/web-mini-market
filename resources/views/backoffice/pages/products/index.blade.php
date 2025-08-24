@@ -32,12 +32,12 @@
                         <thead>
                             <tr>
                                 <th data-property="id">{{ __('ID') }}</th>
-                                <th data-property="name">{{ __('Tên sản phẩm') }}</th>
-                                <th data-property="slug">{{ __('Slug') }}</th>
+                                <th data-property="name" style="width: 325px;">{{ __('Tên sản phẩm') }}</th>
+                                <th class="none" data-property="slug">{{ __('Slug') }}</th>
                                 <th data-property="primary_image" data-render-callback="renderImageColumn">{{ __('Ảnh đại diện') }}</th>
                                 <th data-property="code">{{ __('Mã sản phẩm') }}</th>
                                 <th data-property="brand.name" data-name="brand_id" data-link="brand.actions.update" data-link-target="_blank">{{ __('Thương hiệu') }}</th>
-                                <th data-property="type_name">{{ __('Loại') }}</th>
+                                <th data-render-callback="renderStatusColumn" data-property="type_name">{{ __('Loại') }}</th>
                                 <th data-property="status_name" data-render-callback="renderStatusColumn">{{ __('Trạng thái') }}</th>
                                 <th class="none" data-property="created_at">{{ __('Ngày tạo') }}</th>
                                 <th class="none" data-property="updated_at">{{ __('Ngày cập nhật') }}</th>

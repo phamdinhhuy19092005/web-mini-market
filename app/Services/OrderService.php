@@ -130,28 +130,32 @@ class OrderService extends BaseService
     public function createUserWithCoupon(array $data): Order
     {
         return DB::transaction(function () use ($data) {
-            // 1. Tạo order cơ bản
-            $order = $this->createUser($data); 
+            $order = $this->createUser($data);
 
-            // 2. Tạo order items từ cart_items
-            foreach ($data['cart_items'] as $item) {
+            $cartItems = data_get($data, 'cart_items', []);
+            if (empty($cartItems)) {
+                throw new \Exception('Giỏ hàng rỗng. Vui lòng thêm sản phẩm.');
+            }
+
+            foreach ($cartItems as $item) {
                 $inventory = Inventory::findOrFail($item['inventory_id']);
                 $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->final_price;
 
-                $order->items()->create([
-                    'inventory_id' => $item['inventory_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $price,
-                    'total_price' => $price * $item['quantity'],
-                    'user_id' => $order->user_id,
-                    'currency_code' => $order->currency_code,
-                ]);
+                $exists = $order->items()->where('inventory_id', $inventory->id)->exists();
+                if (!$exists) {
+                    $order->items()->create([
+                        'inventory_id' => $inventory->id,
+                        'quantity' => $item['quantity'],
+                        'price' => $price,
+                        'total_price' => $price * $item['quantity'],
+                        'user_id' => $order->user_id,
+                        'currency_code' => $order->currency_code,
+                    ]);
+                }
             }
 
-            // 3. Tính total_price sau khi tạo items
             $order->total_price = $order->items->sum(fn($item) => $item->price * $item->quantity);
 
-            // 4. Áp coupon
             if (!empty($data['coupon_code'])) {
                 $coupon = Coupon::where('code', $data['coupon_code'])->first();
                 if ($coupon) {
