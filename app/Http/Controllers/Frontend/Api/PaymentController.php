@@ -109,10 +109,12 @@ class PaymentController extends Controller
 
     protected function generateVnpayUrl(array $orderInfo, int $amount): string
     {
+
         $vnp_TmnCode    = config('vnpay.tmn_code');
         $vnp_HashSecret = config('vnpay.hash_secret');
         $vnp_Url        = config('vnpay.url');
-        $vnp_ReturnUrl  = config('vnpay.return_url'); // lấy từ config luôn
+        $vnp_ReturnUrl  = config('vnpay.return_url'); 
+
 
         $vnp_TxnRef   = $orderInfo['uuid'];
         $vnp_OrderInfo = json_encode($orderInfo);
