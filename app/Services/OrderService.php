@@ -127,7 +127,7 @@ class OrderService extends BaseService
         });
     }
 
-    public function createUserWithCoupon(array $data): Order
+    public function createOrderUserWithCoupon(array $data): Order
     {
         return DB::transaction(function () use ($data) {
             $order = $this->createUser($data);
@@ -154,8 +154,14 @@ class OrderService extends BaseService
                 }
             }
 
+            // Tính tổng giá sản phẩm
             $order->total_price = $order->items->sum(fn($item) => $item->price * $item->quantity);
 
+            // Thêm phí ship vào total_price
+            $shippingFee = 16000;
+            $order->total_price += $shippingFee;
+
+            // Áp coupon nếu có
             if (!empty($data['coupon_code'])) {
                 $coupon = Coupon::where('code', $data['coupon_code'])->first();
                 if ($coupon) {
@@ -181,6 +187,7 @@ class OrderService extends BaseService
                         'used_at'   => now(),
                     ]);
 
+                    // Grand total = tổng giá sản phẩm + ship - coupon
                     $order->grand_total = max(0, $order->total_price - $discountAmount);
                 } else {
                     $order->grand_total = $order->total_price;
@@ -194,6 +201,7 @@ class OrderService extends BaseService
             return $order->fresh();
         });
     }
+
 
     public function create(array $attributes = [])
     {

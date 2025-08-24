@@ -42,8 +42,6 @@ class OrderController extends Controller
         ]);
     }
 
-
-
     public function store(Request $request): JsonResponse
     {
         try {
@@ -55,7 +53,7 @@ class OrderController extends Controller
             $data = $request->all();
             $data['user_id'] = $user->id;
 
-            $order = $this->orderService->createUserWithCoupon($data);
+            $order = $this->orderService->createOrderUserWithCoupon($data);
 
             return response()->json([
                 'success' => true,
