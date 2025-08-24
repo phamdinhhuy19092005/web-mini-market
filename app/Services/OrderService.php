@@ -127,6 +127,71 @@ class OrderService extends BaseService
         });
     }
 
+    public function createUserWithCoupon(array $data): Order
+    {
+        return DB::transaction(function () use ($data) {
+            // 1. Tạo order cơ bản
+            $order = $this->createUser($data); 
+
+            // 2. Tạo order items từ cart_items
+            foreach ($data['cart_items'] as $item) {
+                $inventory = Inventory::findOrFail($item['inventory_id']);
+                $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->final_price;
+
+                $order->items()->create([
+                    'inventory_id' => $item['inventory_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $price,
+                    'total_price' => $price * $item['quantity'],
+                    'user_id' => $order->user_id,
+                    'currency_code' => $order->currency_code,
+                ]);
+            }
+
+            // 3. Tính total_price sau khi tạo items
+            $order->total_price = $order->items->sum(fn($item) => $item->price * $item->quantity);
+
+            // 4. Áp coupon
+            if (!empty($data['coupon_code'])) {
+                $coupon = Coupon::where('code', $data['coupon_code'])->first();
+                if ($coupon) {
+                    if ($order->usedDiscounts()->where('coupon_id', $coupon->id)->exists()) {
+                        throw new \Exception('Coupon đã được sử dụng cho đơn hàng này');
+                    }
+
+                    $discountAmount = $coupon->discount_type === DiscountTypeEnum::PERCENTAGE->value
+                        ? $order->total_price * ($coupon->discount_value / 100)
+                        : $coupon->discount_value;
+
+                    $order->discounts()->create([
+                        'discountable_id'   => $coupon->id,
+                        'discountable_type' => Coupon::class,
+                        'discount_value'    => $discountAmount,
+                        'discount_type'     => $coupon->discount_type ?? DiscountTypeEnum::FIXED->value,
+                    ]);
+
+                    $order->usedDiscounts()->create([
+                        'user_id'   => $order->user_id,
+                        'coupon_id' => $coupon->id,
+                        'order_id'  => $order->id,
+                        'used_at'   => now(),
+                    ]);
+
+                    $order->grand_total = max(0, $order->total_price - $discountAmount);
+                } else {
+                    $order->grand_total = $order->total_price;
+                }
+            } else {
+                $order->grand_total = $order->total_price;
+            }
+
+            $order->save();
+
+            return $order->fresh();
+        });
+    }
+
+
     public function create(array $attributes = [])
     {
         $userId = data_get($attributes, 'user_id');
@@ -456,7 +521,6 @@ class OrderService extends BaseService
             return $order;
         });
     }
-
 
     public function parseDepositStatusToOrderPaymentStatus($depositStatus, $throwIfNotFound = true)
     {

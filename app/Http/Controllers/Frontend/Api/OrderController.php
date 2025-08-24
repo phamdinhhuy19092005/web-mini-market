@@ -37,20 +37,26 @@ class OrderController extends Controller
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+   public function store(Request $request): JsonResponse
     {
-        $data = $request->all();
-
         try {
-            $order = $this->orderService->createUser($data);
+            $user = auth('sanctum')->user();
+            if (!$user) {
+                return response()->json(['success' => false, 'message' => 'User không hợp lệ'], 401);
+            }
+
+            $data = $request->all();
+            $data['user_id'] = $user->id;
+            
+            $order = $this->orderService->createUserWithCoupon($data);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Tạo đơn hàng thành công',
-                'data' => $order->fresh(),
+                'data' => $order,
             ], 201);
         } catch (\Exception $e) {
-            Log::error('Tạo đơn hàng thất bại: '.$e->getMessage(), ['data' => $data]);
+            Log::error('Tạo đơn hàng thất bại: '.$e->getMessage(), ['data' => $request->all()]);
 
             return response()->json([
                 'success' => false,
@@ -58,6 +64,9 @@ class OrderController extends Controller
             ], 400);
         }
     }
+
+
+
 
     public function show($uuid): JsonResponse
     {

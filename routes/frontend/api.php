@@ -66,8 +66,8 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
     Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.show');
 
-    Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
-    Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
+    // Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
+    // Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
 
     // Áp mã giảm giá
     Route::post('/orders/{uuid}/apply-coupon', [OrderController::class, 'applyCoupon']);
