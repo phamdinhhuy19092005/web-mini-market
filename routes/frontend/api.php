@@ -64,7 +64,8 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
 
     Route::post('/web-reviews/store', [WebsiteReviewController::class, 'store'])->name('web-reviews.store');
 
-    
+    Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
+    Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.show');
 
     // Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
     // Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
