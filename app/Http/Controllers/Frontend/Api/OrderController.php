@@ -20,26 +20,31 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function index(): JsonResponse
-    {
-        $user = auth('sanctum')->user();
+    public function index(Request $request): JsonResponse
+{
+    $user = auth('sanctum')->user();
 
-        
-        // Lấy trạng thái từ query ?status=...
-        $status = $request->query('order_status');
+    // Lấy trạng thái từ query ?status=...
+    $status = $request->query('order_status');
 
-         $orders = Order::with([
-            'orderItems.inventory.product'
-        ])
-        ->where('user_id', $user->id)
-        ->latest()
-        ->get();
+    // Query cơ bản
+    $ordersQuery = Order::with([
+        'orderItems.inventory.product'
+    ])->where('user_id', $user->id);
 
-        return response()->json([
-            'success' => true,
-            'data' => OrderResource::collection($orders),
-        ]);
+    // Nếu có filter trạng thái thì thêm vào
+    if ($status) {
+        $ordersQuery->where('order_status', $status);
     }
+
+    $orders = $ordersQuery->latest()->get();
+
+    return response()->json([
+        'success' => true,
+        'data' => OrderResource::collection($orders),
+    ]);
+}
+
 
    public function store(Request $request): JsonResponse
     {
