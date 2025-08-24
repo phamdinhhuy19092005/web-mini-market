@@ -58,7 +58,7 @@ class PaymentController extends Controller
 
         try {
             $order = DB::transaction(function () use ($vnpOrderInfo, $amount) {
-                return $this->orderService->createUserWithCoupon([
+                return $this->orderService->createOrderUserWithCoupon([
                     'user_id' => auth('sanctum')->id(),
                     'fullname' => $vnpOrderInfo['fullname'],
                     'phone' => $vnpOrderInfo['phone'],
@@ -109,32 +109,36 @@ class PaymentController extends Controller
 
     protected function generateVnpayUrl(array $orderInfo, int $amount): string
     {
-        $vnp_TmnCode = config('services.vnpay.tmn_code');
-        $vnp_HashSecret = config('services.vnpay.hash_secret');
-        $vnp_Url = config('services.vnpay.payment_url');
-        $vnp_ReturnUrl = route('payment.return');
+        $vnp_TmnCode    = config('vnpay.tmn_code');
+        $vnp_HashSecret = config('vnpay.hash_secret');
+        $vnp_Url        = config('vnpay.url');
+        $vnp_ReturnUrl  = config('vnpay.return_url'); // lấy từ config luôn
 
-        $vnp_TxnRef = $orderInfo['uuid'];
+        $vnp_TxnRef   = $orderInfo['uuid'];
         $vnp_OrderInfo = json_encode($orderInfo);
-        $vnp_Amount = $amount;
-        $vnp_Command = "pay";
-        $vnp_Locale = "vn";
-        $vnp_CurrCode = "VND";
+        $vnp_Amount   = $amount;
+        $vnp_Command  = config('vnpay.command');
+        $vnp_Locale   = config('vnpay.locale');
+        $vnp_CurrCode = config('vnpay.currency');
 
-        $query = http_build_query([
-            'vnp_Version' => '2.1.0',
-            'vnp_TmnCode' => $vnp_TmnCode,
-            'vnp_Amount' => $vnp_Amount,
-            'vnp_Command' => $vnp_Command,
-            'vnp_TxnRef' => $vnp_TxnRef,
+        $inputData = [
+            'vnp_Version'   => config('vnpay.version'),
+            'vnp_TmnCode'   => $vnp_TmnCode,
+            'vnp_Amount'    => $vnp_Amount,
+            'vnp_Command'   => $vnp_Command,
+            'vnp_TxnRef'    => $vnp_TxnRef,
             'vnp_OrderInfo' => $vnp_OrderInfo,
-            'vnp_Locale' => $vnp_Locale,
-            'vnp_CurrCode' => $vnp_CurrCode,
+            'vnp_Locale'    => $vnp_Locale,
+            'vnp_CurrCode'  => $vnp_CurrCode,
             'vnp_ReturnUrl' => $vnp_ReturnUrl,
-            'vnp_CreateDate' => now()->format('YmdHis'),
-        ]);
+            'vnp_CreateDate'=> now()->format('YmdHis'),
+        ];
 
-        $hash = hash_hmac('sha512', $query, $vnp_HashSecret);
-        return $vnp_Url . '?' . $query . '&vnp_SecureHash=' . $hash;
+        ksort($inputData); // sắp xếp theo key chuẩn của VNPAY
+        $query = urldecode(http_build_query($inputData));
+        $hash  = hash_hmac('sha512', $query, $vnp_HashSecret);
+
+        return $vnp_Url . '?' . http_build_query($inputData) . '&vnp_SecureHash=' . $hash;
     }
+
 }
