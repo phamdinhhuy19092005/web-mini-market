@@ -7,6 +7,8 @@ use App\Enum\DiscountTypeEnum;
 use App\Enum\OrderStatusEnum;
 use App\Enum\PaymentOptionTypeEnum;
 use App\Enum\PaymentStatusEnum;
+use App\Events\OrderCreated;
+use App\Mail\OrderCreatedMail;
 use App\Models\Coupon;
 use App\Models\DepositTransaction;
 use App\Repositories\Interfaces\OrderRepositoryInterface;
@@ -17,6 +19,7 @@ use App\Models\Province;
 use App\Models\UsedDiscount;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OrderService extends BaseService
 {
@@ -123,6 +126,71 @@ class OrderService extends BaseService
             return $order->fresh();
         });
     }
+
+    public function createUserWithCoupon(array $data): Order
+    {
+        return DB::transaction(function () use ($data) {
+            // 1. Tạo order cơ bản
+            $order = $this->createUser($data); 
+
+            // 2. Tạo order items từ cart_items
+            foreach ($data['cart_items'] as $item) {
+                $inventory = Inventory::findOrFail($item['inventory_id']);
+                $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->final_price;
+
+                $order->items()->create([
+                    'inventory_id' => $item['inventory_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $price,
+                    'total_price' => $price * $item['quantity'],
+                    'user_id' => $order->user_id,
+                    'currency_code' => $order->currency_code,
+                ]);
+            }
+
+            // 3. Tính total_price sau khi tạo items
+            $order->total_price = $order->items->sum(fn($item) => $item->price * $item->quantity);
+
+            // 4. Áp coupon
+            if (!empty($data['coupon_code'])) {
+                $coupon = Coupon::where('code', $data['coupon_code'])->first();
+                if ($coupon) {
+                    if ($order->usedDiscounts()->where('coupon_id', $coupon->id)->exists()) {
+                        throw new \Exception('Coupon đã được sử dụng cho đơn hàng này');
+                    }
+
+                    $discountAmount = $coupon->discount_type === DiscountTypeEnum::PERCENTAGE->value
+                        ? $order->total_price * ($coupon->discount_value / 100)
+                        : $coupon->discount_value;
+
+                    $order->discounts()->create([
+                        'discountable_id'   => $coupon->id,
+                        'discountable_type' => Coupon::class,
+                        'discount_value'    => $discountAmount,
+                        'discount_type'     => $coupon->discount_type ?? DiscountTypeEnum::FIXED->value,
+                    ]);
+
+                    $order->usedDiscounts()->create([
+                        'user_id'   => $order->user_id,
+                        'coupon_id' => $coupon->id,
+                        'order_id'  => $order->id,
+                        'used_at'   => now(),
+                    ]);
+
+                    $order->grand_total = max(0, $order->total_price - $discountAmount);
+                } else {
+                    $order->grand_total = $order->total_price;
+                }
+            } else {
+                $order->grand_total = $order->total_price;
+            }
+
+            $order->save();
+
+            return $order->fresh();
+        });
+    }
+
 
     public function create(array $attributes = [])
     {
@@ -239,6 +307,8 @@ class OrderService extends BaseService
              */
 
             $order = $this->orderRepository->create($orderData);
+
+            event(new OrderCreated($order));
 
             if ($couponId = data_get($attributes, 'coupon_id')) {
                 $coupon = Coupon::find($couponId);
@@ -452,7 +522,6 @@ class OrderService extends BaseService
         });
     }
 
-
     public function parseDepositStatusToOrderPaymentStatus($depositStatus, $throwIfNotFound = true)
     {
         $mappers = [
@@ -497,9 +566,9 @@ class OrderService extends BaseService
         return \Carbon\Carbon::parse($datetime)->format($format);
     }
 
-    public function updateStatus($order, string $status)
+    public function updateStatus($order, string $status, array $extraData = [])
     {
-        return DB::transaction(function () use ($order, $status) {
+        return DB::transaction(function () use ($order, $status, $extraData) {
             $admin = auth('admin')->user();
 
             $oldStatus = $order->order_status;
@@ -508,35 +577,41 @@ class OrderService extends BaseService
                 case 'processing':
                     $order->order_status = OrderStatusEnum::PROCESSING;
                     break;
+
                 case 'delivery':
                     $order->order_status = OrderStatusEnum::DELIVERY;
+
+                    if (isset($extraData['shipping_date'])) {
+                        $order->shipping_date = $extraData['shipping_date'];
+                    }
+                    if (isset($extraData['delivery_date'])) {
+                        $order->delivery_date = $extraData['delivery_date'];
+                    }
                     break;
+
                 case 'complete':
                     $order->order_status = OrderStatusEnum::COMPLETED;
 
-                    // Nếu trước đó chưa hoàn thành => trừ kho
                     if ($oldStatus != OrderStatusEnum::COMPLETED) {
                         foreach ($order->items as $item) {
                             $inventory = Inventory::find($item->inventory_id);
                             if ($inventory) {
-                                // Trừ kho
                                 $inventory->stock_quantity -= $item->quantity;
-
-                                // Tăng số lượng đã bán
                                 $inventory->sold_count += $item->quantity;
-
                                 $inventory->save();
                             }
                         }
                     }
-
                     break;
+
                 case 'refund':
                     $order->order_status = OrderStatusEnum::REFUNDED;
                     break;
+
                 case 'cancel':
                     $order->order_status = OrderStatusEnum::CANCELED;
                     break;
+
                 default:
                     throw new \InvalidArgumentException("Invalid status: $status");
             }
@@ -548,6 +623,7 @@ class OrderService extends BaseService
             return $order;
         });
     }
+
 
     public function update($id, array $attributes = [])
     {

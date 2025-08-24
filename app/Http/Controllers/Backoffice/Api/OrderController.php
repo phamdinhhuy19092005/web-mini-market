@@ -7,12 +7,15 @@ use App\Enum\DepositStatusEnum;
 use App\Enum\OrderStatusEnum;
 use App\Enum\PaymentOptionTypeEnum;
 use App\Enum\PaymentStatusEnum;
+use App\Mail\OrderCreatedMail;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Services\DepositService;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends BaseApiController
 {
@@ -141,7 +144,10 @@ class OrderController extends BaseApiController
             return response()->json(['message' => 'Không thể chuyển đơn hàng này'], 403);
         }
 
-        $this->orderService->updateStatus($order, 'delivery');
+        $this->orderService->updateStatus($order, 'delivery', [
+            'shipping_date' => now(),
+            'delivery_date' => now(), 
+        ]);
 
         return response()->json(['message' => 'Đơn hàng đã được chuyển trạng thái vận chuyển']);
     }
@@ -203,14 +209,25 @@ class OrderController extends BaseApiController
 
             Log::debug('DEBUG COMPLETE FLOW END', ['order_id' => $order->id]);
 
+            DB::afterCommit(function () use ($order) {
+                try {
+                    Mail::to($order->user->email)
+                        ->queue(new OrderCreatedMail($order));
+                    Log::info('Order completed mail queued', ['order_id' => $order->id]);
+                } catch (\Exception $e) {
+                    Log::error('Failed to queue order completed mail', [
+                        'order_id' => $order->id,
+                        'message' => $e->getMessage()
+                    ]);
+                }
+            });
+
             return response()->json(['message' => 'Đơn hàng đã được hoàn thành và deposit đã xử lý nếu là COD']);
         } catch (\Exception $e) {
             Log::error('Error in complete method', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json(['message' => 'Có lỗi xảy ra khi hoàn thành đơn hàng'], 500);
         }
     }
-
-
 
     public function refund($orderId)
     {

@@ -3,33 +3,38 @@
 namespace App\Http\Controllers\Frontend\Api;
 
 use App\Http\Controllers\Frontend\BaseController;
-use App\Http\Resources\Frontend\PaymentResource;
-use App\Models\Payment;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PaymentController extends BaseController
 {
-    public function createPayment(Request $request): JsonResponse
+    public function createPayment(Request $request)
     {
-        try {
-            $payment = Payment::create($request->all());
-            return $this->jsonResponse(true, new PaymentResource($payment), 'Tạo thanh toán thành công');
-        } catch (\Exception $e) {
-            return $this->jsonResponse(false, null, 'Lỗi khi tạo thanh toán: ' . $e->getMessage(), 500);
+        $request->validate([
+            'order_id' => 'required|string',
+            'amount' => 'required|numeric|min:1000',
+        ]);
+
+        $backendUrl = config('services.vnpay.backend_create_url');
+
+        $response = Http::post($backendUrl, [
+            'order_id' => $request->order_id,
+            'amount' => $request->amount,
+        ]);
+
+        if ($response->successful()) {
+            return response()->json([
+                'url' => $response['url'] ?? null,
+            ]);
         }
+
+        return response()->json([
+            'message' => 'Không thể tạo thanh toán',
+        ], 500);
     }
 
-    public function paymentReturn(Request $request): JsonResponse
+    public function paymentReturn(Request $request)
     {
-        try {
-            $payment = Payment::where('transaction_id', $request->input('transaction_id'))->first();
-            if (!$payment) {
-                return $this->jsonResponse(false, null, 'Giao dịch không tìm thấy', 404);
-            }
-            return $this->jsonResponse(true, new PaymentResource($payment), 'Xử lý phản hồi thanh toán thành công');
-        } catch (\Exception $e) {
-            return $this->jsonResponse(false, null, 'Lỗi khi xử lý phản hồi thanh toán: ' . $e->getMessage(), 500);
-        }
+        return response()->json($request->all());
     }
 }

@@ -49,8 +49,9 @@ class Order extends Model
     protected $casts = [
         'order_channel' => 'array',
         'status' => OrderStatusEnum::class,
+        'shipping_date' => 'datetime',
+        'delivery_date' => 'datetime',
     ];
-
     public function getGrandTotalFormattedAttribute()
     {
         return number_format($this->grand_total, 0, ',', '.') . '₫';
@@ -78,7 +79,12 @@ class Order extends Model
 
     public function items()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'order_id', 'id');
+    }
+
+    public function orderItems()
+    {
+        return $this->items();
     }
 
     public function paymentOption()

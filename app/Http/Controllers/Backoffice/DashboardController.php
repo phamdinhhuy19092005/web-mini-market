@@ -169,6 +169,8 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $totalProducts = Inventory::count();
+
         return view('backoffice.pages.dashboard.index', compact(
             'dailyRevenue',
             'totalRevenue',
@@ -185,6 +187,7 @@ class DashboardController extends Controller
             'expiringCoupons',
             'expiringBanner',
             'pendingOrders',
+            'totalProducts',
             'timeRange'
         ));
     }

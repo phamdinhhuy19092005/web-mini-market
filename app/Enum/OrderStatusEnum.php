@@ -6,12 +6,12 @@ class OrderStatusEnum extends BaseEnum
 {
     public const DECLINED = 0;
     public const WAITING_FOR_PAYMENT = 1;
-    public const PAYMENT_ERROR = 2;
+    public const PAYMENT_ERROR = 2; // Không lấy này
     public const PROCESSING = 3;
     public const DELIVERY = 4;
     public const COMPLETED = 5;
     public const CANCELED = 6;
-    public const REFUNDED = 7;
+    public const REFUNDED = 7; // Không lấy này
 
     public static $labels = [
         self::WAITING_FOR_PAYMENT => 'Chờ thanh toán',

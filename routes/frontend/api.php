@@ -38,7 +38,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
-Route::middleware('auth:sanctum', 'force.json')->group(function () {
+// Route::middleware('auth:sanctum', 'force.json')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -65,13 +65,21 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
 
     
 
-    Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
-    Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
+    // Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
+    // Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
 
     // Áp mã giảm giá
     Route::post('/orders/{uuid}/apply-coupon', [OrderController::class, 'applyCoupon']);
 
+    // =========== ============
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+
+    // Như này để lấy theo trạng thái
+    //api/orders?order_status=PROCESSING => đang xử lý
+    // Dô OrderStatusEnum để xem trạng thái
+
+    //=========== =============
+
     // Cái này dùng tạo 
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
@@ -81,15 +89,17 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     // Cái này là dùng để hủy đơn hàng
     Route::patch('/orders/{uuid}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
-});
+    // Này dành cho thanh toán VNPay 
+    Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+    Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
+
+// });
 
 Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
 Route::get('/coupons/{id}', [CouponController::class, 'show'])->name('coupons.show');
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
-Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
-Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
 
 // ====================== Đánh giá website ======================
 Route::get('/website-reviews', [WebsiteReviewController::class, 'index'])->name('website-reviews.index');

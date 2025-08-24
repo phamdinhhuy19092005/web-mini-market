@@ -8,7 +8,7 @@
         <div id="k_header_menu" class="k-header-menu k-header-menu-mobile">
             <ul class="k-menu__nav">
                 <li class="k-menu__item k-menu__item--submenu k-menu__item--rel">
-                    <a href="#" target="_blank" class="k-menu__link">
+                    <a href="https://www.uchimart.site/" target="_blank" class="k-menu__link">
                         <span class="k-menu__link-text" style="text-transform: uppercase;">Uchi Mart</span>
                     </a>
                 </li>
@@ -25,7 +25,7 @@
                 <div class="k-header__topbar-user">
                     <span class="k-header__topbar-welcome k-hidden-mobile">Hi,</span>
                     <span class="k-header__topbar-username k-hidden-mobile">{{ auth('admin')->user()->name ?? 'Guest' }}</span>
-                    <img alt="Profile Picture" src="https://i.pinimg.com/originals/0f/9d/bc/0f9dbcffc8a6d409cca58e2cb70d7389.gif">
+                    <img alt="Profile Picture" src="{{ asset('assets/media/logos/0f9dbcffc8a6d409cca58e2cb70d7389.gif') }}">
                     <span class="k-badge k-badge--username k-badge--lg k-badge--brand k-hidden">{{ substr(auth('admin')->user()->name ?? 'G', 0, 1) }}</span>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                 <div class="k-user-card k-margin-b-50 k-margin-b-30-tablet-and-mobile">
                     <div class="k-user-card__wrapper">
                         <div class="k-user-card__pic">
-                            <img alt="Profile Picture" src="https://i.pinimg.com/originals/0f/9d/bc/0f9dbcffc8a6d409cca58e2cb70d7389.gif">
+                            <img alt="Profile Picture" src="{{ asset('assets/media/logos/0f9dbcffc8a6d409cca58e2cb70d7389.gif') }}">
                         </div>
                         <div class="k-user-card__details">
                             <div class="k-user-card__name">{{ auth('admin')->user()->name ?? 'admin' }}</div>
