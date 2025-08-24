@@ -139,7 +139,7 @@ class OrderService extends BaseService
 
             foreach ($cartItems as $item) {
                 $inventory = Inventory::findOrFail($item['inventory_id']);
-                $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->final_price;
+                $price = $inventory->offer_price ?? $inventory->sale_price ?? $inventory->final_price;
 
                 $exists = $order->items()->where('inventory_id', $inventory->id)->exists();
                 if (!$exists) {

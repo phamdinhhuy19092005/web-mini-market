@@ -19,6 +19,7 @@ class OrderResource extends BaseResource
             'order_status' => $this->order_status,
             'order_status_name'=> $this->order_status_name,
             'total_price' => $this->total_price ? number_format($this->total_price, 0, '.', ',') : '',
+            'grand_total' => $this->grand_total ? number_format($this->total_price, 0, '.', ',') : '',
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 
