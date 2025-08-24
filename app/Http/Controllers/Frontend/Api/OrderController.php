@@ -37,7 +37,7 @@ class OrderController extends Controller
         ]);
     }
 
-   public function store(Request $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         try {
             $user = auth('sanctum')->user();
@@ -68,7 +68,7 @@ class OrderController extends Controller
     public function show($uuid): JsonResponse
     {
         $order = Order::with([
-            'orderItems.inventory.product',
+            'orderItems.inventory',
             'paymentOption',
             'shippingRate',
             'coupon'
@@ -88,7 +88,6 @@ class OrderController extends Controller
             'data' => $order,
         ]);
     }
-
 
     public function cancel($uuid): JsonResponse
     {
