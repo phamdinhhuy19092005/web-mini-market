@@ -195,7 +195,6 @@ class OrderService extends BaseService
         });
     }
 
-
     public function create(array $attributes = [])
     {
         $userId = data_get($attributes, 'user_id');
@@ -356,7 +355,7 @@ class OrderService extends BaseService
             // Lưu order items
             foreach ($cartItems as $item) {
                 $inventory = Inventory::findOrFail($item['inventory_id']);
-                $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->final_price;
+                $price = $inventory->offer_price ?? $inventory->sale_price ?? $inventory->final_price;
 
                 $order->items()->create([
                     'inventory_id' => $item['inventory_id'],
@@ -510,7 +509,7 @@ class OrderService extends BaseService
             // Lưu order items
             foreach ($cartItems as $item) {
                 $inventory = Inventory::findOrFail($item['inventory_id']);
-                $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->final_price;
+                $price = $inventory->offer_price ?? $inventory->sale_price ?? $inventory->final_price;
 
                 $order->items()->create([
                     'inventory_id' => $item['inventory_id'],
