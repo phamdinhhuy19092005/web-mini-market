@@ -69,9 +69,6 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     // Route::get('/auto-discounts', [AutoDiscountController::class, 'index'])->name('auto-discounts.index');
     // Route::get('/auto-discounts/{id}', [AutoDiscountController::class, 'show'])->name('auto-discounts.show');
 
-    // Áp mã giảm giá
-    Route::post('/orders/{uuid}/apply-coupon', [OrderController::class, 'applyCoupon']);
-
     // =========== ============
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 
@@ -81,18 +78,21 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
 
     //=========== =============
 
-    // Cái này dùng tạo 
+    // Cái này dùng tạo
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
-    // Này lấy order từ user nha dô OrderStatusEnum để xen trạng thái 
+    // Này lấy order từ user nha dô OrderStatusEnum để xen trạng thái
     Route::get('/orders/{uuid}', [OrderController::class, 'show'])->name('orders.show');
 
     // Cái này là dùng để hủy đơn hàng
     Route::patch('/orders/{uuid}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
-    // Này dành cho thanh toán VNPay 
-    Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+    // Tạo session VNPAY (chưa tạo order, trả về URL cho FE)
+    Route::post('/payment/create-session', [PaymentController::class, 'createSession'])->name('payment.create-session');
+
+    // Callback từ VNPAY trả về → tạo order thật
     Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
+
 
 });
 
