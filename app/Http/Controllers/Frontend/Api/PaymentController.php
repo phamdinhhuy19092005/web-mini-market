@@ -7,9 +7,11 @@ use App\Models\Coupon;
 use App\Enum\DiscountTypeEnum;
 use App\Enum\OrderStatusEnum;
 use App\Http\Resources\Frontend\OrderResource;
+use App\Models\User;
 use App\Services\CartService;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -78,7 +80,7 @@ class PaymentController extends Controller
                 'order_channel' => $request->order_channel ?? ['type' => 'online', 'reference_id' => null],
             ];
 
-            \Illuminate\Support\Facades\Cache::put('order_' . $orderInfo['uuid'], $orderInfo, now()->addHours(2));
+            Cache::put('order_' . $orderInfo['uuid'], $orderInfo, now()->addHours(2));
 
             Log::info('VNPAY createSession input', [
                 'order_info' => $orderInfo,
@@ -111,36 +113,19 @@ class PaymentController extends Controller
         $calculatedHash = hash_hmac('sha512', $query, $vnp_HashSecret);
 
         if ($calculatedHash !== $vnp_SecureHash) {
-            Log::error('VNPAY Secure Hash không khớp', [
-                'calculated' => $calculatedHash,
-                'received' => $vnp_SecureHash,
-                'query' => $request->query(),
-                'query_string' => $query,
-            ]);
-            return response()->json(['success' => false, 'message' => 'Secure Hash không hợp lệ'], 400);
+            Log::error('VNPAY Secure Hash không khớp', ['calculated' => $calculatedHash, 'received' => $vnp_SecureHash]);
+            return redirect('http://localhost:3001/payment-result?status=error');
         }
 
         $txnRef = $request->query('vnp_TxnRef');
         $responseCode = $request->query('vnp_ResponseCode');
         $amount = $request->query('vnp_Amount');
 
-        $orderInfo = \Illuminate\Support\Facades\Cache::get('order_' . $txnRef);
+        $orderInfo = Cache::get('order_' . $txnRef);
         if (!$orderInfo) {
-            Log::error('Không tìm thấy thông tin đơn hàng trong cache', [
-                'txnRef' => $txnRef,
-                'cache_key' => 'order_' . $txnRef,
-            ]);
-            return response()->json(['success' => false, 'message' => 'Không tìm thấy thông tin đơn hàng'], 400);
+            Log::error('Không tìm thấy thông tin đơn hàng trong cache', ['txnRef' => $txnRef]);
+            return redirect('http://localhost:3001/payment-result?status=error');
         }
-
-        Log::info('VNPAY callback received', [
-            'vnp_OrderInfo' => $request->query('vnp_OrderInfo'),
-            'vnp_ResponseCode' => $responseCode,
-            'vnp_Amount' => $amount,
-            'vnp_TxnRef' => $txnRef,
-            'all_query' => $request->query(),
-            'orderInfo' => $orderInfo,
-        ]);
 
         try {
             $orderData = [
@@ -166,35 +151,30 @@ class PaymentController extends Controller
                 'payment_status' => $responseCode === '00' ? 'paid' : 'failed',
             ];
 
-            Log::info('Dữ liệu gửi đến OrderService', ['orderData' => $orderData]);
-
             $order = DB::transaction(function () use ($orderData) {
                 return $this->orderService->createOrderUserWithCoupon($orderData);
             });
 
             // Xóa giỏ hàng nếu thanh toán thành công
             if ($responseCode === '00') {
-                $user = \App\Models\User::find($orderInfo['user_id']);
+                $user = User::find($orderInfo['user_id']);
                 if ($user) {
                     $cart = $this->cartService->getOrCreateCart($user, null, request()->ip());
                     $this->cartService->clearCart($cart);
-                    Log::info('Giỏ hàng đã được xóa sau khi thanh toán VNPAY thành công', ['user_id' => $user->id]);
                 }
             }
 
-            \Illuminate\Support\Facades\Cache::forget('order_' . $txnRef);
+            Cache::forget('order_' . $txnRef);
 
-            Log::info('Đơn hàng được tạo thành công', ['order' => $order->toArray()]);
-
-            return response()->json(['success' => $responseCode === '00', 'data' => new OrderResource($order)]);
+            // Redirect về frontend với trạng thái
+            $status = $responseCode === '00' ? 'success' : 'fail';
+            return redirect("http://localhost:3001/payment-result?status={$status}");
         } catch (\Exception $e) {
-            Log::error('Tạo order sau VNPAY thất bại: ' . $e->getMessage(), [
-                'orderInfo' => $orderInfo,
-                'stack' => $e->getTraceAsString(),
-            ]);
-            return response()->json(['success' => false, 'message' => 'Lỗi tạo đơn hàng: ' . $e->getMessage()], 500);
+            Log::error('Tạo order sau VNPAY thất bại: ' . $e->getMessage(), ['orderInfo' => $orderInfo]);
+            return redirect('http://localhost:3001/payment-result?status=error');
         }
     }
+
 
 
     protected function calculateTotal(array $cartItems, ?string $couponCode = null): int
