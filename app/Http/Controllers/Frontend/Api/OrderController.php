@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Enum\OrderStatusEnum;
+use App\Enum\PaymentOptionTypeEnum;
 use App\Http\Resources\Frontend\OrderResource;
 use App\Services\CartService;
 use App\Services\OrderService;
@@ -59,9 +60,10 @@ class OrderController extends Controller
             // Tạo đơn hàng
             $order = $this->orderService->createOrderUserWithCoupon($data);
 
-            // Xóa giỏ hàng cũ
-            $cart = $this->cartService->getOrCreateCart($user, null, request()->ip());
-            $this->cartService->clearCart($cart);
+            if (isset($data['payment_option_id']) && $data['payment_option_id'] === PaymentOptionTypeEnum::COD) {
+                $cart = $this->cartService->getOrCreateCart($user, null, request()->ip());
+                $this->cartService->clearCart($cart);
+            }
 
             return response()->json([
                 'success' => true,
