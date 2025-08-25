@@ -229,7 +229,6 @@ class OrderService extends BaseService
                         : $coupon->discount_value;
 
                     $order->update([
-                        'coupon_id' => $coupon->id,
                         'discount_amount' => $discountAmount,
                         'grand_total' => max(0, $order->total_price - $discountAmount),
                     ]);
@@ -253,7 +252,7 @@ class OrderService extends BaseService
             }
 
             // Xử lý deposit
-            if ($data['payment_status'] !== 'failed') {
+            if (!isset($data['payment_status']) || $data['payment_status'] !== 'failed') {
                 $deposit = $this->depositService->deposit(
                     $user,
                     $order->grand_total,

@@ -48,7 +48,7 @@ class DashboardController extends Controller
             ->where('orders.order_status', 5)
             ->groupBy('inventories.id', 'inventories.title')
             ->orderByDesc('sold')
-            ->take(4)
+            ->take(5)
             ->get();
 
         // New orders (fixed to return a collection)
@@ -105,7 +105,6 @@ class DashboardController extends Controller
         ->selectRaw('stock_quantity / 100 * 100 as quantity_percentage')
         ->where('stock_quantity', '>', 0)
         ->orderBy('stock_quantity', 'asc')
-        ->take(3)
         ->get();
 
         // Recent transactions
@@ -118,7 +117,7 @@ class DashboardController extends Controller
         )
         ->where('order_status', 5)
         ->orderBy('created_at', 'desc')
-        ->take(3)
+        ->take(10)
         ->get()
         ->map(function ($transaction) {
             $transaction->date = Carbon::parse($transaction->date)->format('d/m/Y');

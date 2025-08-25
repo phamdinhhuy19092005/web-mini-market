@@ -186,15 +186,25 @@ $breadcrumbs = [
 
                             <!-- Danh sách sản phẩm bên phải -->
                             <div class="col-md-6">
-                                <h5 class="mb-3">Top 5 Sản phẩm bán chạy</h5>
-                                <ul class="list-group">
-                                    @foreach($topProducts as $product)
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {{ $product->name }}
-                                            <span class="badge badge-primary badge-pill">{{ $product->sold_quantity }}</span>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                                <h5 class="mb-3">Top Sản phẩm bán chạy</h5>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Sản phẩm</th>
+                                            <th>Số lượng bán</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($topProducts as $index => $product)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $product->name }}</td>
+                                                <td>{{ $product->sold }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
@@ -203,18 +213,20 @@ $breadcrumbs = [
                         <!-- Inventory Alerts (dạng danh sách) -->
                         <div class="tab-pane fade" id="tab-inventory-alerts" role="tabpanel">
                             <div class="row">
-                                @forelse($inventoryAlerts as $alert)
-                                    <div class="col-md-4 mb-3">
-                                        <div class="p-3 border badge-danger rounded h-100">
-                                            <h6 class="mb-2">{{ $alert->product_name }}</h6>
-                                            <p class="mb-1">Số lượng: <b>{{ $alert->quantity }}</b></p>
-                                            <p class="mb-2">Trạng thái: <span class="badge badge-danger">{{ $alert->status }}</span></p>
-                                            <a href="{{ route('bo.web.inventories.edit', $alert->id) }}" style="color: #ffff; border:1px solid #ffff" class="btn btn-sm ">Xem</a>
-                                        </div>
+                                <div class="swiper inventory-slider">
+                                    <div class="swiper-wrapper">
+                                        @foreach($inventoryAlerts as $alert)
+                                            <div class="swiper-slide">
+                                                <div class="p-3 border badge-danger rounded">
+                                                    <h6>{{ $alert->product_name }}</h6>
+                                                    <p>Số lượng: {{ $alert->quantity }}</p>
+                                                    <a href="{{ route('bo.web.inventories.edit', $alert->id) }}" class="btn btn-sm btn-light">Xem</a>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                @empty
-                                    <div class="col-12 text-center text-muted">Không có cảnh báo kho</div>
-                                @endforelse
+                                    <div class="swiper-pagination"></div>
+                                </div>
                             </div>
                         </div>
 
@@ -238,8 +250,9 @@ $breadcrumbs = [
                                                 <td>{{ $transaction->customer }}</td>
                                                 <td>{{ number_format($transaction->amount, 0, ',', '.') }} VND</td>
                                                 <td>{{ $transaction->date }}</td>
+
                                                 <td>
-                                                    <a href="{{ route('bo.web.orders.show', $transaction->id) }}" class="btn btn-sm btn-outline-primary">Xem</a>
+                                                    <a href="{{ route('bo.web.orders.show', $transaction->id) }}" class="btn btn-sm btn-outline-primary">Xem đơn hàng</a>
                                                 </td>
                                             </tr>
                                         @empty
@@ -251,7 +264,6 @@ $breadcrumbs = [
                                 </table>
                             </div>
                         </div>
-
 
                         <!-- Pending Orders -->
                         <div class="tab-pane fade" id="tab-pending-orders" role="tabpanel">
@@ -429,7 +441,7 @@ $breadcrumbs = [
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
 
     // Revenue Chart
     const revenueChartEl = document.getElementById('revenueChart');
@@ -543,8 +555,16 @@ $breadcrumbs = [
         });
     }
 
-});
+    new Swiper('.inventory-slider', {
+        slidesPerView: 3,
+        spaceBetween: 15,
+        loop: true,
+        autoplay: { delay: 5000 },
+        pagination: false,
+    });
 
+
+});
 </script>
 
 <style>
