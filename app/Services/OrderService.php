@@ -719,7 +719,6 @@ class OrderService extends BaseService
         });
     }
 
-
     public function update($id, array $attributes = [])
     {
         return DB::transaction(function () use ($id, $attributes) {

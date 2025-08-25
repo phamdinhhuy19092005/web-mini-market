@@ -114,7 +114,7 @@ class OrderController extends BaseApiController
     protected function parseDepositStatusToOrderPaymentStatus(int $depositStatus): int
     {
         return match ($depositStatus) {
-            DepositStatusEnum::PENDING, 
+            DepositStatusEnum::PENDING,
             DepositStatusEnum::WAIT_FOR_CONFIRMATION => PaymentStatusEnum::PENDING,
             DepositStatusEnum::APPROVED => PaymentStatusEnum::APPROVED,
             DepositStatusEnum::DECLINED => PaymentStatusEnum::DECLINED,
@@ -146,7 +146,7 @@ class OrderController extends BaseApiController
 
         $this->orderService->updateStatus($order, 'delivery', [
             'shipping_date' => now(),
-            'delivery_date' => now(), 
+            'delivery_date' => now(),
         ]);
 
         return response()->json(['message' => 'Đơn hàng đã được chuyển trạng thái vận chuyển']);
@@ -212,7 +212,7 @@ class OrderController extends BaseApiController
             DB::afterCommit(function () use ($order) {
                 try {
                     Mail::to($order->user->email)
-                        ->queue(new OrderCreatedMail($order));
+                        ->send(new OrderCreatedMail($order));
                     Log::info('Order completed mail queued', ['order_id' => $order->id]);
                 } catch (\Exception $e) {
                     Log::error('Failed to queue order completed mail', [
