@@ -27,6 +27,19 @@ class StoreFaqTopicRequest extends BaseFormRequest implements StoreFaqTopicReque
         ]);
     }
 
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Tên chủ đề FAQ không được để trống.',
+            'name.string' => 'Tên chủ đề FAQ phải là chuỗi ký tự.',
+            'name.max' => 'Tên chủ đề FAQ không được vượt quá 255 ký tự.',
+
+            'order.integer' => 'Thứ tự phải là số nguyên.',
+
+            'status.required' => 'Trạng thái không được để trống.',
+            'status.in' => 'Trạng thái không hợp lệ.',
+        ];
+    }
     
     public function imageFile()
     {

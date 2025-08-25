@@ -26,4 +26,21 @@ class StoreAdminRequest extends BaseFormRequest implements StoreAdminRequestInte
     {
         return null;
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Họ và tên không được để trống.',
+            'name.string' => 'Họ và tên phải là chuỗi ký tự.',
+            'name.max' => 'Họ và tên không được vượt quá 255 ký tự.',
+
+            'email.required' => 'Email không được để trống.',
+            'email.email' => 'Email không hợp lệ.',
+            'email.max' => 'Email không được vượt quá 255 ký tự.',
+            'email.unique' => 'Email đã tồn tại, vui lòng chọn email khác.',
+
+            'password.required' => 'Mật khẩu không được để trống.',
+            'password.string' => 'Mật khẩu phải là chuỗi ký tự.',
+        ];
+    }
 }

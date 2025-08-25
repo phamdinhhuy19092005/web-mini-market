@@ -34,4 +34,39 @@ class StoreAddressRequest extends BaseFormRequest implements StoreAddressRequest
     {
         return null;
     }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Tiêu đề không được để trống.',
+            'title.string' => 'Tiêu đề phải là chuỗi ký tự.',
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự.',
+
+            'code.required' => 'Mã coupon không được để trống.',
+            'code.string' => 'Mã coupon phải là chuỗi ký tự.',
+            'code.max' => 'Mã coupon không được vượt quá 50 ký tự.',
+            'code.unique' => 'Mã coupon đã tồn tại, vui lòng chọn mã khác.',
+
+            'discount_type.required' => 'Loại giảm giá không được để trống.',
+            'discount_type.integer' => 'Loại giảm giá phải là số nguyên.',
+            'discount_type.in' => 'Loại giảm giá không hợp lệ.',
+
+            'discount_value.required' => 'Giá trị giảm giá không được để trống.',
+            'discount_value.numeric' => 'Giá trị giảm giá phải là số.',
+            'discount_value.min' => 'Giá trị giảm giá không được nhỏ hơn 0.',
+
+            'usage_limit.integer' => 'Giới hạn sử dụng phải là số nguyên.',
+            'usage_limit.min' => 'Giới hạn sử dụng không được nhỏ hơn 0.',
+
+            'terms.string' => 'Điều khoản phải là chuỗi ký tự.',
+
+            'start_date.date' => 'Ngày bắt đầu không hợp lệ.',
+            'end_date.date' => 'Ngày kết thúc không hợp lệ.',
+            'end_date.after_or_equal' => 'Ngày kết thúc phải bằng hoặc sau ngày bắt đầu.',
+
+            'status.required' => 'Trạng thái coupon không được để trống.',
+            'status.in' => 'Trạng thái coupon không hợp lệ.',
+        ];
+    }
+
 }

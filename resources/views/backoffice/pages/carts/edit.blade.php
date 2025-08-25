@@ -165,10 +165,10 @@
                             </div>
                         </div>
 
-                        <div class="card-footer">
+                        {{-- <div class="card-footer">
                             <button type="submit" class="btn btn-primary">{{ __('Lưu') }}</button>
                             <button type="reset" class="btn btn-secondary">{{ __('Hủy') }}</button>
-                        </div>
+                        </div> --}}
                     </form>
                     <!--end::Form-->
                 </div>

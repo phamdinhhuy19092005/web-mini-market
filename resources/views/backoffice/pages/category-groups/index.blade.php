@@ -21,18 +21,11 @@
                         <div class="k-portlet__head-label">
                             <h3 class="k-portlet__head-title">Danh sách Nhóm Danh mục</h3>
                         </div>
-                        @canAny(['category-groups.store'])
-                            @can('category-groups.store')
                             <div class="k-portlet__head-toolbar">
                                 <a href="{{ route('bo.web.category-groups.create') }}" class="btn btn-primary btn-bold btn-upper btn-font-sm">
                                     <i class="flaticon2-add-1"></i> Tạo Nhóm Danh mục
                                 </a>
-                                <button type="button" class="btn btn-outline-secondary btn-bold btn-upper btn-font-sm ml-2" data-toggle="modal" data-target="#trashModal">
-                                    <i class="flaticon-delete"></i> Thùng rác
-                                </button>
                             </div>
-                            @endcan
-                        @endcan
                     </div>
                     <div class="k-portlet__body k-portlet__body--fit p-4">
                         <table id="table_category_groups_index" data-searching="true" data-request-url="{{ route('bo.api.category-groups.index') }}" class="datatable table table-striped table-bordered table-hover table-checkable" >

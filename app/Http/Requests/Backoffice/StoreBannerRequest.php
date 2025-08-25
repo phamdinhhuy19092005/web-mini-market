@@ -56,4 +56,58 @@ class StoreBannerRequest extends BaseFormRequest implements StoreBannerRequestIn
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Tên banner không được để trống.',
+            'name.string' => 'Tên banner phải là chuỗi ký tự.',
+            'name.max' => 'Tên banner không được vượt quá 255 ký tự.',
+
+            'desktop_image.required' => 'Ảnh desktop không được để trống.',
+            'desktop_image.file' => 'Ảnh desktop phải là file hợp lệ.',
+            'desktop_image.mimes' => 'Ảnh desktop phải có định dạng: jpeg, png, gif, webp.',
+            'desktop_image.max' => 'Ảnh desktop không được lớn hơn 5MB.',
+
+            'mobile_image.required' => 'Ảnh mobile không được để trống.',
+            'mobile_image.file' => 'Ảnh mobile phải là file hợp lệ.',
+            'mobile_image.mimes' => 'Ảnh mobile phải có định dạng: jpeg, png, gif, webp.',
+            'mobile_image.max' => 'Ảnh mobile không được lớn hơn 5MB.',
+
+            'label.string' => 'Nhãn phải là chuỗi ký tự.',
+            'label.max' => 'Nhãn không được vượt quá 255 ký tự.',
+
+            'type.required' => 'Loại banner không được để trống.',
+            'type.integer' => 'Loại banner phải là số nguyên.',
+            'type.in' => 'Loại banner không hợp lệ.',
+
+            'cta_label.string' => 'Nhãn nút phải là chuỗi ký tự.',
+            'cta_label.max' => 'Nhãn nút không được vượt quá 255 ký tự.',
+
+            'redirect_url.url' => 'URL chuyển hướng không hợp lệ.',
+
+            'order.integer' => 'Thứ tự phải là số nguyên.',
+            'order.min' => 'Thứ tự không được nhỏ hơn 0.',
+
+            'color.string' => 'Màu sắc phải là chuỗi ký tự.',
+
+            'description.string' => 'Mô tả phải là chuỗi ký tự.',
+
+            'seo_title.string' => 'Tiêu đề SEO phải là chuỗi ký tự.',
+            'seo_title.max' => 'Tiêu đề SEO không được vượt quá 255 ký tự.',
+
+            'seo_description.string' => 'Mô tả SEO phải là chuỗi ký tự.',
+            'seo_description.max' => 'Mô tả SEO không được vượt quá 255 ký tự.',
+
+            'start_at.required' => 'Ngày bắt đầu không được để trống.',
+            'start_at.date' => 'Ngày bắt đầu không hợp lệ.',
+
+            'end_at.date' => 'Ngày kết thúc không hợp lệ.',
+            'end_at.after_or_equal' => 'Ngày kết thúc phải bằng hoặc sau ngày bắt đầu.',
+
+            'status.required' => 'Trạng thái banner không được để trống.',
+            'status.in' => 'Trạng thái banner không hợp lệ.',
+        ];
+    }
+        
+
 }

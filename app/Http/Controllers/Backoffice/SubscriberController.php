@@ -28,15 +28,18 @@ class SubscriberController extends BaseController
             'content' => 'required|string',
         ]);
 
-        $subscribers = Subscriber::pluck('email')->toArray();
+        $subscribers = Subscriber::where('sent_post', 0)->get();
 
-        foreach ($subscribers as $email) {
-            Mail::raw($request->content, function ($message) use ($email, $request) {
-                $message->to($email)->subject($request->subject);
+        foreach ($subscribers as $subscriber) {
+            Mail::raw($request->content, function ($message) use ($subscriber, $request) {
+                $message->to($subscriber->email)->subject($request->subject);
             });
+
+            $subscriber->update(['sent_post' => 1]);
         }
 
-        return back();
+        return back()->with('success', 'Đã gửi mail đến tất cả subscriber chưa nhận.');
     }
+
 
 }

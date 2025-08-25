@@ -37,11 +37,11 @@ $breadcrumbs = [
                         </div>
                         <div class="k-portlet__head-label">
                             {{-- @can('sub-categories.delete') --}}
-                                <form id="delete-form" action="{{ route('bo.web.sub-categories.destroy', $sub_category->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa nhóm danh mục này?')">
+                                {{-- <form id="delete-form" action="{{ route('bo.web.sub-categories.destroy', $sub_category->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa nhóm danh mục này?')">
                                     @csrf
                                     @method('DELETE')
                                     <button style="width: 150px" type="submit" class="btn btn-danger ml-2">{{ __('Xóa') }}</button>
-                                </form>
+                                </form> --}}
                             {{-- @endcan --}}
                         </div>
                     </div>

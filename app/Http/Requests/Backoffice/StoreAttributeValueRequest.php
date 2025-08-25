@@ -28,6 +28,23 @@ class StoreAttributeValueRequest extends BaseFormRequest implements StoreAttribu
         ]);
     }
 
+    public function messages(): array
+    {
+        return [
+            'value.required' => 'Giá trị thuộc tính không được để trống.',
+            'value.string' => 'Giá trị thuộc tính phải là chuỗi ký tự.',
+            'value.max' => 'Giá trị thuộc tính không được vượt quá 255 ký tự.',
+
+            'attribute_id.required' => 'Thuộc tính liên kết không được để trống.',
+            'attribute_id.exists' => 'Thuộc tính liên kết không tồn tại.',
+
+            'order.integer' => 'Thứ tự phải là số nguyên.',
+
+            'status.required' => 'Trạng thái không được để trống.',
+            'status.in' => 'Trạng thái không hợp lệ.',
+        ];
+    }
+
     public function imageFile()
     {
         return $this->null;

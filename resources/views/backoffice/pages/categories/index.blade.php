@@ -21,18 +21,11 @@
                         <div class="k-portlet__head-label">
                             <h3 class="k-portlet__head-title">Danh sách Danh mục</h3>
                         </div>
-                        @canAny(['categories.store'])
-                            @can('categories.store')
-                            <div class="k-portlet__head-toolbar">
-                                <a href="{{ route('bo.web.categories.create') }}" class="btn btn-primary btn-bold btn-upper btn-font-sm">
-                                    <i class="flaticon2-add-1"></i> Tạo danh mục
-                                </a>
-                                <button type="button" class="btn btn-outline-secondary btn-bold btn-upper btn-font-sm ml-2" data-toggle="modal" data-target="#trashModal">
-                                    <i class="flaticon-delete"></i> Thùng rác
-                                </button>
-                            </div>
-                            @endcan
-                        @endcan
+                        <div class="k-portlet__head-toolbar">
+                            <a href="{{ route('bo.web.categories.create') }}" class="btn btn-primary btn-bold btn-upper btn-font-sm">
+                                <i class="flaticon2-add-1"></i> Tạo danh mục
+                            </a>
+                        </div>
                     </div>
                     <div class="k-portlet__body k-portlet__body--fit p-4">
                         <table id="table_categories_index"

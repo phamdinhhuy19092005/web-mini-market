@@ -12,6 +12,7 @@ class OrderResource extends BaseResource
             'id' => $this->id,
             'order_code' => $this->order_code,
             'fullname' => $this->fullname,
+            'uuid' => $this->uuid,
             'email' => $this->email,
             'phone' => $this->phone,
             'total_item' => $this->total_item,

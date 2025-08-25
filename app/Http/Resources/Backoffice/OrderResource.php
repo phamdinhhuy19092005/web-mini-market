@@ -8,6 +8,7 @@ class OrderResource extends BaseResource
     {
         return array_merge([
             'id' => $this->id,
+            'uuid' => $this->uuid,
             'order_code' => $this->order_code,
             'fullname' => $this->fullname,
             'email' => $this->email,

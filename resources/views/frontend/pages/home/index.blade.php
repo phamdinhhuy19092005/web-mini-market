@@ -56,18 +56,41 @@
         }
 
         .btn {
-            padding: 8px 16px;
+            padding: 12px 24px;
             border-radius: var(--radius);
             border: 1px solid var(--line);
             background: #ffffff;
             color: var(--text);
             cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
         }
 
         .btn:hover {
             background: var(--bg-soft);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Nút login riêng để căn giữa và căng layout */
+        .btn-login {
+            display: block;
+            width: 220px; /* căng vừa phải */
+            margin: 30px auto 0; /* căn giữa */
+            text-align: center;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .btn-login {
+                width: 180px;
+                font-size: 16px;
+            }
         }
 
         /* Hero Section */
@@ -109,9 +132,7 @@
     </style>
 </head>
 <body>
-    <header>
-        <button class="btn" id="loginBtn">Đăng nhập</button>
-    </header>
+
     <main class="container">
         <section class="hero">
             <div class="hero-content">
@@ -120,6 +141,7 @@
                 <p>Hệ thống quản trị thông minh, giúp bạn kiểm soát sản phẩm, đơn hàng và khách hàng một cách hiệu quả và nhanh chóng.</p>
             </div>
         </section>
+        <a href="#" class="btn btn-login" id="loginBtn">Đăng nhập</a>
     </main>
 
     <script>
