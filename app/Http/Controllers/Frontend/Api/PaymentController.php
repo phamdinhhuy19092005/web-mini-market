@@ -7,6 +7,7 @@ use App\Models\Coupon;
 use App\Enum\DiscountTypeEnum;
 use App\Enum\OrderStatusEnum;
 use App\Http\Resources\Frontend\OrderResource;
+use App\Models\Inventory;
 use App\Models\User;
 use App\Services\CartService;
 use App\Services\OrderService;
@@ -183,20 +184,30 @@ class PaymentController extends Controller
     {
         $totalPrice = 0; 
         foreach ($cartItems as $item) {
-            $inventory = \App\Models\Inventory::find($item['inventory_id']);
+            $inventory = Inventory::find($item['inventory_id']);
+            if (!$inventory) {
+                throw new \Exception('Sản phẩm không tồn tại: ' . $item['inventory_id']);
+            }
             $price = $inventory->offer_price ?? $inventory->sale_price ?? 0;
             $totalPrice += $price * $item['quantity'];
         }
 
         $grandTotal = $totalPrice;
+
         if ($couponCode) {
-            $coupon = Coupon::where('code', $couponCode)->first();
+            $coupon = Coupon::where('code', $couponCode)
+                ->where('status', 1)
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->first();
+
             Log::info('DEBUG coupon', ['coupon' => $coupon, 'couponCode' => $couponCode]);
+
             if ($coupon) {
-                $type = (int)$coupon->type;
-                $discount = ($type === DiscountTypeEnum::PERCENTAGE->value)
-                    ? $grandTotal * ($coupon->value / 100)
-                    : $coupon->value;
+                $discount = $coupon->discount_type === DiscountTypeEnum::PERCENTAGE->value
+                    ? $grandTotal * ($coupon->discount_value / 100)
+                    : $coupon->discount_value;
+
                 $grandTotal = max(0, $grandTotal - $discount);
             }
         }
@@ -206,7 +217,6 @@ class PaymentController extends Controller
             'grand_total' => $grandTotal * 100,
         ];
     }
-
 
     protected function generateVnpayUrl(array $orderInfo, int $amount, string $ipAddr): string
     {
