@@ -169,6 +169,16 @@ class PaymentController extends Controller
                 return $this->orderService->createOrderUserWithCoupon($orderData);
             });
 
+            // Xóa giỏ hàng nếu thanh toán thành công
+            if ($responseCode === '00') {
+                $user = \App\Models\User::find($orderInfo['user_id']);
+                if ($user) {
+                    $cart = $this->cartService->getOrCreateCart($user, null, request()->ip());
+                    $this->cartService->clearCart($cart);
+                    Log::info('Giỏ hàng đã được xóa sau khi thanh toán VNPAY thành công', ['user_id' => $user->id]);
+                }
+            }
+
             \Illuminate\Support\Facades\Cache::forget('order_' . $txnRef);
 
             Log::info('Đơn hàng được tạo thành công', ['order' => $order->toArray()]);
@@ -183,6 +193,7 @@ class PaymentController extends Controller
         }
     }
 
+
     protected function calculateTotal(array $cartItems, ?string $couponCode = null): int
     {
         $total = 0;
@@ -192,7 +203,7 @@ class PaymentController extends Controller
                 Log::error('Không tìm thấy sản phẩm trong kho', ['inventory_id' => $item['inventory_id']]);
                 throw new \Exception('Sản phẩm không tồn tại: ' . $item['inventory_id']);
             }
-            $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->final_price ?? 0;
+            $price = $inventory->offer_price ?? $inventory->sale_price ?? 0;
             if ($price === 0) {
                 Log::warning('Giá sản phẩm bằng 0', ['inventory_id' => $item['inventory_id']]);
             }
