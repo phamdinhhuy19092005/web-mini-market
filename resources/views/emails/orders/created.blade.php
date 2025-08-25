@@ -62,7 +62,6 @@
 </table>
 
 <div class="section total">
-    <p><strong>Cước phí giao hàng:</strong> 16,000₫</p>
     <p><strong>Phí dịch vụ:</strong> {{ number_format($order->service_fee ?? 0) }}₫</p>
     <p><strong>Tổng giá:</strong> <span style="color:#00c73c;font-size:16px;font-weight:bold;">{{ number_format($order->total_price) }}₫</span></p>
 </div>

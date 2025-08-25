@@ -218,7 +218,7 @@
                                 <div class="d-flex justify-content-start">
                                     <div style="flex: 0 0 30%;" class="pt-2 pb-2">P.T vận chuyển</div>
                                     <span class="pt-2 pb-2 mr-2">:</span>
-                                    <div style="flex: 1;" class="pt-2 bp-2"> GHTK </div>
+                                    <div style="flex: 1;" class="pt-2 bp-2"> Shop </div>
                                     {{-- <div style="flex: 1;" class="pt-2 bp-2"> {{ optional($order->shippingOption)->name ?? 'N/A' }} </div> --}}
                                 </div>
 
@@ -246,7 +246,7 @@
                                     </div>
                                 </div>
 
-                                <div class="d-flex justify-content-start">
+                                {{-- <div class="d-flex justify-content-start">
                                     <div style="flex: 0 0 30%;" class="pt-2 pb-2">Phí trả ĐVVC</div>
                                     <span class="pt-2 pb-2 mr-2">:</span>
                                     <div style="flex: 1;" class="pt-2 bp-2">
@@ -254,7 +254,7 @@
                                             {{ $order->transport_fee ? $orderService->formatPrice($order->transport_fee) : 'N/A' }}
                                         </b>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

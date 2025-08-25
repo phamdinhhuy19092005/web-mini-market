@@ -52,10 +52,13 @@ class PaymentController extends Controller
         ]);
 
         try {
-            $amount = $this->calculateTotal($request->cart_items, $request->coupon_code);
+            $amounts = $this->calculateTotal($request->cart_items, $request->coupon_code);
+            $totalPrice = $amounts['total_price'];     
+            $grandTotal = $amounts['grand_total'];     
 
             Log::info('Tổng tiền tính được cho đơn hàng', [
-                'amount' => $amount,
+                'total_price' => $totalPrice,
+                'grand_total' => $grandTotal,
                 'cart_items' => $request->cart_items,
                 'coupon_code' => $request->coupon_code,
             ]);
@@ -78,16 +81,18 @@ class PaymentController extends Controller
                 'payment_option_id' => $request->payment_option_id,
                 'coupon_code' => $request->coupon_code ?? null,
                 'order_channel' => $request->order_channel ?? ['type' => 'online', 'reference_id' => null],
+                'total_price' => $totalPrice / 100,
+                'grand_total' => $grandTotal / 100,
             ];
 
             Cache::put('order_' . $orderInfo['uuid'], $orderInfo, now()->addHours(2));
 
             Log::info('VNPAY createSession input', [
                 'order_info' => $orderInfo,
-                'amount' => $amount,
+                'amount' => $grandTotal,
             ]);
 
-            $vnpUrl = $this->generateVnpayUrl($orderInfo, $amount, $request->ip());
+            $vnpUrl = $this->generateVnpayUrl($orderInfo, $grandTotal, $request->ip());
 
             Log::info('VNPAY URL đã tạo', ['url' => $vnpUrl, 'orderInfo' => $orderInfo]);
 
@@ -119,7 +124,6 @@ class PaymentController extends Controller
 
         $txnRef = $request->query('vnp_TxnRef');
         $responseCode = $request->query('vnp_ResponseCode');
-        $amount = $request->query('vnp_Amount');
 
         $orderInfo = Cache::get('order_' . $txnRef);
         if (!$orderInfo) {
@@ -145,8 +149,8 @@ class PaymentController extends Controller
                 'payment_option_id' => $orderInfo['payment_option_id'] ?? null,
                 'coupon_code' => $orderInfo['coupon_code'] ?? null,
                 'order_channel' => $orderInfo['order_channel'] ?? ['type' => 'online', 'reference_id' => null],
-                'total_price' => $amount / 100,
-                'grand_total' => $amount / 100,
+                'total_price' => $orderInfo['total_price'],  // dùng total_price từ cache
+                'grand_total' => $orderInfo['grand_total'],  // dùng grand_total từ cache
                 'order_status' => $responseCode === '00' ? OrderStatusEnum::PROCESSING : OrderStatusEnum::CANCELED,
                 'payment_status' => $responseCode === '00' ? 'paid' : 'failed',
             ];
@@ -175,37 +179,33 @@ class PaymentController extends Controller
         }
     }
 
-
-
-    protected function calculateTotal(array $cartItems, ?string $couponCode = null): int
+    protected function calculateTotal(array $cartItems, ?string $couponCode = null): array
     {
-        $total = 0;
+        $totalPrice = 0; 
         foreach ($cartItems as $item) {
             $inventory = \App\Models\Inventory::find($item['inventory_id']);
             if (!$inventory) {
-                Log::error('Không tìm thấy sản phẩm trong kho', ['inventory_id' => $item['inventory_id']]);
                 throw new \Exception('Sản phẩm không tồn tại: ' . $item['inventory_id']);
             }
             $price = $inventory->offer_price ?? $inventory->sale_price ?? 0;
-            if ($price === 0) {
-                Log::warning('Giá sản phẩm bằng 0', ['inventory_id' => $item['inventory_id']]);
-            }
-            $total += $price * $item['quantity'];
+            $totalPrice += $price * $item['quantity'];
         }
 
+        $grandTotal = $totalPrice;
         if ($couponCode) {
             $coupon = Coupon::where('code', $couponCode)->first();
             if ($coupon) {
                 $discount = $coupon->type === DiscountTypeEnum::PERCENTAGE->value
-                    ? $total * ($coupon->value / 100)
+                    ? $grandTotal * ($coupon->value / 100)
                     : $coupon->value;
-                $total = max(0, $total - $discount);
-            } else {
-                Log::warning('Mã coupon không hợp lệ', ['coupon_code' => $couponCode]);
+                $grandTotal = max(0, $grandTotal - $discount);
             }
         }
 
-        return $total * 100;
+        return [
+            'total_price' => $totalPrice * 100, 
+            'grand_total' => $grandTotal * 100,
+        ];
     }
 
     protected function generateVnpayUrl(array $orderInfo, int $amount, string $ipAddr): string
