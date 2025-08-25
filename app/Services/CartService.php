@@ -35,7 +35,7 @@ class CartService extends BaseService
 
     public function getCartsWithItemsByUserId(int $userId)
     {
-        return Cart::with(['items.inventory']) 
+        return Cart::with(['items.inventory'])
             ->where('user_id', $userId)
             ->orderByDesc('created_at')
             ->get();
@@ -86,7 +86,7 @@ class CartService extends BaseService
             return ['error' => 'Số lượng tồn kho không đủ'];
         }
 
-        $price = $inventory->sale_price ?? $inventory->offer_price;
+        $price = $inventory->offer_price ?? $inventory->sale_price;
 
         $cartItem = CartItem::where('cart_id', $cart->id)
             ->where('inventory_id', $inventoryId)
