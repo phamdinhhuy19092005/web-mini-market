@@ -7,6 +7,7 @@ use App\Models\Coupon;
 use App\Enum\DiscountTypeEnum;
 use App\Enum\OrderStatusEnum;
 use App\Http\Resources\Frontend\OrderResource;
+use App\Services\CartService;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,10 +16,12 @@ use Illuminate\Support\Facades\Log;
 class PaymentController extends Controller
 {
     protected OrderService $orderService;
+    protected CartService $cartService;
 
-    public function __construct(OrderService $orderService)
+    public function __construct(OrderService $orderService, CartService $cartService)
     {
         $this->orderService = $orderService;
+        $this->cartService = $cartService;
     }
 
     public function createSession(Request $request)
