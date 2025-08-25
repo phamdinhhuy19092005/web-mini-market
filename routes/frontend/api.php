@@ -90,11 +90,10 @@ Route::middleware('auth:sanctum', 'force.json')->group(function () {
     // Tạo session VNPAY (chưa tạo order, trả về URL cho FE)
     Route::post('/payment/create-session', [PaymentController::class, 'createSession'])->name('payment.create-session');
 
-    // Callback từ VNPAY trả về → tạo order thật
-    Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
-
-
 });
+
+Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
+
 Route::get('/orders/{uuid}', [OrderController::class, 'show'])->name('orders.show');
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');

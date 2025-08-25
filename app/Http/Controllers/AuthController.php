@@ -78,8 +78,7 @@ class AuthController extends BaseController
             $userCart->total_item = $userCart->items()->count();
             $userCart->total_price = $userCart->items()->sum('total_price');
             $userCart->save();
-
-            $guestCart->delete();
+$guestCart->delete();
 
             DB::commit();
             return $userCart;
@@ -106,9 +105,12 @@ class AuthController extends BaseController
             return response()->json(['error' => 'Sai email hoặc mật khẩu'], 401);
         }
 
-        if ($user->status !== UserActionEnum::ACTIVE) {
-            return response()->json(['error' => 'Vui lòng kích hoạt tài khoản!'], 403);
-        }
+        if ($user->status != 1) {
+    return response()->json([
+        'error' => 'Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để xác thực.'
+    ], 403);
+}
+
 
         Auth::login($user);
 
@@ -164,8 +166,7 @@ class AuthController extends BaseController
 
             $verifyUrl = "http://localhost:3001/verify-email?token={$token}&email=" . urlencode($user->email);
             Mail::to($user->email)->send(new VerifyEmail($user, $verifyUrl));
-
-            Auth::login($user);
+Auth::login($user);
 
             $guestUuid = $this->getCartUuidFromRequest($request);
             $userCart = $this->mergeGuestCartToUserCart($guestUuid, $user, $request->ip());
@@ -261,7 +262,7 @@ class AuthController extends BaseController
 
             Mail::raw("Click vào link để đặt lại mật khẩu: {$resetUrl}", function ($message) use ($user) {
                 $message->to($user->email)
-                    ->subject('Khôi phục mật khẩu');
+->subject('Khôi phục mật khẩu');
             });
 
             return response()->json([

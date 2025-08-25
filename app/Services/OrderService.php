@@ -130,70 +130,155 @@ class OrderService extends BaseService
     public function createOrderUserWithCoupon(array $data): Order
     {
         return DB::transaction(function () use ($data) {
-            $order = $this->createUser($data);
-
-            $cartItems = data_get($data, 'cart_items', []);
-            if (empty($cartItems)) {
+            // Validate dữ liệu đầu vào
+            if (empty($data['cart_items'])) {
                 throw new \Exception('Giỏ hàng rỗng. Vui lòng thêm sản phẩm.');
             }
 
-            foreach ($cartItems as $item) {
-                $inventory = Inventory::findOrFail($item['inventory_id']);
-                $price = $inventory->offer_price ?? $inventory->sale_price ?? $inventory->final_price;
+            if (empty($data['payment_option_id'])) {
+                throw new \Exception('Phương thức thanh toán không hợp lệ.');
+            }
 
-                $exists = $order->items()->where('inventory_id', $inventory->id)->exists();
-                if (!$exists) {
-                    $order->items()->create([
-                        'inventory_id' => $inventory->id,
-                        'quantity' => $item['quantity'],
-                        'price' => $price,
-                        'total_price' => $price * $item['quantity'],
-                        'user_id' => $order->user_id,
-                        'currency_code' => $order->currency_code,
-                    ]);
-                }
+            if (empty($data['user_id'])) {
+                throw new \Exception('ID người dùng không hợp lệ.');
+            }
+
+            // Lấy user và payment option
+            $user = $this->userService->show($data['user_id']);
+            $paymentOption = $this->paymentOptionService->show($data['payment_option_id']);
+            $shippingOption = $data['shipping_option_id'] ? $this->shippingOptionService->show($data['shipping_option_id']) : null;
+
+            // Kiểm tra province
+            $province = Province::where('code', $data['province_code'] ?? null)->first();
+            if (!$province && !empty($data['province_code'])) {
+                throw new \Exception('Tỉnh/Thành phố không hợp lệ.');
+            }
+
+            // Kiểm tra đơn hàng trùng lặp
+            $uuid = $data['uuid'] ?? (string) \Illuminate\Support\Str::uuid();
+            if (Order::where('uuid', $uuid)->exists()) {
+                Log::error('Đơn hàng với UUID đã tồn tại:', ['uuid' => $uuid]);
+                throw new \Exception('Đơn hàng này đã được tạo trước đó.');
             }
 
             // Tính tổng giá sản phẩm
-            $order->total_price = $order->items->sum(fn($item) => $item->price * $item->quantity);
+            $calculatedTotalPrice = 0;
+            foreach ($data['cart_items'] as $item) {
+                $inventory = Inventory::findOrFail($item['inventory_id']);
+                $price = $inventory->offer_price ?? $inventory->sale_price ?? $inventory->final_price ?? 0;
+                if ($price === 0) {
+                    Log::warning('Giá sản phẩm bằng 0', ['inventory_id' => $item['inventory_id']]);
+                }
+                $calculatedTotalPrice += $price * $item['quantity'];
+            }
 
-            // Thêm phí ship vào total_price
-            $shippingFee = 16000;
-            $order->total_price += $shippingFee;
+            $totalPrice = $data['total_price'] ?? $calculatedTotalPrice;
 
-            // Áp coupon nếu có
+            // Thêm phí ship
+            $shippingFee = $shippingOption ? $shippingOption->fee : 16000;
+            $totalPrice += $shippingFee;
+
+            // Tạo đơn hàng
+            $orderData = [
+                'user_id' => $user->id,
+                'uuid' => $uuid,
+                'order_channel' => json_encode([
+                    'type' => $data['order_channel']['type'] ?? 'online',
+                    'reference_id' => $data['order_channel']['reference_id'] ?? null,
+                ]),
+                'fullname' => $data['fullname'] ?? null,
+                'email' => $data['email'] ?? null,
+                'phone' => $data['phone'] ?? null,
+                'company' => $data['company'] ?? null,
+                'province_code' => $data['province_code'] ?? null,
+                'district_code' => $data['district_code'] ?? null,
+                'ward_code' => $data['ward_code'] ?? null,
+                'address_line' => $data['address_line'] ?? null,
+                'user_note' => $data['user_note'] ?? null,
+                'admin_note' => $data['admin_note'] ?? null,
+                'city_name' => $province ? $province->name : null,
+                'shipping_option_id' => $data['shipping_option_id'] ?? null,
+                'shipping_rate_id' => $data['shipping_rate_id'] ?? null,
+                'payment_option_id' => $data['payment_option_id'],
+                'total_price' => $totalPrice,
+                'grand_total' => $totalPrice,
+                'order_status' => $data['order_status'] ?? OrderStatusEnum::WAITING_FOR_PAYMENT,
+                'payment_status' => $data['payment_status'] ?? 'waiting_for_payment',
+                'created_by_type' => get_class($user),
+                'created_by_id' => $user->id,
+                'updated_by_type' => get_class($user),
+                'updated_by_id' => $user->id,
+                'order_code' => strtoupper(uniqid(dechex(random_int(10, 99)))),
+                'currency_code' => 'VND',
+                'total_item' => count($data['cart_items']),
+                'total_quantity' => collect($data['cart_items'])->sum('quantity'),
+            ];
+
+            $order = $this->orderRepository->create($orderData);
+
+            // Xử lý coupon
             if (!empty($data['coupon_code'])) {
                 $coupon = Coupon::where('code', $data['coupon_code'])->first();
                 if ($coupon) {
                     if ($order->usedDiscounts()->where('coupon_id', $coupon->id)->exists()) {
-                        throw new \Exception('Coupon đã được sử dụng cho đơn hàng này');
+                        throw new \Exception('Coupon đã được sử dụng cho đơn hàng này.');
                     }
 
                     $discountAmount = $coupon->discount_type === DiscountTypeEnum::PERCENTAGE->value
                         ? $order->total_price * ($coupon->discount_value / 100)
                         : $coupon->discount_value;
 
-                    $order->discounts()->create([
-                        'discountable_id'   => $coupon->id,
-                        'discountable_type' => Coupon::class,
-                        'discount_value'    => $discountAmount,
-                        'discount_type'     => $coupon->discount_type ?? DiscountTypeEnum::FIXED->value,
-                    ]);
-
-                    $order->usedDiscounts()->create([
-                        'user_id'   => $order->user_id,
+                    $order->update([
                         'coupon_id' => $coupon->id,
-                        'order_id'  => $order->id,
-                        'used_at'   => now(),
+                        'discount_amount' => $discountAmount,
+                        'grand_total' => max(0, $order->total_price - $discountAmount),
                     ]);
 
-                    // Grand total = tổng giá sản phẩm + ship - coupon
-                    $order->grand_total = max(0, $order->total_price - $discountAmount);
+                    $order->discounts()->create([
+                        'discountable_id' => $coupon->id,
+                        'discountable_type' => Coupon::class,
+                        'discount_value' => $discountAmount,
+                        'discount_type' => $coupon->discount_type ?? DiscountTypeEnum::FIXED->value,
+                    ]);
+
+                    $coupon->usedDiscounts()->create([
+                        'user_id' => $order->user_id,
+                        'order_id' => $order->id,
+                    ]);
+
+                    $coupon->increment('used');
                 } else {
-                    $order->grand_total = $order->total_price;
+                    Log::warning('Mã coupon không hợp lệ', ['coupon_code' => $data['coupon_code']]);
                 }
-            } else {
-                $order->grand_total = $order->total_price;
+            }
+
+            // Xử lý deposit
+            if ($data['payment_status'] !== 'failed') {
+                $deposit = $this->depositService->deposit(
+                    $user,
+                    $order->grand_total,
+                    $paymentOption,
+                    $user,
+                    array_merge($data, ['order_id' => $order->getKey()])
+                );
+
+                $order->payment_status = $this->parseDepositStatusToOrderPaymentStatus($deposit->status);
+                $order->deposit_transaction_id = $deposit->getKey();
+            }
+
+            // Lưu order items
+            foreach ($data['cart_items'] as $item) {
+                $inventory = Inventory::findOrFail($item['inventory_id']);
+                $price = $inventory->offer_price ?? $inventory->sale_price ?? $inventory->final_price ?? 0;
+
+                $order->items()->create([
+                    'inventory_id' => $item['inventory_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $price,
+                    'total_price' => $price * $item['quantity'],
+                    'user_id' => $order->user_id,
+                    'currency_code' => $order->currency_code,
+                ]);
             }
 
             $order->save();
