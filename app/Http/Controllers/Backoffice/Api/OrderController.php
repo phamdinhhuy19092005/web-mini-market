@@ -152,7 +152,6 @@ class OrderController extends BaseApiController
         return response()->json(['message' => 'Đơn hàng đã được chuyển trạng thái vận chuyển']);
     }
 
-
     public function complete($orderId)
     {
         try {

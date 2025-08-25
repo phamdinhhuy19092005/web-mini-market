@@ -157,19 +157,7 @@
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-lg-4">
-                            <label for="allow_login" class="form-label">{{ __('Cho phép đăng nhập') }} <span class="text-danger">*</span></label>
-                            <select class="form-control k_selectpicker" id="allow_login" name="allow_login" data-live-search="true" required>
-                                <option value="1" {{ old('allow_login', $user->allow_login) == 1 ? 'selected' : '' }}>{{ __('Có') }}</option>
-                                <option value="0" {{ old('allow_login', $user->allow_login) == 0 ? 'selected' : '' }}>{{ __('Không') }}</option>
-                            </select>
-                            @error('allow_login')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
 
-                    <div class="row mb-3">
                         <div class="col-lg-4">
                             <label for="birthday" class="form-label">{{ __('Sinh nhật') }}</label>
                             <div class="input-group">

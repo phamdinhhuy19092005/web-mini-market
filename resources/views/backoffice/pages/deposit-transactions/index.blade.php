@@ -27,16 +27,16 @@
                 </div>
                 <div class="k-portlet__body k-portlet__body--fit p-4">
                     <table id="table_deposit_transactions_index" class="table table-striped table-bordered table-hover table-checkable datatable"
-                           data-request-url="{{ route('bo.api.deposit-transactions.index') }}" data-searching="true">
+                        data-request-url="{{ route('bo.api.deposit-transactions.index') }}" data-searching="true">
                         <thead>
                             <tr>
                                 <th data-property="id" scope="col">{{ __('ID') }}</th>
-                                <th data-property="user_name" scope="col">{{ __('Người dùng') }}</th>
-                                <th data-property="order_id" scope="col">{{ __('Đơn hàng') }}</th>
-                                <th data-property="payment_option_id" scope="col">{{ __('Phương thức thanh toán') }}</th>
-                                <th data-property="amount" scope="col">{{ __('Số tiền đã nạp') }}</th>
+                                <th data-property="user_name" data-render-callback="renderUserLink" scope="col">{{ __('Người dùng') }}</th>
+                                <th data-property="order_id" data-render-callback="renderOrderLink" scope="col">{{ __('Đơn hàng') }}</th>
+                                <th data-property="payment_option_name" scope="col">{{ __('Phương thức thanh toán') }}</th>
+                                <th data-property="amount" data-render-callback="renderAmountColumn" scope="col">{{ __('Số tiền đã nạp') }}</th>
                                 <th data-property="status_name" data-render-callback="renderStatusColumn" scope="col">{{ __('Trạng thái') }}</th>
-                                <th class="none" data-property="created_at" scope="col">{{ __('Ngày tạo ') }}</th>
+                                <th class="none" data-property="created_at" scope="col">{{ __('Ngày tạo') }}</th>
                                 <th class="none" data-property="updated_at" scope="col">{{ __('Ngày cập nhật') }}</th>
                             </tr>
                         </thead>
@@ -47,6 +47,18 @@
         </div>
     </div>
 </div>
+<script>
+    function renderOrderLink(data, type, row) {
+        if (!row.order_link) return '';
+        return `<a href="${row.order_link}" target="_blank">${data}</a>`;
+    }
+
+    function renderUserLink(data, type, row) {
+        if (!row.user_link) return '';
+        return `<a href="${row.user_link}" target="_blank">${data}</a>`;
+    }
+
+</script>
 @endsection
 
 @component('backoffice.partials.datatable')

@@ -5,13 +5,13 @@ namespace App\Enum;
 enum AccessChannelEnum: int
 {
     case GOOGLE = 1;
-    case SMS = 2;
+    case FORM = 2;
 
     public function label(): string
     {
         return match ($this) {
             self::GOOGLE => 'Google',
-            self::SMS => 'SMS',
+            self::FORM => 'Form',
         };
     }
 

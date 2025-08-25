@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Enum\OrderStatusEnum;
 use App\Http\Resources\Frontend\OrderResource;
+use App\Services\CartService;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -14,10 +15,12 @@ use Illuminate\Support\Facades\Log;
 class OrderController extends Controller
 {
     protected OrderService $orderService;
+    protected CartService $cartService;
 
-    public function __construct(OrderService $orderService)
+    public function __construct(OrderService $orderService, CartService $cartService)
     {
         $this->orderService = $orderService;
+        $this->cartService = $cartService;
     }
 
     public function index(Request $request): JsonResponse
@@ -53,7 +56,12 @@ class OrderController extends Controller
             $data = $request->all();
             $data['user_id'] = $user->id;
 
+            // Tạo đơn hàng
             $order = $this->orderService->createOrderUserWithCoupon($data);
+
+            // Xóa giỏ hàng cũ
+            $cart = $this->cartService->getOrCreateCart($user, null, request()->ip());
+            $this->cartService->clearCart($cart);
 
             return response()->json([
                 'success' => true,
@@ -69,6 +77,7 @@ class OrderController extends Controller
             ], 400);
         }
     }
+
 
     public function show($uuid): JsonResponse
     {
@@ -147,6 +156,6 @@ class OrderController extends Controller
             ], 400);
         }
     }
-    
+
 
 }

@@ -17,7 +17,6 @@ class UpdateUserRequest extends BaseFormRequest implements UpdateUserRequestInte
             'email' => ['required', 'email'],
             'phone_number' => ['nullable','string','max:20',Rule::unique('users', 'phone_number')->ignore($ignoreId)],
             'access_channel_type' => ['required', 'string'],
-            'allow_login' => ['required', 'boolean'],
             'birthday' => ['nullable', 'date', 'before:tomorrow'],
             'genders' => ['required', 'in:0,1'],
         ];
@@ -35,8 +34,6 @@ class UpdateUserRequest extends BaseFormRequest implements UpdateUserRequestInte
             'phone_number.max' => 'Số điện thoại không được vượt quá 20 ký tự.',
             'phone_number.unique' => 'Số điện thoại này đã được sử dụng.',
             'access_channel_type.required' => 'Kênh truy cập không được để trống.',
-            'allow_login.required' => 'Bạn phải chọn trạng thái cho phép đăng nhập.',
-            'allow_login.boolean' => 'Giá trị cho phép đăng nhập không hợp lệ.',
             'birthday.date' => 'Ngày sinh không hợp lệ.',
             'birthday.before' => 'Ngày sinh phải trước ngày hôm nay.',
             'genders.required' => 'Giới tính không được để trống.',
