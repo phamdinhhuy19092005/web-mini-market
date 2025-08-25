@@ -25,10 +25,9 @@ class GoogleAuthController extends BaseController
 {
     try {
         $googleUser = Socialite::driver('google')->stateless()->user();
-
         $frontendLoginUrl = config('FRONTEND_URL', 'http://localhost:3001') . '/login';
 
-        // Tìm user theo google_id trước
+        // Tìm user theo google_id
         $user = User::where('google_id', $googleUser->getId())->first();
 
         if (!$user) {
@@ -36,19 +35,20 @@ class GoogleAuthController extends BaseController
             $user = User::where('email', $googleUser->getEmail())->first();
 
             if ($user) {
-                // Gán google_id cho user cũ
-                $user->update([
-                    'google_id' => $googleUser->getId()
-                ]);
+                Auth::logout();
+                // Nếu user đã tồn tại nhưng đăng ký bằng form => từ chối, không gán google_id
+                return redirect()->away($frontendLoginUrl . '?' . http_build_query([
+                    'error' => 'Email này đã được đăng ký bằng form, vui lòng đăng nhập bằng email & mật khẩu.'
+                ]));
             } else {
-                // Tạo mới user
+                // Tạo mới user bằng Google
                 $user = User::create([
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
                     'avatar' => $googleUser->getAvatar(),
                     'password' => bcrypt(Str::random(16)),
-                    'status' => UserActionEnum::ACTIVE, // ✅ Enum
+                    'status' => UserActionEnum::ACTIVE,
                     'email_verified_at' => now(),
                     'last_logged_in_at' => now(),
                     'access_channel_type' => 1,
@@ -56,7 +56,7 @@ class GoogleAuthController extends BaseController
             }
         }
 
-        // Kiểm tra status trước khi login (so sánh bằng Enum)
+        // Kiểm tra trạng thái
         if ($user->status !== UserActionEnum::ACTIVE) {
             return redirect()->away($frontendLoginUrl . '?' . http_build_query([
                 'error' => 'Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để xác thực.'
@@ -79,10 +79,10 @@ class GoogleAuthController extends BaseController
             'name' => $user->name,
             'email' => $user->email,
             'avatar' => $user->avatar,
-            'phone_number' => $user->phone_number,
+'phone_number' => $user->phone_number,
             'birthday' => $user->birthday,
             'genders' => $user->genders,
-'access_channel_type' => $user->access_channel_type,
+            'access_channel_type' => $user->access_channel_type,
         ]));
 
     } catch (\Exception $e) {
@@ -91,6 +91,7 @@ class GoogleAuthController extends BaseController
         ]));
     }
 }
+
 
 
 }
