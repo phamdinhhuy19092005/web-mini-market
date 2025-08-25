@@ -45,7 +45,7 @@ class CartController extends BaseApiController
         );
 
         $inventory = Inventory::findOrFail($request->inventory_id);
-        $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->price;
+        $price = $inventory->offer_price ?? $inventory->sale_price;
 
         $item = $cart->items()->where('inventory_id', $inventory->id)->first();
 
@@ -150,7 +150,7 @@ class CartController extends BaseApiController
 
         foreach ($request->items as $item) {
             $inventory = Inventory::findOrFail($item['inventory_id']);
-            $price = $inventory->sale_price ?? $inventory->offer_price ?? $inventory->price;
+            $price = $inventory->offer_price  ?? $inventory->sale_price;
 
             $existingItem = $cart->items()->where('inventory_id', $inventory->id)->first();
 
