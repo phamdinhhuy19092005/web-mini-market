@@ -184,9 +184,6 @@ class PaymentController extends Controller
         $totalPrice = 0; 
         foreach ($cartItems as $item) {
             $inventory = \App\Models\Inventory::find($item['inventory_id']);
-            if (!$inventory) {
-                throw new \Exception('Sản phẩm không tồn tại: ' . $item['inventory_id']);
-            }
             $price = $inventory->offer_price ?? $inventory->sale_price ?? 0;
             $totalPrice += $price * $item['quantity'];
         }
@@ -194,8 +191,10 @@ class PaymentController extends Controller
         $grandTotal = $totalPrice;
         if ($couponCode) {
             $coupon = Coupon::where('code', $couponCode)->first();
+            Log::info('DEBUG coupon', ['coupon' => $coupon, 'couponCode' => $couponCode]);
             if ($coupon) {
-                $discount = $coupon->type === DiscountTypeEnum::PERCENTAGE->value
+                $type = (int)$coupon->type;
+                $discount = ($type === DiscountTypeEnum::PERCENTAGE->value)
                     ? $grandTotal * ($coupon->value / 100)
                     : $coupon->value;
                 $grandTotal = max(0, $grandTotal - $discount);
@@ -207,6 +206,7 @@ class PaymentController extends Controller
             'grand_total' => $grandTotal * 100,
         ];
     }
+
 
     protected function generateVnpayUrl(array $orderInfo, int $amount, string $ipAddr): string
     {
@@ -237,6 +237,8 @@ class PaymentController extends Controller
             'vnp_IpAddr' => $ipAddr,
             'vnp_OrderType' => 'topup',
         ];
+
+        Log::info('DEBUG vnp_OrderInfo', ['vnp_OrderInfo' => $vnp_OrderInfo]);
 
         ksort($inputData);
         $query = http_build_query($inputData, '', '&', PHP_QUERY_RFC1738);
